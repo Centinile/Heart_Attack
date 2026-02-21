@@ -1,0 +1,21 @@
+using UnityEngine;
+
+[CreateAssetMenu(
+    menuName = "Structure/Wall",
+    fileName = "WallData_",
+    order = 40)]
+public class WallData : StructureData
+{
+    [Header("Wall Settings")]
+    [Tooltip("If true, enemies will attack walls to reach the heart.")]
+    [SerializeField] private bool prioritizedByEnemies = true;
+    
+    [Tooltip("Additional damage reduction from ranged attacks.")]
+    [SerializeField] private float rangedDamageReduction = 0.5f;
+    
+    // Public accessors
+    public bool PrioritizedByEnemies => prioritizedByEnemies;
+    public float RangedDamageReduction => rangedDamageReduction;
+    
+    public override StructureType GetStructureType() => StructureType.Wall;
+}

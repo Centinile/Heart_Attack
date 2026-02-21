@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75daa3637f98f924ca73d6f51671b397, type: 3}
+  m_Name: SpawnSpeedBoost_
+  m_EditorClassIdentifier: 
+  abilityName: Spawn Speed Boost
+  cooldown: 0
+  triggerOnSpawn: 1
+  triggerOnAttack: 0
+  triggerOnDeath: 0
+  isPassive: 0
+  usableWhileStunned: 1
+  speedMultiplier: 5
+  boostDuration: 0.5

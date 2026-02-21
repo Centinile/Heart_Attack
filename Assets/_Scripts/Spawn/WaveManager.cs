@@ -49,16 +49,30 @@ public class WaveManager : MonoBehaviour
 
         if (!freeplayMode && currentWaveIndex < waves.Length)
         {
+            WaveData wave = waves[currentWaveIndex];
+
+            Debug.Log($"Mode: DESIGNED WAVE");
+            LogSpawnData("Designed Wave", wave);
+
             activeSpawns.Add(StartCoroutine(SpawnGroup(waves[currentWaveIndex])));
         }
         else
         {
+            Debug.Log($"Mode: FREEPLAY");
+
             List<EnemyRaidGroup> groups = GenerateFreeplayWave(currentWaveIndex);
 
             foreach (var group in groups)
             {
+                LogSpawnData("Raid Group", group);
                 activeSpawns.Add(StartCoroutine(SpawnGroup(group)));
             }
+
+            Debug.Log($"========== WAVE {currentWaveIndex} END ==========");
+
+            waveRunning = false;
+            startWaveButton.interactable = true;
+            currentWaveIndex++;
         }
 
         // Wait until all spawns finish
@@ -83,8 +97,6 @@ public class WaveManager : MonoBehaviour
         GameObject e = Instantiate(prefab, spawnPos, Quaternion.identity);
         Enemy enemy = e.GetComponent<Enemy>();
 
-        if (enemy != null)
-            enemy.wayPoints = wayPoints;
     }
 
     Vector3 GenerateEdgePosition()
@@ -133,6 +145,8 @@ public class WaveManager : MonoBehaviour
         int weightLimit = baseFreeplayWeight + (waveNumber * weightIncreasePerWave);
         int currentWeight = 0;
 
+        Debug.Log($"Freeplay Weight Limit: {weightLimit}");
+
         List<EnemyRaidGroup> selectedGroups = new List<EnemyRaidGroup>();
 
         int safety = 0; // prevents infinite loop
@@ -150,7 +164,11 @@ public class WaveManager : MonoBehaviour
 
             selectedGroups.Add(randomGroup);
             currentWeight += randomGroup.weightCost;
+
+            Debug.Log($"Added Group: {randomGroup.name} | Cost: {randomGroup.weightCost} | Total Weight: {currentWeight}");
         }
+
+        Debug.Log($"Final Freeplay Weight Used: {currentWeight}");
 
         return selectedGroups;
     }
@@ -168,6 +186,18 @@ public class WaveManager : MonoBehaviour
             SpawnEnemy(prefab);
             yield return new WaitForSeconds(0.05f); // spawn next frame
         }
+    }
+
+    void LogSpawnData(string header, SpawnData data)
+    {
+        string log = $"[{header}] {data.name} → ";
+
+        foreach (var entry in data.spawnEntries)
+        {
+            log += $"{entry.prefab.name} x{entry.count}, ";
+        }
+
+        Debug.Log(log);
     }
 
 }

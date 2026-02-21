@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Raid Group", menuName = "Scriptable Objects/Raid Group")]
+[CreateAssetMenu(fileName = "Raid Group", menuName = "Waves/Raid Group")]
 public class EnemyRaidGroup : SpawnData
 {
 

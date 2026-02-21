@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 3
   tags:
   - Enemy
+  - End
+  - Defense
+  - Resource
+  - Wall
+  - Heart
   layers:
   - Default
   - TransparentFX
