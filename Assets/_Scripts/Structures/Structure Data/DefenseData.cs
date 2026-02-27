@@ -37,10 +37,6 @@ public class DefenseData : StructureData
     [Tooltip("Radius of splash damage.")]
     [SerializeField] private float splashRadius = 2f;
     
-    [Header("Upgrades")]
-    [Tooltip("Next level upgrade data (optional).")]
-    [SerializeField] private DefenseData nextLevel;
-    
     // Public accessors
     public float Damage => damage;
     public float AttackSpeed => attackSpeed;
@@ -51,8 +47,5 @@ public class DefenseData : StructureData
     public float ProjectileSpeed => projectileSpeed;
     public int MaxTargets => maxTargets;
     public float SplashRadius => splashRadius;
-    public DefenseData NextLevel => nextLevel;
-    public bool HasUpgrade => nextLevel != null;
-    
     public override StructureType GetStructureType() => StructureType.Defense;
 }

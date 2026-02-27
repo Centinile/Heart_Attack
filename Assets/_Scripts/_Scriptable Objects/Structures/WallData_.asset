@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   structureName: Wall
   maxHP: 100
-  icon: {fileID: 0}
+  nutrientCost: 5
+  hydrationCost: 0
+  nextLevelData: {fileID: 0}
+  upgradeCost: 150
+  icon: {fileID: 21300000, guid: d57dcbd3f9564554da1784d3bd7b8205, type: 3}
   prefab: {fileID: 4611168650507600015, guid: 30474534713806b44b7f4900164ec842, type: 3}
   prioritizedByEnemies: 0
   rangedDamageReduction: 0.9

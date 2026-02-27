@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 public class TowerPlacer : MonoBehaviour
 {
+    public static TowerPlacer Instance;
     public Tilemap placementMap;
     public Tilemap nonPlaceableTiles;
 
@@ -12,6 +13,11 @@ public class TowerPlacer : MonoBehaviour
 
     private HashSet<Vector3Int> occupiedTiles = new HashSet<Vector3Int>();
     private GameObject ghostInstance;
+
+    void Awake()
+    {
+        Instance = this;
+    }
 
     void Update()
     {
@@ -21,27 +27,27 @@ public class TowerPlacer : MonoBehaviour
 
     void HandlePlacementHover()
     {
-        if(TowerSelectionUI.SelectedTowerPrefab == null)
+        if (TowerSelectionUI.SelectedStructureData == null)
         {
             if (ghostInstance != null)
                 Destroy(ghostInstance);
             return;
         }
 
-        if(ghostInstance == null)
+        if (ghostInstance == null)
             ghostInstance = Instantiate(ghostPrefab);
 
-        ghostInstance.GetComponent<SpriteRenderer>().sprite = TowerSelectionUI.SelectedTowerPrefab.GetComponent<SpriteRenderer>().sprite;
+        ghostInstance.GetComponent<SpriteRenderer>().sprite =
+            TowerSelectionUI.SelectedStructureData.Icon;
 
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mouseWorldPos.z = 0;
 
         Vector3Int cellPos = placementMap.WorldToCell(mouseWorldPos);
-
         Vector3 worldCenter = placementMap.GetCellCenterWorld(cellPos);
-        worldCenter.z = 0;
 
-        ghostInstance.transform.position = worldCenter + new Vector3(0, placementMap.cellSize.y * 0.25f);
+        ghostInstance.transform.position =
+            worldCenter + new Vector3(0, placementMap.cellSize.y * 0.25f);
 
         bool valid = placementMap.HasTile(cellPos) && !occupiedTiles.Contains(cellPos);
 
@@ -51,7 +57,7 @@ public class TowerPlacer : MonoBehaviour
     void HandlePlacementClick()
     {
         if(!Input.GetMouseButtonDown(0)) return;
-        if (TowerSelectionUI.SelectedTowerPrefab == null) return;
+        if (TowerSelectionUI.SelectedStructureData == null) return;
 
         if(EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
             return;
@@ -64,11 +70,28 @@ public class TowerPlacer : MonoBehaviour
         if(!placementMap.HasTile(cellpos)) return;
         if(occupiedTiles.Contains(cellpos)) return;
 
-        Instantiate(TowerSelectionUI.SelectedTowerPrefab, ghostInstance.transform.position, Quaternion.identity);
+        StructureData data = TowerSelectionUI.SelectedStructureData;
+        GameObject prefab = data.Prefab;
 
-        TowerSelectionUI.SelectedTowerPrefab = null;
+        if (!GameManager.Instance.SpendNutrients(data.NutrientCost))
+            return;
 
-        occupiedTiles.Add(cellpos);
-        
+        GameObject newBuilding = Instantiate(prefab, ghostInstance.transform.position, Quaternion.identity);
+
+        Building building = newBuilding.GetComponent<Building>();
+        data.ConfigureBuilding(building);
+        building.Initialize(data);
+
+        occupiedTiles.Add(cellpos); 
+    }
+
+    public void FreeTile(Vector3 worldPosition)
+    {
+        Vector3Int cellPos = placementMap.WorldToCell(worldPosition);
+
+        if (occupiedTiles.Contains(cellPos))
+        {
+            occupiedTiles.Remove(cellPos);
+        }
     }
 }

@@ -2,16 +2,19 @@ using UnityEngine;
 
 public class TowerSelectionUI : MonoBehaviour
 {
-    public static GameObject SelectedTowerPrefab;
+    public static StructureData SelectedStructureData;
 
-    public void SelectTower(GameObject towerPrefab)
+    public void SelectStructure(StructureData data)
     {
-        if(towerPrefab == SelectedTowerPrefab)
+        if (SelectedStructureData == data)
         {
-            SelectedTowerPrefab = null;
+            SelectedStructureData = null;
             return;
         }
 
-        SelectedTowerPrefab = towerPrefab;
+        // Cancel building selection properly
+        Object.FindAnyObjectByType<BuildingSelector>().Deselect();
+
+        SelectedStructureData = data;
     }
 }

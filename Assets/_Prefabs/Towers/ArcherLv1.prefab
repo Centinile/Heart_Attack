@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 5757587013675632553}
   - component: {fileID: 128818442715224949}
   - component: {fileID: -3924674970481793475}
-  m_Layer: 0
-  m_Name: Archer
+  - component: {fileID: 6396465466065567474}
+  m_Layer: 3
+  m_Name: ArcherLv1
   m_TagString: Defense
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -150,9 +151,29 @@ MonoBehaviour:
   structureType: 2
   maxHP: 100
   currentHP: 0
+  nutrientCost: 0
+  hydrationCost: 0
   isNavMeshObstacle: 0
   carveNavMesh: 0
   data: {fileID: 11400000, guid: 8fc27eea14ea0594f847f98612b8755e, type: 2}
   currentTarget: {fileID: 0}
   attackTimer: 0
   isAttacking: 0
+--- !u!114 &6396465466065567474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4611168650507600015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineMode: 0
+  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineWidth: 5.95
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []

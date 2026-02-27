@@ -11,6 +11,14 @@ public abstract class StructureData : ScriptableObject
     
     [Tooltip("Maximum health points.")]
     [SerializeField] protected float maxHP = 100f;
+
+    [Header("Economy")]
+    [SerializeField] protected float nutrientCost = 100f;
+    [SerializeField] protected float hydrationCost = 5f;
+
+    [Header("Upgrade")]
+    [SerializeField] protected StructureData nextLevelData;
+    [SerializeField] protected float upgradeCost = 150f;
     
     [Header("Visual")]
     [Tooltip("Icon shown in UI.")]
@@ -22,6 +30,10 @@ public abstract class StructureData : ScriptableObject
     // Public accessors
     public string StructureName => structureName;
     public float MaxHP => maxHP;
+    public float NutrientCost => nutrientCost;
+    public float HydrationCost => hydrationCost;
+    public float UpgradeCost => upgradeCost;
+    public StructureData NextLevelData => nextLevelData;
     public Sprite Icon => icon;
     public GameObject Prefab => prefab;
     

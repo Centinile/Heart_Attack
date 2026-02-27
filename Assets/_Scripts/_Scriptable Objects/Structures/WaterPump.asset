@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab2d2bd548a21fa418e90f94a831b181, type: 3}
-  m_Name: HeartData_
+  m_Script: {fileID: 11500000, guid: 051adea317e7fb445943ca37c4b8b90e, type: 3}
+  m_Name: WaterPump
   m_EditorClassIdentifier: 
-  structureName: Heart
+  structureName: New Structure
   maxHP: 100
   nutrientCost: 0
   hydrationCost: 0
@@ -20,6 +20,8 @@ MonoBehaviour:
   upgradeCost: 150
   icon: {fileID: 0}
   prefab: {fileID: 0}
-  invulnerable: 0
-  damageEffect: {fileID: 0}
-  isMainHeart: 1
+  resourceType: Hydration
+  resourceAmount: 10
+  collectionInterval: 5
+  maxStorage: 100
+  collectEffect: {fileID: 0}
