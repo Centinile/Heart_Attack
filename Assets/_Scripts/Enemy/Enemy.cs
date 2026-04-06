@@ -13,6 +13,9 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float currentHP;
     public float CurrentHP => currentHP;
     
+    private float scaledMaxHP;
+    private float scaledDamage;
+
     [SerializeField] private bool isAttacking;
     public bool IsAttacking => isAttacking;
     
@@ -47,10 +50,14 @@ public class Enemy : MonoBehaviour
     
     void Start()
     {
-        if (data == null)
+        if (data == null) return;
+                
+                // If scaling wasn't applied, use defaults
+        if (scaledMaxHP <= 0) 
         {
-            Debug.LogError("Enemy: No EnemyData assigned!", gameObject);
-            return;
+            scaledMaxHP = data.MaxHP;
+            scaledDamage = data.AttackDamage;
+            currentHP = scaledMaxHP;
         }
         
         // Initialize health
@@ -118,6 +125,20 @@ public class Enemy : MonoBehaviour
         {
             HandleMeleeBehavior(distanceToTarget, hasPath);
         }
+    }
+
+    public void ApplyScaling(float multiplier)
+    {
+        // Ensure we have the data reference
+        if (data == null) return;
+
+        scaledMaxHP = data.MaxHP * multiplier;
+        scaledDamage = data.AttackDamage * multiplier;
+
+        // Update current health to the new max
+        currentHP = scaledMaxHP;
+        
+        Debug.Log($"{gameObject.name} scaled: HP {scaledMaxHP}, DMG {scaledDamage}");
     }
     
     void HandleRangedBehavior(float distanceToTarget, bool hasPath)
@@ -350,16 +371,13 @@ public class Enemy : MonoBehaviour
     void TryAttack()
     {
         if (attackTimer > 0f) return;
-        
         Building building = currentTarget.GetComponent<Building>();
         
         if (building != null)
         {
-            building.TakeDamage(data.AttackDamage);
-            
-            // Trigger attack abilities
+            // USE THE SCALED DAMAGE HERE
+            building.TakeDamage(scaledDamage);
             data.TriggerAttackAbilities(this, building);
-            
             attackTimer = data.AttackCooldown;
         }
     }

@@ -21,10 +21,14 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 0a0b70cfd52e574419e377163923b946, type: 3}
   prefab: {fileID: 4611168650507600015, guid: ae53c4d789105f14a957fd44088e289e, type: 3}
   damage: 4
-  attackSpeed: 2
+  attackCooldown: 0.5
   range: 7
-  targetMode: 2
   attackType: 0
+  useFourDirectionalFacing: 0
+  spriteUp: {fileID: 0}
+  spriteDown: {fileID: 0}
+  spriteLeft: {fileID: 0}
+  spriteRight: {fileID: 0}
   projectileData: {fileID: 11400000, guid: d500cbf7a8a33a04e920b02edf4c609b, type: 2}
   projectileSpeed: 10
   maxTargets: 1

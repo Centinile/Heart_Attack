@@ -211,6 +211,12 @@ public class GameManager : MonoBehaviour
         UpdateResourceUI();
     }
 
+    public void ModifyMaxHydration(float amount)
+    {
+        currentHydration += amount;
+        UpdateResourceUI();
+    }
+
     private void UpdateResourceUI()
     {
         currentNutrientsDisplay.text = currentNutrients.ToString("0");

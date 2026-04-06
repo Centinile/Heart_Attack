@@ -5,199 +5,205 @@ using System.Collections.Generic;
 
 public class WaveManager : MonoBehaviour
 {
+    public static System.Action OnWaveCleared;
     [Header("Wave Setup")]
     public WaveData[] waves;
     public Button startWaveButton;
-    public Transform[] wayPoints;
-
-    [Header("Spawn Area")]
-    public BoxCollider2D spawnBounds;
-    public float spawnOutsideOffset = 1f; // how far outside map enemies appear
-
     public int currentWaveIndex;
     public bool waveRunning = false;
+
+    [Header("Automation Settings")]
+    public bool autoStartNextWave = false; 
+    public float timeBetweenWaves = 5f;
+
+    [Header("Scaling Settings")]
+    public bool enableScaling = false; 
+    public float scalingPerWave = 0.02f; 
+
+    [Header("Spawn Area")]
+    public PolygonCollider2D spawnBounds;
+    public float spawnOutsideOffset = 1f;
 
     [Header("Freeplay")]
     public bool freeplayMode = false;
     public EnemyRaidGroup[] availableGroups;
-
     public int baseFreeplayWeight = 50;
     public int weightIncreasePerWave = 5;
 
     void Start()
     {
-        startWaveButton.onClick.AddListener(StartWave);
+        if(startWaveButton != null)
+            startWaveButton.onClick.AddListener(StartWave);
+    }
+
+    public void ToggleAutoStart(bool value)
+    {
+        autoStartNextWave = value;
+        if (autoStartNextWave && !waveRunning) StartWave();
     }
 
     public void StartWave()
     {
         if (waveRunning) return;
-
-        // Allow freeplay after designed waves end
-        if (!freeplayMode && currentWaveIndex >= waves.Length)
-            freeplayMode = true;
-
         StartCoroutine(RunWave());
     }
 
     IEnumerator RunWave()
     {
         waveRunning = true;
-        startWaveButton.interactable = false;
+        if(startWaveButton != null) startWaveButton.interactable = false;
 
-        List<Coroutine> activeSpawns = new List<Coroutine>();
+        // Check if we should be in Freeplay
+        if (currentWaveIndex >= waves.Length) freeplayMode = true;
+        
+        string modeColor = freeplayMode ? "orange" : "cyan";
+        Debug.Log($"<color={modeColor}><b>[WAVE {currentWaveIndex + 1}]</b> STARTED ({ (freeplayMode ? "FREEPLAY" : "DESIGNED") })</color>");
 
-        if (!freeplayMode && currentWaveIndex < waves.Length)
+        // --- STEP 1: SPAWNING PHASE ---
+        if (!freeplayMode)
         {
-            WaveData wave = waves[currentWaveIndex];
-
-            Debug.Log($"Mode: DESIGNED WAVE");
-            LogSpawnData("Designed Wave", wave);
-
-            activeSpawns.Add(StartCoroutine(SpawnGroup(waves[currentWaveIndex])));
+            Debug.Log($"Wave {currentWaveIndex + 1}: DESIGNED");
+            // We yield return the coroutine directly so we wait for all spawns to finish
+            yield return StartCoroutine(SpawnGroup(waves[currentWaveIndex]));
         }
         else
         {
-            Debug.Log($"Mode: FREEPLAY");
-
-            List<EnemyRaidGroup> groups = GenerateFreeplayWave(currentWaveIndex);
-
-            foreach (var group in groups)
+            Debug.Log($"Wave {currentWaveIndex + 1}: FREEPLAY");
+            List<EnemyRaidGroup> selectedGroups = GenerateFreeplayWave(currentWaveIndex);
+            
+            List<string> raidNames = new List<string>();
+            foreach(var g in selectedGroups) 
+                raidNames.Add(string.IsNullOrEmpty(g.raidName) ? g.name : g.raidName);
+            Debug.Log($"<color=orange><b>[FREEPLAY WAVE {currentWaveIndex + 1}]</b> Raids Joining: {string.Join(", ", raidNames)}</color>");
+            
+            List<GameObject> masterSpawnQueue = new List<GameObject>();
+            foreach (var group in selectedGroups)
             {
-                LogSpawnData("Raid Group", group);
-                activeSpawns.Add(StartCoroutine(SpawnGroup(group)));
+                masterSpawnQueue.AddRange(group.BuildSpawnQueue());
             }
 
-            Debug.Log($"========== WAVE {currentWaveIndex} END ==========");
+            ShuffleList(masterSpawnQueue);
 
-            waveRunning = false;
-            startWaveButton.interactable = true;
-            currentWaveIndex++;
+            foreach (GameObject enemyPrefab in masterSpawnQueue)
+            {
+                SpawnEnemy(enemyPrefab);
+                yield return new WaitForSeconds(Random.Range(0.05f, 0.2f));
+            }
         }
 
-        // Wait until all spawns finish
-        foreach (var routine in activeSpawns)
+        // --- STEP 2: SURVIVAL PHASE (Cleanup) ---
+        // This is now OUTSIDE the if/else, so it runs for both modes
+        
+        // Wait a small buffer for the last enemy to register
+        yield return new WaitForSeconds(0.5f);
+
+        // Wait until all objects with the "Enemy" script are gone
+        while (GameObject.FindObjectsByType<Enemy>(FindObjectsSortMode.None).Length > 0)
         {
-            yield return routine;
+            yield return new WaitForSeconds(0.5f); 
         }
+
+        Debug.Log($"Wave {currentWaveIndex + 1} Cleared!");
+        OnWaveCleared?.Invoke();
 
         waveRunning = false;
-        startWaveButton.interactable = true;
+        if(startWaveButton != null) startWaveButton.interactable = true;
         currentWaveIndex++;
+
+        // --- STEP 3: AUTOMATION ---
+        if (autoStartNextWave)
+        {
+            Debug.Log($"Next wave in {timeBetweenWaves}s...");
+            yield return new WaitForSeconds(timeBetweenWaves);
+            StartWave();
+        }
     }
 
-    // ==============================
-    // SPAWNING
-    // ==============================
+    // --- REFACTORED SELECTION & UTILS ---
 
     void SpawnEnemy(GameObject prefab)
     {
         Vector3 spawnPos = GenerateEdgePosition();
-
         GameObject e = Instantiate(prefab, spawnPos, Quaternion.identity);
         Enemy enemy = e.GetComponent<Enemy>();
 
-    }
-
-    Vector3 GenerateEdgePosition()
-    {
-        Bounds bounds = spawnBounds.bounds;
-
-        float minX = bounds.min.x;
-        float maxX = bounds.max.x;
-        float minY = bounds.min.y;
-        float maxY = bounds.max.y;
-
-        float x = Random.Range(minX, maxX);
-        float y = Random.Range(minY, maxY);
-
-        switch (Random.Range(0, 4))
+        if (enableScaling && enemy != null)
         {
-            // Left
-            case 0:
-                return new Vector3(minX - spawnOutsideOffset, y, 0);
-
-            // Right
-            case 1:
-                return new Vector3(maxX + spawnOutsideOffset, y, 0);
-
-            // Bottom
-            case 2:
-                return new Vector3(x, minY - spawnOutsideOffset, 0);
-
-            // Top
-            default:
-                return new Vector3(x, maxY + spawnOutsideOffset, 0);
+            float multiplier = 1f + (currentWaveIndex * scalingPerWave);
+            enemy.ApplyScaling(multiplier);
         }
     }
 
-    public bool IsWithinBounds(Transform target)
+    private void ShuffleList<T>(List<T> list)
     {
-        return spawnBounds.bounds.Contains(target.position);
+        for (int i = 0; i < list.Count; i++)
+        {
+            T temp = list[i];
+            int randomIndex = Random.Range(i, list.Count);
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
+        }
     }
-
-    // ==============================
-    // FREEPLAY GENERATION
-    // ==============================
 
     List<EnemyRaidGroup> GenerateFreeplayWave(int waveNumber)
     {
         int weightLimit = baseFreeplayWeight + (waveNumber * weightIncreasePerWave);
         int currentWeight = 0;
-
-        Debug.Log($"Freeplay Weight Limit: {weightLimit}");
-
         List<EnemyRaidGroup> selectedGroups = new List<EnemyRaidGroup>();
 
-        int safety = 0; // prevents infinite loop
-
+        int safety = 0;
         while (currentWeight < weightLimit && safety < 500)
         {
-            EnemyRaidGroup randomGroup =
-                availableGroups[Random.Range(0, availableGroups.Length)];
-
+            EnemyRaidGroup randomGroup = GetWeightedRandomGroup();
             if (currentWeight + randomGroup.weightCost > weightLimit)
             {
                 safety++;
                 continue;
             }
-
             selectedGroups.Add(randomGroup);
             currentWeight += randomGroup.weightCost;
-
-            Debug.Log($"Added Group: {randomGroup.name} | Cost: {randomGroup.weightCost} | Total Weight: {currentWeight}");
         }
-
-        Debug.Log($"Final Freeplay Weight Used: {currentWeight}");
-
         return selectedGroups;
     }
 
-    // ==============================
-    // GROUP SPAWNING
-    // ==============================
+    EnemyRaidGroup GetWeightedRandomGroup()
+    {
+        int totalSelectionWeight = 0;
+        foreach (var g in availableGroups) totalSelectionWeight += g.selectionWeight;
+
+        int randomValue = Random.Range(0, totalSelectionWeight);
+        int cumulativeWeight = 0;
+
+        foreach (var group in availableGroups)
+        {
+            cumulativeWeight += group.selectionWeight;
+            if (randomValue < cumulativeWeight) return group;
+        }
+        return availableGroups[0];
+    }
 
     IEnumerator SpawnGroup(SpawnData data)
     {
         List<GameObject> queue = data.BuildSpawnQueue();
-
         foreach (var prefab in queue)
         {
             SpawnEnemy(prefab);
-            yield return new WaitForSeconds(0.05f); // spawn next frame
+            yield return new WaitForSeconds(0.1f); 
         }
     }
 
-    void LogSpawnData(string header, SpawnData data)
+    Vector3 GenerateEdgePosition()
     {
-        string log = $"[{header}] {data.name} → ";
+        Bounds bounds = spawnBounds.bounds;
+        float x = Random.Range(bounds.min.x, bounds.max.x);
+        float y = Random.Range(bounds.min.y, bounds.max.y);
 
-        foreach (var entry in data.spawnEntries)
+        switch (Random.Range(0, 4))
         {
-            log += $"{entry.prefab.name} x{entry.count}, ";
+            case 0: return new Vector3(bounds.min.x - spawnOutsideOffset, y, 0); // Left
+            case 1: return new Vector3(bounds.max.x + spawnOutsideOffset, y, 0); // Right
+            case 2: return new Vector3(x, bounds.min.y - spawnOutsideOffset, 0); // Bottom
+            default: return new Vector3(x, bounds.max.y + spawnOutsideOffset, 0); // Top
         }
-
-        Debug.Log(log);
     }
-
 }

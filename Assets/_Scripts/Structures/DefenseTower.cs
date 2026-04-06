@@ -2,147 +2,117 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.AI;
 
-/// <summary>
-/// Represents a defensive tower structure.
-/// Towers can also block enemy movement and attack enemies.
-/// </summary>
 public class DefenseTower : Building
 {
-    [Header("NavMesh Settings")]
-    [SerializeField] private bool isNavMeshObstacle = false;
-    [SerializeField] private bool carveNavMesh = false;
-    
     [Header("References")]
     [SerializeField] private DefenseData data;
-    
-    [Header("State")]
-    [SerializeField] private Transform currentTarget;
-    [SerializeField] private float attackTimer;
-    [SerializeField] private bool isAttacking;
-    
-    // Cached references
+    [SerializeField] private RangeIndicator rangeIndicator;
+    [SerializeField] private SpriteRenderer towerRenderer;
+
+    [Header("Live State")]
+    [SerializeField] private TargetMode currentTargetMode;
+    private Transform currentTarget;
+    private float attackTimer;
     private Transform heartTransform;
-    private NavMeshObstacle navMeshObstacle;
-    
-    public DefenseData Data => data;
-    public bool IsAttacking => isAttacking;
-    public Transform CurrentTarget => currentTarget;
-    
+
     protected override void Awake()
     {
         base.Awake();
         structureType = StructureType.Defense;
-        
-        // Add NavMeshObstacle component
-        navMeshObstacle = gameObject.AddComponent<NavMeshObstacle>();
-        navMeshObstacle.enabled = isNavMeshObstacle;
-        navMeshObstacle.carving = carveNavMesh;
-        navMeshObstacle.shape = NavMeshObstacleShape.Capsule;
-        navMeshObstacle.center = Vector3.zero;
-        
-        // Set size based on collider
-        CircleCollider2D circleCollider = GetComponent<CircleCollider2D>();
-        if (circleCollider != null)
-        {
-            navMeshObstacle.size = new Vector3(circleCollider.radius * 2, 1f, 0.1f);
-        }
+        if (towerRenderer == null) towerRenderer = GetComponentInChildren<SpriteRenderer>();
     }
-    
+
     void Start()
     {
-        // Find the heart for targeting calculations
         GameObject heart = GameObject.FindGameObjectWithTag("Heart");
-        if (heart != null)
-        {
-            heartTransform = heart.transform;
-        }
+        if (heart != null) heartTransform = heart.transform;
         
+        // Initialize targeting from the data default
+        // If you want a default, you can set it here or in the Inspector
+        currentTargetMode = TargetMode.ClosestToHeart; 
         attackTimer = 0f;
     }
-    
+
+    /// <summary>
+    /// Call this from a UI button to cycle through targeting modes.
+    /// </summary>
+    public void SwitchTargetMode()
+    {
+        // Cycles: ClosestToHeart -> Farthest -> ClosestToTower -> First -> (Back to start)
+        int nextMode = ((int)currentTargetMode + 1) % System.Enum.GetValues(typeof(TargetMode)).Length;
+        currentTargetMode = (TargetMode)nextMode;
+        
+        Debug.Log($"Tower {gameObject.name} targeting changed to: {currentTargetMode}");
+    }
+
     void Update()
     {
         if (data == null) return;
-        
-        // Update attack timer
-        attackTimer -= Time.deltaTime;
-        
-        // Find and attack target
+
+        if (attackTimer > 0) attackTimer -= Time.deltaTime;
+
         if (currentTarget == null || !IsTargetValid(currentTarget))
         {
             currentTarget = FindTarget();
         }
-        
+
         if (currentTarget != null)
         {
-            float distanceToTarget = Vector2.Distance(transform.position, currentTarget.position);
-            
-            if (distanceToTarget <= data.Range)
+            if (data.useFourDirectionalFacing)
             {
-                // REMOVED: FaceTarget() - Towers no longer rotate, add this again if we want rotation
-                
-                // Attack if ready
-                if (attackTimer <= 0f)
-                {
-                    PerformAttack();
-                    attackTimer = 1f / data.AttackSpeed;
-                }
-                
-                isAttacking = true;
+                UpdateFaceDirection(currentTarget.position);
             }
-            else
+
+            if (attackTimer <= 0f)
             {
-                // Target out of range, find new target
-                currentTarget = FindTarget();
-                isAttacking = false;
+                PerformAttack();
+                attackTimer = data.attackCooldown; // Simple seconds-based cooldown
             }
+        }
+    }
+
+    private void UpdateFaceDirection(Vector3 targetPos)
+    {
+        if (towerRenderer == null) return;
+
+        Vector2 direction = (targetPos - transform.position).normalized;
+
+        // Determine 4-way direction
+        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
+        {
+            // Horizontal
+            towerRenderer.sprite = direction.x > 0 ? data.spriteRight : data.spriteLeft;
         }
         else
         {
-            isAttacking = false;
+            // Vertical
+            towerRenderer.sprite = direction.y > 0 ? data.spriteUp : data.spriteDown;
         }
     }
-    
-    /// Finds the best target based on the tower's target mode.
+
     private Transform FindTarget()
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, data.Range);
-        
-        if (hits.Length == 0) return null;
-        
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, data.range);
         List<Transform> validTargets = new List<Transform>();
-        
+
         foreach (Collider2D hit in hits)
         {
             Enemy enemy = hit.GetComponent<Enemy>();
-            if (enemy != null && enemy.CurrentHP > 0)
-            {
-                validTargets.Add(hit.transform);
-            }
+            if (enemy != null && enemy.CurrentHP > 0) validTargets.Add(hit.transform);
         }
-        
+
         if (validTargets.Count == 0) return null;
-        
-        // Sort based on target mode
-        switch (data.TargetMode)
+
+        // Use the instance variable 'currentTargetMode' instead of data
+        switch (currentTargetMode)
         {
-            case TargetMode.ClosestToHeart:
-                return GetClosestToHeart(validTargets);
-                
-            case TargetMode.FarthestFromHeart:
-                return GetFarthestFromHeart(validTargets);
-                
-            case TargetMode.ClosestToTower:
-                return GetClosestToTower(validTargets);
-                
-            case TargetMode.First:
-                return validTargets[0];
-                
-            default:
-                return validTargets[0];
+            case TargetMode.ClosestToHeart: return GetClosestToHeart(validTargets);
+            case TargetMode.FarthestFromHeart: return GetFarthestFromHeart(validTargets);
+            case TargetMode.ClosestToTower: return GetClosestToTower(validTargets);
+            default: return validTargets[0];
         }
     }
-    
+
     private Transform GetClosestToHeart(List<Transform> targets)
     {
         Transform bestTarget = null;
@@ -203,69 +173,38 @@ public class DefenseTower : Building
         
         return bestTarget;
     }
-    
+
     private bool IsTargetValid(Transform target)
     {
         if (target == null) return false;
-        
         Enemy enemy = target.GetComponent<Enemy>();
         if (enemy == null || enemy.CurrentHP <= 0) return false;
-        
-        float distance = Vector2.Distance(transform.position, target.position);
-        return distance <= data.Range;
+        return Vector2.Distance(transform.position, target.position) <= data.range;
     }
-    
-    // REMOVED: FaceTarget() method - towers no longer rotate
-    
+
     private void PerformAttack()
     {
-        if (currentTarget == null) return;
-        
-        switch (data.AttackType)
+        switch (data.attackType)
         {
-            case AttackType.SingleTarget:
-                FireProjectile(currentTarget);
-                break;
-                
-            case AttackType.MultiTarget:
-                AttackMultipleTargets();
-                break;
-                
-            case AttackType.SplashDamage:
-                FireSplashProjectile(currentTarget);
-                break;
-                
-            case AttackType.AllInRange:
-                AttackAllInRange();
-                break;
+            case AttackType.SingleTarget: FireProjectile(currentTarget); break;
+            case AttackType.MultiTarget: AttackMultipleTargets(); break;
+            case AttackType.SplashDamage: FireSplashProjectile(currentTarget); break;
+            case AttackType.AllInRange: AttackAllInRange(); break;
         }
     }
-    
+
     private void FireProjectile(Transform target)
     {
-        if (data.ProjectileData == null)
-        {
-            // Direct hit if no projectile
-            Enemy enemy = target.GetComponent<Enemy>();
-            if (enemy != null)
-            {
-                enemy.TakeDamage(data.Damage);
-            }
-            return;
-        }
-        
-        GameObject projectileObj = InstantiateProjectile();
-        Projectile projectile = projectileObj.GetComponent<Projectile>();
-        
-        if (projectile != null)
-        {
-            projectile.Initialize(target, data.Damage, this, AttackType.SingleTarget);
-        }
+        if (data.projectileData == null) return;
+
+        GameObject projObj = Instantiate(data.projectileData.Prefab, transform.position, Quaternion.identity);
+        Projectile proj = projObj.GetComponent<Projectile>();
+        if (proj != null) proj.Initialize(target, data.damage, this, AttackType.SingleTarget);
     }
-    
+
     private void AttackMultipleTargets()
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, data.Range);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, data.range);
         List<Transform> enemies = new List<Transform>();
         
         foreach (Collider2D hit in hits)
@@ -283,7 +222,7 @@ public class DefenseTower : Building
                 Vector2.Distance(transform.position, b.position)));
         
         // Attack up to maxTargets
-        int targetsToAttack = Mathf.Min(enemies.Count, data.MaxTargets);
+        int targetsToAttack = Mathf.Min(enemies.Count, data.maxTargets);
         
         for (int i = 0; i < targetsToAttack; i++)
         {
@@ -292,11 +231,11 @@ public class DefenseTower : Building
     }
     
     private void FireSplashProjectile(Transform target)
-    {
-        if (data.ProjectileData == null)
+    {        
+        if (data.projectileData == null)
         {
             // Direct hit with splash
-            ApplySplashDamage(target.position, data.Damage);
+            ApplySplashDamage(target.position, data.damage);
             return;
         }
         
@@ -305,13 +244,13 @@ public class DefenseTower : Building
         
         if (projectile != null)
         {
-            projectile.Initialize(target, data.Damage, this, AttackType.SplashDamage, data.SplashRadius);
+            projectile.Initialize(target, data.damage, this, AttackType.SplashDamage, data.splashRadius);
         }
     }
     
     private void AttackAllInRange()
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, data.Range);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, data.range);
         
         foreach (Collider2D hit in hits)
         {
@@ -322,21 +261,21 @@ public class DefenseTower : Building
             }
         }
     }
-    
+
     private GameObject InstantiateProjectile()
     {
-        // Create projectile at tower position (no rotation)
+        // Create projectile at tower position
         Vector3 spawnPosition = transform.position;
         
         // Use the prefab from ProjectileData
-        GameObject projectileObj = Instantiate(data.ProjectileData.Prefab, spawnPosition, Quaternion.identity);
+        GameObject projectileObj = Instantiate(data.projectileData.Prefab, spawnPosition, Quaternion.identity);
         
         return projectileObj;
     }
     
     private void ApplySplashDamage(Vector3 center, float damage)
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(center, data.SplashRadius);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(center, data.splashRadius);
         
         foreach (Collider2D hit in hits)
         {
@@ -344,32 +283,25 @@ public class DefenseTower : Building
             if (enemy != null)
             {
                 float distToCenter = Vector2.Distance(center, hit.transform.position);
-                float damageMultiplier = 1f - (distToCenter / data.SplashRadius);
+                // Damage falls off based on distance from the center of the blast
+                float damageMultiplier = 1f - (distToCenter / data.splashRadius);
+                damageMultiplier = Mathf.Clamp01(damageMultiplier);
+                
                 enemy.TakeDamage(damage * damageMultiplier);
             }
         }
     }
-    
-    /// Returns the position from which projectiles should spawn.
-    /// Override for custom attack origins.
-    public virtual Vector3 GetAttackPosition()
+
+    // Helper methods for Range Indicator
+    public override void OnSelected()
     {
-        return transform.position;
+        base.OnSelected();
+        if (rangeIndicator != null) rangeIndicator.Show(data.range);
     }
-    
-#if UNITY_EDITOR
-    void OnDrawGizmosSelected()
+
+    public override void OnDeselected()
     {
-        // Draw range circle
-        Gizmos.color = new Color(0, 1, 0, 0.1f);
-        Gizmos.DrawWireSphere(transform.position, data != null ? data.Range : 5f);
-        
-        // Draw line to current target
-        if (currentTarget != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, currentTarget.position);
-        }
+        base.OnDeselected();
+        if (rangeIndicator != null) rangeIndicator.Hide();
     }
-#endif
 }

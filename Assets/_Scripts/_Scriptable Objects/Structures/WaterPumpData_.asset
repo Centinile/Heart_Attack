@@ -10,18 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 051adea317e7fb445943ca37c4b8b90e, type: 3}
-  m_Name: WaterPump
+  m_Name: WaterPumpData_
   m_EditorClassIdentifier: 
-  structureName: New Structure
+  structureName: Water Pump
   maxHP: 100
   nutrientCost: 0
   hydrationCost: 0
   nextLevelData: {fileID: 0}
   upgradeCost: 150
-  icon: {fileID: 0}
-  prefab: {fileID: 0}
-  resourceType: Hydration
-  resourceAmount: 10
-  collectionInterval: 5
-  maxStorage: 100
+  icon: {fileID: 21300000, guid: 0528d4dc9102ed149af7e44771f55305, type: 3}
+  prefab: {fileID: 4611168650507600015, guid: 20727da3cbb6d6646b9147b0c833547d, type: 3}
+  type: 1
+  nutrientsPerWave: 60
+  hydrationCapacityBoost: 10
   collectEffect: {fileID: 0}

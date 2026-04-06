@@ -17,4 +17,5 @@ MonoBehaviour:
     count: 5
   - prefab: {fileID: 6344384041587836070, guid: 6566b014f46abea4aa0a897846eba3b9, type: 3}
     count: 7
-  weightCost: 15
+  weightCost: 5
+  selectionWeight: 5

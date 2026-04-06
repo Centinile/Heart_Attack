@@ -1,76 +1,59 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-/// Represents a defensive wall structure.
-/// Walls block enemy movement, adjusting their path, and absorb damage.
+/// <summary>
+/// Represents a defensive wall structure that blocks paths and absorbs damage.
+/// </summary>
 public class Wall : Building
 {
     [Header("NavMesh Settings")]
-    [SerializeField] private bool isNavMeshObstacle = true;
-    [SerializeField] private bool carveNavMesh = true;
-    
-    [Tooltip("Multiplied with collider size to determine NavMesh carve size.")]
-    [Range(0.1f, 1f)]
-    [SerializeField] private float carveSizeMultiplier = 0.5f;
-    
+    //[SerializeField] private bool isNavMeshObstacle = true;
+    //[SerializeField] private bool carveNavMesh = true;
+    //[Range(0.1f, 1f)] [SerializeField] private float carveSizeMultiplier = 0.5f;
+
     [Header("References")]
     [SerializeField] private WallData data;
     
     private NavMeshObstacle navMeshObstacle;
-    
-    public WallData Data => data;
-    
+
     protected override void Awake()
     {
         base.Awake();
         structureType = StructureType.Wall;
-        
-        // Add NavMeshObstacle component
-        navMeshObstacle = gameObject.AddComponent<NavMeshObstacle>();
-        navMeshObstacle.enabled = isNavMeshObstacle;
-        navMeshObstacle.carving = carveNavMesh;
-        navMeshObstacle.shape = NavMeshObstacleShape.Box;
-        navMeshObstacle.center = Vector3.zero;
-        
-        // Set size based on collider with multiplier
-        BoxCollider2D boxCollider = GetComponent<BoxCollider2D>();
-        if (boxCollider != null)
-        {
-            float width = boxCollider.size.x * carveSizeMultiplier;
-            float height = boxCollider.size.y * carveSizeMultiplier;
-            navMeshObstacle.size = new Vector3(width, height, 0.1f);
-        }
+        //SetupNavMesh();
     }
-    
 
-    /// Configures the wall with data from a ScriptableObject.
+    // private void SetupNavMesh()
+    // {
+    //     navMeshObstacle = gameObject.AddComponent<NavMeshObstacle>();
+    //     navMeshObstacle.enabled = isNavMeshObstacle;
+    //     navMeshObstacle.carving = carveNavMesh;
+    //     navMeshObstacle.shape = NavMeshObstacleShape.Box;
+
+    //     if (TryGetComponent(out BoxCollider2D box))
+    //     {
+    //         navMeshObstacle.size = new Vector3(box.size.x * carveSizeMultiplier, box.size.y * carveSizeMultiplier, 0.1f);
+    //     }
+    // }
+
     public void Configure(WallData wallData)
     {
         data = wallData;
-        SetHealth(wallData.MaxHP);
+        SetHealth(data.MaxHP);
     }
-    
+
     public override void TakeDamage(float damage)
     {
-        // Apply ranged damage reduction if applicable
-        float actualDamage = damage;
-        
-        if (data.RangedDamageReduction > 0)
-        {
-            actualDamage = damage * (1f - data.RangedDamageReduction);
-        }
-        
-        base.TakeDamage(actualDamage);
+        // Reduce damage if a reduction value exists, otherwise use base damage
+        float reduction = data != null ? data.RangedDamageReduction : 0;
+        base.TakeDamage(damage * (1f - reduction));
     }
-    
+
+    public override void OnPlaced() => Debug.Log($"{gameObject.name} placed!");
+
     protected override void OnDestroyed()
     {
         Debug.Log("Wall destroyed!");
         Destroy(gameObject);
-    }
-    
-    public override void OnPlaced()
-    {
-        Debug.Log("Wall placed!");
     }
 }

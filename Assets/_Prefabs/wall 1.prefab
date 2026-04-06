@@ -162,12 +162,12 @@ NavMeshObstacle:
   m_GameObject: {fileID: 4611168650507600015}
   m_Enabled: 1
   serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.365, y: 0.135, z: 0.5}
+  m_Shape: 0
+  m_Extents: {x: 0.71000004, y: 0.77000004, z: 0.71000004}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: -0.37, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
 --- !u!114 &1167289319302841404
 MonoBehaviour:
@@ -181,5 +181,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765b7814265afe440a9441027f0e2bda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 200
-  beingAttacked: 0
+  structureType: 0
+  maxHP: 100
+  currentHP: 0
+  nutrientCost: 0
+  hydrationCost: 0
+  data: {fileID: 0}

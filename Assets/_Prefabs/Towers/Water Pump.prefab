@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1573027324725933340
+--- !u!1 &1267490232577889034
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,9 +8,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3383876946450843467}
-  - component: {fileID: 5553880011596097946}
-  - component: {fileID: 7004886863606903887}
+  - component: {fileID: 4946082389990601683}
+  - component: {fileID: 85304827059291928}
+  - component: {fileID: 8949921203573974235}
   m_Layer: 3
   m_Name: RangeIndicator
   m_TagString: Untagged
@@ -18,29 +18,29 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3383876946450843467
+--- !u!4 &4946082389990601683
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1573027324725933340}
+  m_GameObject: {fileID: 1267490232577889034}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 503833265516061244}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!120 &5553880011596097946
+--- !u!120 &85304827059291928
 LineRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1573027324725933340}
+  m_GameObject: {fileID: 1267490232577889034}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -139,13 +139,13 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 1
   m_ApplyActiveColorSpace: 1
---- !u!114 &7004886863606903887
+--- !u!114 &8949921203573974235
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1573027324725933340}
+  m_GameObject: {fileID: 1267490232577889034}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c5de80b927145094c8653377b728f78f, type: 3}
@@ -163,10 +163,10 @@ GameObject:
   - component: {fileID: 503833265516061244}
   - component: {fileID: 5757587013675632553}
   - component: {fileID: 128818442715224949}
-  - component: {fileID: -3924674970481793475}
-  - component: {fileID: -519200345816809116}
+  - component: {fileID: 8211003167203178827}
+  - component: {fileID: 6396465466065567474}
   m_Layer: 3
-  m_Name: ArcherLv2
+  m_Name: Water Pump
   m_TagString: Defense
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -185,7 +185,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3383876946450843467}
+  - {fileID: 4946082389990601683}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5757587013675632553
@@ -232,7 +232,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 49763f91ff9a68644897226748ef2f76, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0528d4dc9102ed149af7e44771f55305, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -281,7 +281,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.31, y: 1.8}
+    oldSize: {x: 1.5, y: 1.26}
     newSize: {x: 1.3, y: 1.66}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -289,7 +289,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.3, y: 1.6600003}
   m_EdgeRadius: 0
---- !u!114 &-3924674970481793475
+--- !u!114 &8211003167203178827
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -298,22 +298,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 4611168650507600015}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2d2cfb86a41f1a4b9c7d7eab2633020, type: 3}
+  m_Script: {fileID: 11500000, guid: 310c5aa2f474fc54e88a6a1ede4a0568, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  structureType: 2
+  structureType: 1
   maxHP: 100
   currentHP: 0
   nutrientCost: 0
   hydrationCost: 0
-  isNavMeshObstacle: 0
-  carveNavMesh: 0
-  data: {fileID: 11400000, guid: 02e5146ecb708b84e9dc77c074cdc081, type: 2}
-  rangeIndicator: {fileID: 7004886863606903887}
-  currentTarget: {fileID: 0}
-  attackTimer: 0
-  isAttacking: 0
---- !u!114 &-519200345816809116
+  data: {fileID: 11400000, guid: 94ab375209246654e95813b2500a6fc9, type: 2}
+  currentResources: 0
+  collectionTimer: 0
+--- !u!114 &6396465466065567474
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -1,51 +1,29 @@
 using UnityEngine;
 
-[CreateAssetMenu(
-    menuName = "Structure/Defense Tower",
-    fileName = "DefenseData_",
-    order = 10)]
+[CreateAssetMenu(menuName = "Structure/Defense Tower", fileName = "DefenseData_")]
 public class DefenseData : StructureData
 {
     [Header("Combat Stats")]
-    [Tooltip("Damage dealt per attack.")]
-    [SerializeField] private float damage = 10f;
+    public float damage = 10f;
+    [Tooltip("Seconds between attacks (e.g., 0.5 = fires every half second)")]
+    public float attackCooldown = 1f; 
+    public float range = 5f;
+    public AttackType attackType = AttackType.SingleTarget;
     
-    [Tooltip("Time between attacks in seconds.")]
-    [SerializeField] private float attackSpeed = 1f;
-    
-    [Tooltip("Attack range in world units.")]
-    [SerializeField] private float range = 5f;
-    
-    [Tooltip("How the tower selects its target.")]
-    [SerializeField] private TargetMode targetMode = TargetMode.ClosestToHeart;
-    
-    [Tooltip("Type of attack performed.")]
-    [SerializeField] private AttackType attackType = AttackType.SingleTarget;
-    
+    [Header("Visuals (4-Directional)")]
+    public bool useFourDirectionalFacing = false;
+    public Sprite spriteUp;
+    public Sprite spriteDown;
+    public Sprite spriteLeft;
+    public Sprite spriteRight;
+
     [Header("Projectile")]
-    [Tooltip("Projectile data for the projectile this tower fires.")]
-    [SerializeField] private ProjectileData projectileData;
+    public ProjectileData projectileData;
+    public float projectileSpeed = 10f;
     
-    [Tooltip("Speed of the projectile.")]
-    [SerializeField] private float projectileSpeed = 10f;
-    
-    [Header("Multi-Target Settings")]
-    [Tooltip("Maximum number of targets for MultiTarget attack type.")]
-    [SerializeField] private int maxTargets = 3;
-    
-    [Header("Splash Settings")]
-    [Tooltip("Radius of splash damage.")]
-    [SerializeField] private float splashRadius = 2f;
-    
-    // Public accessors
-    public float Damage => damage;
-    public float AttackSpeed => attackSpeed;
-    public float Range => range;
-    public TargetMode TargetMode => targetMode;
-    public AttackType AttackType => attackType;
-    public ProjectileData ProjectileData => projectileData;
-    public float ProjectileSpeed => projectileSpeed;
-    public int MaxTargets => maxTargets;
-    public float SplashRadius => splashRadius;
+    [Header("Multi-Target / Splash")]
+    public int maxTargets = 3;
+    public float splashRadius = 2f;
+
     public override StructureType GetStructureType() => StructureType.Defense;
 }
