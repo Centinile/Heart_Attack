@@ -20,4 +20,4 @@ MonoBehaviour:
   isPassive: 0
   usableWhileStunned: 1
   speedMultiplier: 5
-  boostDuration: 0.5
+  boostDuration: 2.5

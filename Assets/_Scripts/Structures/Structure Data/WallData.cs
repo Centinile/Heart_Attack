@@ -11,11 +11,8 @@ public class WallData : StructureData
     [SerializeField] private bool prioritizedByEnemies = true;
     
     [Tooltip("Additional damage reduction from ranged attacks.")]
-    [SerializeField] private float rangedDamageReduction = 0.5f;
     
     // Public accessors
     public bool PrioritizedByEnemies => prioritizedByEnemies;
-    public float RangedDamageReduction => rangedDamageReduction;
-    
     public override StructureType GetStructureType() => StructureType.Wall;
 }

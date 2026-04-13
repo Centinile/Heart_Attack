@@ -6,13 +6,11 @@ public class Enemy : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private EnemyData data;
-    
     public EnemyData Data => data;
     
     [Header("State")]
     [SerializeField] private float currentHP;
     public float CurrentHP => currentHP;
-    
     private float scaledMaxHP;
     private float scaledDamage;
 
@@ -96,35 +94,23 @@ public class Enemy : MonoBehaviour
     
     void Update()
     {
-        if (data == null) return;
-        
-        if (heartTarget == null) return;
-        
-        // Update attack timer
+        if (data == null || heartTarget == null) return;
+
         attackTimer -= Time.deltaTime;
-        
-        // Update passive abilities
         data.UpdatePassiveAbilities(this);
-        
-        // Evaluate detection and targeting
         EvaluateDetection();
-        
-        // Ensure we have a valid target
-        if (currentTarget == null)
-            currentTarget = heartTarget;
-        
-        // Execute enemy behavior
+
+        if (currentTarget == null) currentTarget = heartTarget;
+
         float distanceToTarget = Vector2.Distance(transform.position, currentTarget.position);
-        bool hasPath = HasPath(currentTarget);
         
+        // check path status every frame to handle walls appearing
+        bool hasPath = HasPath(currentTarget);
+
         if (data.IsRanged)
-        {
             HandleRangedBehavior(distanceToTarget, hasPath);
-        }
         else
-        {
             HandleMeleeBehavior(distanceToTarget, hasPath);
-        }
     }
 
     public void ApplyScaling(float multiplier)
@@ -166,25 +152,51 @@ public class Enemy : MonoBehaviour
     
     void HandleMeleeBehavior(float distanceToTarget, bool hasPath)
     {
+        // 1. Always check if our current target's COLLIDER is within our attack radius
+        if (currentTarget != null && IsTargetInPhysicalRange())
+        {
+            agent.ResetPath();
+            isAttacking = true;
+            TryAttack();
+            return; // Exit so we don't try to move
+        }
+
+        // 2. If not in range, move toward the target
+        isAttacking = false;
+        
         if (!hasPath)
         {
             HandleBlockedPathMelee();
-            return;
-        }
-        
-        if (distanceToTarget <= data.AttackRadius)
-        {
-            agent.ResetPath();
-            TryAttack();
         }
         else
         {
             agent.SetDestination(currentTarget.position);
         }
     }
+
+    private bool IsTargetInPhysicalRange()
+    {
+        if (currentTarget == null) return false;
+
+        // We check for any colliders within the attack radius
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, data.AttackRadius);
+        
+        foreach (var hit in hitColliders)
+        {
+            // If one of the colliders we are touching is our target, we are in range!
+            if (hit.transform == currentTarget || hit.transform.IsChildOf(currentTarget) || currentTarget.IsChildOf(hit.transform))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     
     void EvaluateDetection()
     {
+        if (currentTarget != null && currentTarget.CompareTag("Wall") && !HasPath(heartTarget)) 
+        return;
+
         if (isAttacking) return;
         
         // Find valid targets based on targeting priority
@@ -273,24 +285,25 @@ public class Enemy : MonoBehaviour
     
     bool IsValidTarget(Collider2D col)
     {
+        // If the path is blocked, ANY wall in front of us is a valid target 
+        // to clear the path, regardless of our "Priority" settings.
+        
+
         switch (data.TargetingPriority)
         {
             case TargetPriority.WallOnly:
                 return col.CompareTag("Wall");
-                
             case TargetPriority.Defense:
                 return col.CompareTag("Defense");
-                
             case TargetPriority.Resource:
                 return col.CompareTag("Resource");
-                
             case TargetPriority.AnyNonWall:
                 return col.CompareTag("Defense") || col.CompareTag("Resource");
-                
             case TargetPriority.None:
+                // If priority is none, they only care about the Heart, 
+                // but the "Wall" check above still lets them break obstacles.
                 return false;
         }
-        
         return false;
     }
     
@@ -370,15 +383,29 @@ public class Enemy : MonoBehaviour
     
     void TryAttack()
     {
-        if (attackTimer > 0f) return;
-        Building building = currentTarget.GetComponent<Building>();
-        
-        if (building != null)
+        if (attackTimer > 0f || currentTarget == null) return;
+
+        // Use GetComponentInParent to ensure we grab the Building script 
+        // regardless of whether the collider is on a child or the root
+        Building targetBuilding = currentTarget.GetComponentInParent<Building>();
+
+        if (targetBuilding != null)
         {
-            // USE THE SCALED DAMAGE HERE
-            building.TakeDamage(scaledDamage);
-            data.TriggerAttackAbilities(this, building);
+            float damageToApply = (scaledDamage > 0) ? scaledDamage : data.AttackDamage;
+            
+            targetBuilding.TakeDamage(damageToApply);
+            
+            if (data != null)
+                data.TriggerAttackAbilities(this, targetBuilding);
+                
             attackTimer = data.AttackCooldown;
+            Debug.Log($"<color=green>[SUCCESS]</color> Attacking {currentTarget.name}. Wall/Tower is within physical radius.");
+        }
+        else
+        {
+            // Fallback: If target is destroyed or missing script, reset
+            isAttacking = false;
+            currentTarget = heartTarget;
         }
     }
     

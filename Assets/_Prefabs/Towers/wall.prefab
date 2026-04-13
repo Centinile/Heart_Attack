@@ -125,7 +125,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.0660522, y: 0.00000011920929}
+  m_Offset: {x: 0.021803379, y: -0.046239763}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -135,7 +135,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.8944736, y: 1.6600003}
+  m_Size: {x: 1.3488436, y: 1.3455694}
   m_EdgeRadius: 0
 --- !u!114 &1167289319302841404
 MonoBehaviour:
@@ -149,12 +149,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 765b7814265afe440a9441027f0e2bda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  structureType: 3
-  maxHP: 100
-  currentHP: 0
-  nutrientCost: 0
-  hydrationCost: 0
-  data: {fileID: 11400000, guid: fb976aeb45235134ca3eda3d5372c19a, type: 2}
+  wallData: {fileID: 11400000, guid: fb976aeb45235134ca3eda3d5372c19a, type: 2}
+  carveSizeMultiplier: 0.8
 --- !u!114 &8556044685630585319
 MonoBehaviour:
   m_ObjectHideFlags: 0

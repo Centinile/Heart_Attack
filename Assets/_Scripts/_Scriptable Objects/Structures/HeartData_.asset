@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: HeartData_
   m_EditorClassIdentifier: 
   structureName: Heart
-  maxHP: 200
+  maxHP: 100
   nutrientCost: 0
   hydrationCost: 0
   nextLevelData: {fileID: 0}

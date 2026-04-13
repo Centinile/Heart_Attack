@@ -12,19 +12,6 @@ public class Heart : Building
         heartData = data;
     }
 
-    public override void TakeDamage(float damage)
-    {
-        if (heartData != null && heartData.Invulnerable) return;
-
-        // Apply damage through base class
-        base.TakeDamage(damage);
-
-        // Spawn effect if we are still alive but took a hit
-        if (IsAlive && heartData.DamageEffect != null)
-        {
-            Instantiate(heartData.DamageEffect, transform.position, Quaternion.identity);
-        }
-    }
 
     protected override void OnDestroyed()
     {
