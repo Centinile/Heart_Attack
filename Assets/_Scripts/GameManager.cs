@@ -156,6 +156,23 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void EnterRestingPhase()
+    {
+        if (currentState == GameState.Gameover) return;
+        
+        ChangeState(GameState.RestingPhase);
+        Debug.Log("<color=green>Resting Phase Started.</color>");
+        // Here you could trigger a UI animation or sound effect
+    }
+
+    public void EnterGameplayPhase()
+    {
+        if (currentState == GameState.Gameover) return;
+
+        ChangeState(GameState.Gameplay);
+        Debug.Log("<color=red>Wave Started!</color>");
+    }
+
     public void RestingPhase()
     {
         

@@ -6,28 +6,21 @@ using UnityEngine;
 public abstract class StructureData : ScriptableObject
 {
     [Header("Base Settings")]
-    [Tooltip("Display name of this structure.")]
-    [SerializeField] protected string structureName = "New Structure";
-    
-    [Tooltip("Maximum health points.")]
-    [SerializeField] protected float maxHP = 100f;
+    [SerializeField] private string structureName = "New Structure";
+    [SerializeField] private float maxHP = 100f;
 
     [Header("Economy")]
-    [SerializeField] protected float nutrientCost = 100f;
-    [SerializeField] protected float hydrationCost = 5f;
+    [SerializeField] private float nutrientCost = 100f;
+    [SerializeField] private float hydrationCost = 5f;
 
     [Header("Upgrade")]
-    [SerializeField] protected StructureData nextLevelData;
-    [SerializeField] protected float upgradeCost = 150f;
+    [SerializeField] private StructureData nextLevelData;
+    [SerializeField] private float upgradeCost = 150f;
     
     [Header("Visual")]
-    [Tooltip("Icon shown in UI.")]
-    [SerializeField] protected Sprite icon;
+    [SerializeField] private Sprite icon;
+    [SerializeField] private GameObject prefab;
     
-    [Tooltip("Prefab to spawn.")]
-    [SerializeField] protected GameObject prefab;
-    
-    // Public accessors
     public string StructureName => structureName;
     public float MaxHP => maxHP;
     public float NutrientCost => nutrientCost;
@@ -37,13 +30,10 @@ public abstract class StructureData : ScriptableObject
     public Sprite Icon => icon;
     public GameObject Prefab => prefab;
     
-    /// Returns the type of structure this data represents.
     public abstract StructureType GetStructureType();
-    
-    /// Configures the building component with this data.
-    /// <param name="building">The Building component to configure.</param>
+
     public virtual void ConfigureBuilding(Building building)
     {
-        building.SetHealth(maxHP);
+        // Base logic: Initialize handles the core stats now
     }
 }

@@ -1,68 +1,41 @@
 using UnityEngine;
 
-/// <summary>
-/// Represents the player's main base/heart that must be defended.
-/// </summary>
 public class Heart : Building
 {
     [Header("References")]
-    [SerializeField] private HeartData data;
+    [SerializeField] private HeartData heartData;
     
-    [Header("State")]
-    [SerializeField] private bool isDestroyed;
-    
-    public HeartData Data => data;
-    public bool IsDestroyed => isDestroyed;
-    
-    protected override void Awake()
+    private bool isGameOverTriggered = false;
+
+    public void Configure(HeartData data)
     {
-        base.Awake();
-        structureType = StructureType.Heart;
+        heartData = data;
     }
-    
-    /// <summary>
-    /// Configures the heart with data from a ScriptableObject.
-    /// </summary>
-    public void Configure(HeartData heartData)
-    {
-        data = heartData;
-        maxHP = heartData.MaxHP;
-        currentHP = maxHP;
-    }
-    
+
     public override void TakeDamage(float damage)
     {
-        if (data.Invulnerable) return;
-        
-        currentHP -= damage;
-        
-        // Spawn damage effect
-        if (data.DamageEffect != null && currentHP < maxHP)
+        if (heartData != null && heartData.Invulnerable) return;
+
+        // Apply damage through base class
+        base.TakeDamage(damage);
+
+        // Spawn effect if we are still alive but took a hit
+        if (IsAlive && heartData.DamageEffect != null)
         {
-            Instantiate(data.DamageEffect, transform.position, Quaternion.identity);
-        }
-        
-        if (currentHP <= 0 && !isDestroyed)
-        {
-            isDestroyed = true;
-            OnDestroyed();
+            Instantiate(heartData.DamageEffect, transform.position, Quaternion.identity);
         }
     }
-    
+
     protected override void OnDestroyed()
     {
-        // Game over logic
-        Debug.Log("Heart destroyed! Game Over!");
+        if (isGameOverTriggered) return;
+        isGameOverTriggered = true;
+
+        Debug.Log("<color=red><b>The Heart has been destroyed!</b></color>");
         
-        // You can integrate with your game manager here
-        // GameManager.Instance.GameOver();
+        // Trigger game over logic in GameManager
+        GameManager.Instance.GameOver();
         
-        Destroy(gameObject);
-    }
-    
-    public override void OnPlaced()
-    {
-        // Heart-specific placement logic
-        Debug.Log("Heart placed!");
+        base.OnDestroyed();
     }
 }

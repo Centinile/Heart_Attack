@@ -3,31 +3,27 @@ using UnityEngine;
 public class ResourceStructure : Building
 {
     [SerializeField] private ResourceData data;
+    private bool initializedLogic = false;
 
-    protected override void Awake()
-    {
-        base.Awake();
-        structureType = StructureType.Resource;
-    }
+    // We no longer need Awake to set structureType; Initialize handles it.
 
     public void Configure(ResourceData resourceData)
     {
         data = resourceData;
-        maxHP = resourceData.MaxHP;
-        currentHP = maxHP;
-
+        // The base class Initialize will handle HP and StructureType, 
+        // we just focus on the unique resource logic.
         InitializeResourceLogic();
     }
 
     public override void OnPlaced()
     {
+        base.OnPlaced(); // Good practice
         InitializeResourceLogic();
     }
 
-    private bool initialized = false;
     private void InitializeResourceLogic()
     {
-        if (data == null || initialized) return;
+        if (data == null || initializedLogic) return;
 
         // 1. HYDRATION
         if (data.type == ResourceType.Hydration)
@@ -39,13 +35,12 @@ public class ResourceStructure : Building
         // 2. NUTRIENTS
         if (data.type == ResourceType.Nutrients)
         {
-            // Safety: Unsubscribe first to avoid double-subscribing
             WaveManager.OnWaveCleared -= ProduceWaveNutrients;
             WaveManager.OnWaveCleared += ProduceWaveNutrients;
             Debug.Log("[Nutrients] Subscribed to WaveManager");
         }
 
-        initialized = true;
+        initializedLogic = true;
     }
 
     private void ProduceWaveNutrients()
@@ -68,12 +63,14 @@ public class ResourceStructure : Building
         }
 
         WaveManager.OnWaveCleared -= ProduceWaveNutrients;
-        Destroy(gameObject);
+        
+        // IMPORTANT: Call base.OnDestroyed() to handle the rest of the cleanup 
+        // (releasing hydration cost, freeing tiles, and the actual Destroy call)
+        base.OnDestroyed();
     }
 
     private void OnDisable()
     {
-        // Essential to prevent errors if the level changes or tower is disabled
         WaveManager.OnWaveCleared -= ProduceWaveNutrients;
     }
 }

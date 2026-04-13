@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 051adea317e7fb445943ca37c4b8b90e, type: 3}
+  m_Name: MineData_
+  m_EditorClassIdentifier: 
+  structureName: Mine
+  maxHP: 100
+  nutrientCost: 50
+  hydrationCost: 5
+  nextLevelData: {fileID: 0}
+  upgradeCost: 150
+  icon: {fileID: 21300000, guid: 450b80e2cd189b044bbfdd22c558bb48, type: 3}
+  prefab: {fileID: 4611168650507600015, guid: 7cae0236dc9126a4cb14c5e895a975b5, type: 3}
+  type: 0
+  nutrientsPerWave: 1000
+  hydrationCapacityBoost: 10
+  collectEffect: {fileID: 0}

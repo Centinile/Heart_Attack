@@ -101,13 +101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e508ffc6070eea4e969e1d83030fd85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  structureType: 0
-  maxHP: 500
-  currentHP: 0
-  nutrientCost: 0
-  hydrationCost: 0
-  data: {fileID: 11400000, guid: 21c82e9bd457b424d99be4d45167ada3, type: 2}
-  isDestroyed: 0
+  heartData: {fileID: 11400000, guid: 21c82e9bd457b424d99be4d45167ada3, type: 2}
 --- !u!114 &2893337898319522252
 MonoBehaviour:
   m_ObjectHideFlags: 0

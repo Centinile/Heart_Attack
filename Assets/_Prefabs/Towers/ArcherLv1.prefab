@@ -301,18 +301,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2d2cfb86a41f1a4b9c7d7eab2633020, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  structureType: 2
-  maxHP: 100
-  currentHP: 0
-  nutrientCost: 0
-  hydrationCost: 0
-  isNavMeshObstacle: 0
-  carveNavMesh: 0
-  data: {fileID: 11400000, guid: 8fc27eea14ea0594f847f98612b8755e, type: 2}
+  defenseData: {fileID: 11400000, guid: 8fc27eea14ea0594f847f98612b8755e, type: 2}
   rangeIndicator: {fileID: 8949921203573974235}
-  currentTarget: {fileID: 0}
-  attackTimer: 0
-  isAttacking: 0
+  towerRenderer: {fileID: 0}
+  currentTargetMode: 0
 --- !u!114 &6396465466065567474
 MonoBehaviour:
   m_ObjectHideFlags: 0

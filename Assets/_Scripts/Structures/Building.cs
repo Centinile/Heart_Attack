@@ -36,94 +36,56 @@ public enum AttackType
 /// Implements common functionality shared by all structure types.
 public class Building : MonoBehaviour
 {
-    [Header("Building Info")]
-    [SerializeField] protected StructureType structureType;
+    public StructureData Data { get; private set; }
+    public int Level { get; protected set; } = 1;
+    public bool IsPowered { get; protected set; }
     
-    [Header("Health")]
-    [SerializeField] protected float maxHP = 100f;
-    [SerializeField] protected float currentHP;
-
-    [Header("Cost")]
-    [SerializeField] protected float nutrientCost = 0f;
-    [SerializeField] protected float hydrationCost = 0f;
+    public StructureType StructureType { get; private set; }
+    public float MaxHP { get; private set; }
+    public float CurrentHP { get; private set; }
+    public float HPPercent => MaxHP > 0 ? CurrentHP / MaxHP : 0f;
+    public bool IsAlive => CurrentHP > 0;
 
     private Outline outline;
-
-    // Properties for external access
-    protected StructureData structureData;
-    protected int level = 1;
-    protected bool isPowered = false;
-
-    public StructureData Data => structureData;
-    public int Level => level;
-    public bool IsPowered => isPowered;
-    
-    public StructureType StructureType => structureType;
-    public float MaxHP => maxHP;
-    public float CurrentHP => currentHP;
-    public float HPPercent => maxHP > 0 ? currentHP / maxHP : 0f;
-    public bool IsAlive => currentHP > 0;
-
-    //Initialize
-    public virtual void Initialize(StructureData data)
-    {
-        structureData = data;
-        structureType = data.GetStructureType();
-        SetHealth(data.MaxHP);
-
-        TryActivate();
-    }
-    
-    /// Sets the health values for this building.
-    /// <param name="newMaxHP">The maximum health value.</param>
-    /// <param name="newCurrentHP">The current health value (defaults to maxHP).</param>
-    public void SetHealth(float newMaxHP, float? newCurrentHP = null)
-    {
-        maxHP = newMaxHP;
-        currentHP = newCurrentHP ?? newMaxHP;
-    }
 
     protected virtual void Awake()
     {
         outline = GetComponent<Outline>();
-        if (outline != null)
-            outline.enabled = false; 
-
-        currentHP = maxHP;
+        if (outline != null) outline.enabled = false; 
     }
-    
-    /// Applies damage to the building.
-    /// <param name="damage">Amount of damage to deal.</param>
+
+    public virtual void Initialize(StructureData data)
+    {
+        Data = data;
+        StructureType = data.GetStructureType();
+        MaxHP = data.MaxHP;
+        CurrentHP = MaxHP;
+
+        TryActivate();
+    }
+
     public virtual void TakeDamage(float damage)
     {
-        currentHP -= damage;
-        
-        if (currentHP <= 0)
-        {
-            currentHP = 0;
-            OnDestroyed();
-        }
+        CurrentHP = Mathf.Max(0, CurrentHP - damage);
+        if (CurrentHP <= 0) OnDestroyed();
     }
-    
-    /// Heals the building by the specified amount.
-    /// <param name="amount">Amount to heal.</param>
+
     public virtual void Heal(float amount)
     {
-        currentHP = Mathf.Min(currentHP + amount, maxHP);
+        CurrentHP = Mathf.Min(CurrentHP + amount, MaxHP);
     }
-    
-    /// Called when the building is destroyed.
-    /// Override in subclasses for custom destruction logic.
+
     protected virtual void OnDestroyed()
     {
-        GameManager.Instance.ReleaseHydration(structureData.HydrationCost);
+        // One-stop shop for cleanup
+        GameManager.Instance.ReleaseHydration(Data.HydrationCost);
 
         if (TowerPlacer.Instance != null)
             TowerPlacer.Instance.FreeTile(transform.position);
+            
         Destroy(gameObject);
     }
-    
-    
+
     /// Called when the building is placed on the map.
     /// Override to perform initialization.
     public virtual void OnPlaced()
@@ -133,76 +95,44 @@ public class Building : MonoBehaviour
 
     protected void TryActivate()
     {
-        if (GameManager.Instance.TryUseHydration(structureData.HydrationCost))
-        {
-            isPowered = true;
-            OnPowered();
-        }
-        else
-        {
-            isPowered = false;
-            OnUnpowered();
-        }
+        // This is good logic, ensures hydration is managed on spawn
+        IsPowered = GameManager.Instance.TryUseHydration(Data.HydrationCost);
+        if (IsPowered) OnPowered(); else OnUnpowered();
     }
 
     protected virtual void OnPowered() { }
-
     protected virtual void OnUnpowered() { }
-    public virtual void OnSelected()
-    {
-        if (outline != null)
-            outline.enabled = true;
-    }
 
-    public virtual void OnDeselected()
-    {
-        if (outline != null)
-            outline.enabled = false;
-    }
+    public virtual void OnSelected() { if (outline != null) outline.enabled = true; }
+    public virtual void OnDeselected() { if (outline != null) outline.enabled = false; }
 
     public virtual void Upgrade()
     {
-        if (structureData.NextLevelData == null)
+        if (Data.NextLevelData == null || !GameManager.Instance.SpendNutrients(Data.UpgradeCost))
             return;
 
-        if (!GameManager.Instance.SpendNutrients(structureData.UpgradeCost))
-            return;
+        StructureData nextData = Data.NextLevelData;
 
-        StructureData nextData = structureData.NextLevelData;
+        // Capture transform before destruction
+        Vector3 pos = transform.position;
+        Quaternion rot = transform.rotation;
 
-        Vector3 spawnPosition = transform.position;
-        Quaternion spawnRotation = transform.rotation;
+        // We call OnDestroyed to handle the cleanup of old hydration/tiles
+        OnDestroyed();
 
-        // Release old hydration
-        GameManager.Instance.ReleaseHydration(structureData.HydrationCost);
-
-        // Destroy current building
-        Destroy(gameObject);
-
-        // Spawn upgraded prefab
-        GameObject newBuildingObj = Instantiate(nextData.Prefab, spawnPosition, spawnRotation);
-
-        Building newBuilding = newBuildingObj.GetComponent<Building>();
-
-        nextData.ConfigureBuilding(newBuilding);
+        GameObject newObj = Instantiate(nextData.Prefab, pos, rot);
+        Building newBuilding = newObj.GetComponent<Building>();
+        
+        // Let initialize handle everything
         newBuilding.Initialize(nextData);
 
-        //auto-select new building
         BuildingSelector.SelectedBuilding = newBuilding;
         newBuilding.OnSelected();
-}
+    }
 
     public virtual void Sell()
     {
-        float refund = structureData.NutrientCost * 0.5f;
-
-        GameManager.Instance.AddNutrients(refund);
-        GameManager.Instance.ReleaseHydration(structureData.HydrationCost);
-
-        if (TowerPlacer.Instance != null)
-            TowerPlacer.Instance.FreeTile(transform.position);
-
-        Destroy(gameObject);
+        GameManager.Instance.AddNutrients(Data.NutrientCost * 0.5f);
+        OnDestroyed(); // Use the common cleanup method
     }
-    
 }

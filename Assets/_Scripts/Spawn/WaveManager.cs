@@ -51,36 +51,45 @@ public class WaveManager : MonoBehaviour
     IEnumerator RunWave()
     {
         waveRunning = true;
-        if(startWaveButton != null) startWaveButton.interactable = false;
+        // Tell the GameManager we are in Gameplay
+        GameManager.Instance.EnterGameplayPhase();
 
-        // Check if we should be in Freeplay
-        if (currentWaveIndex >= waves.Length) freeplayMode = true;
-        
+        if (startWaveButton != null) startWaveButton.interactable = false;
+
+        // --- Freeplay Check ---
+        // If current index is at or beyond the hand-designed waves, lock into freeplay
+        if (currentWaveIndex >= waves.Length) 
+        {
+            freeplayMode = true;
+        }
+
         string modeColor = freeplayMode ? "orange" : "cyan";
         Debug.Log($"<color={modeColor}><b>[WAVE {currentWaveIndex + 1}]</b> STARTED ({ (freeplayMode ? "FREEPLAY" : "DESIGNED") })</color>");
+        
+        float totalNutrientReward = 0;
 
         // --- STEP 1: SPAWNING PHASE ---
         if (!freeplayMode)
         {
             Debug.Log($"Wave {currentWaveIndex + 1}: DESIGNED");
-            // We yield return the coroutine directly so we wait for all spawns to finish
-            yield return StartCoroutine(SpawnGroup(waves[currentWaveIndex]));
+            WaveData currentWaveData = waves[currentWaveIndex];
+            totalNutrientReward = currentWaveData.NutrientReward;
+            yield return StartCoroutine(SpawnGroup(currentWaveData));
         }
         else
         {
             Debug.Log($"Wave {currentWaveIndex + 1}: FREEPLAY");
+            // Freeplay logic
             List<EnemyRaidGroup> selectedGroups = GenerateFreeplayWave(currentWaveIndex);
-            
+            foreach(var group in selectedGroups) totalNutrientReward += group.NutrientReward;
+
             List<string> raidNames = new List<string>();
             foreach(var g in selectedGroups) 
                 raidNames.Add(string.IsNullOrEmpty(g.raidName) ? g.name : g.raidName);
             Debug.Log($"<color=orange><b>[FREEPLAY WAVE {currentWaveIndex + 1}]</b> Raids Joining: {string.Join(", ", raidNames)}</color>");
-            
+
             List<GameObject> masterSpawnQueue = new List<GameObject>();
-            foreach (var group in selectedGroups)
-            {
-                masterSpawnQueue.AddRange(group.BuildSpawnQueue());
-            }
+            foreach (var group in selectedGroups) masterSpawnQueue.AddRange(group.BuildSpawnQueue());
 
             ShuffleList(masterSpawnQueue);
 
@@ -91,35 +100,38 @@ public class WaveManager : MonoBehaviour
             }
         }
 
-        // --- STEP 2: SURVIVAL PHASE (Cleanup) ---
-        // This is now OUTSIDE the if/else, so it runs for both modes
-        
-        // Wait a small buffer for the last enemy to register
-        yield return new WaitForSeconds(0.5f);
+        // --- STEP 2: SURVIVAL PHASE ---
+        yield return new WaitForSeconds(1f); // Buffer for enemies to initialize
 
-        // Wait until all objects with the "Enemy" script are gone
         while (GameObject.FindObjectsByType<Enemy>(FindObjectsSortMode.None).Length > 0)
         {
             yield return new WaitForSeconds(0.5f); 
         }
 
+        // --- STEP 3: WAVE CLEAR & RESTING ---
         Debug.Log($"Wave {currentWaveIndex + 1} Cleared!");
+        GameManager.Instance.AddNutrients(totalNutrientReward);
+
+        // This triggers your resource structures to produce nutrients
         OnWaveCleared?.Invoke();
 
         waveRunning = false;
-        if(startWaveButton != null) startWaveButton.interactable = true;
         currentWaveIndex++;
 
-        // --- STEP 3: AUTOMATION ---
+        // Tell the GameManager to enter Resting Phase
+        GameManager.Instance.EnterRestingPhase();
+
+        if (startWaveButton != null) startWaveButton.interactable = true;
+
+        // --- STEP 4: AUTOMATION ---
         if (autoStartNextWave)
         {
-            Debug.Log($"Next wave in {timeBetweenWaves}s...");
             yield return new WaitForSeconds(timeBetweenWaves);
             StartWave();
         }
     }
 
-    // --- REFACTORED SELECTION & UTILS ---
+    // --- SELECTION & UTILS ---
 
     void SpawnEnemy(GameObject prefab)
     {

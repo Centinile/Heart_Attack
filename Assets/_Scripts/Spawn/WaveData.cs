@@ -5,4 +5,5 @@ using System.Collections.Generic;
 public class WaveData : SpawnData
 {
     public int WaveWeight = 0;
+    public float NutrientReward = 0;
 }
