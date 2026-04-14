@@ -432,10 +432,13 @@ public class Enemy : MonoBehaviour
     
     void Die()
     {
-        // Cleanup abilities
-        data.CleanupAbilities();
-        
-        Destroy(gameObject);
+        foreach (var ability in instantiatedAbilities)
+            {
+                // This triggers OnAbilityRemoved for cleanup (like destroying aura particles)
+                Destroy(ability); 
+            }
+            instantiatedAbilities.Clear();
+            Destroy(gameObject);
     }
     
 

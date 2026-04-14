@@ -46,7 +46,7 @@ public class DamageAuraAbility : AbilityBase
         );
         
         // Apply damage to each hit building
-        float damageThisTick = damagePerSecond * Time.deltaTime;
+        float damageThisTick = damagePerSecond * (cooldown > 0 ? cooldown : Time.deltaTime);
         
         foreach (Collider2D hit in hits)
         {

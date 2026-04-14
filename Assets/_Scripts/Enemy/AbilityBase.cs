@@ -138,10 +138,14 @@ public abstract class AbilityBase : ScriptableObject, IAbility
     /// <inheritdoc/>
     public void OnUpdate(Enemy user)
     {
-        if (!isPassive || !isInitialized)
-            return;
-        
-        ExecuteAbility(user);
+        if (!isPassive || !isInitialized) return;
+            
+            // Passives should still respect their tick rate (cooldown)
+            if (IsReady) 
+            {
+                ExecuteAbility(user);
+                lastUsedTime = Time.time;
+            }
     }
     
     /// <inheritdoc/>
