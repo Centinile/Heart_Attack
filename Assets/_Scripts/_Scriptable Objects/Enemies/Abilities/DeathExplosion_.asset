@@ -20,9 +20,5 @@ MonoBehaviour:
   isPassive: 0
   usableWhileStunned: 1
   explosionRadius: 3
-  explosionDamage: 50
-  targetLayers:
-    serializedVersion: 2
-    m_Bits: 0
   explosionEffect: {fileID: 0}
   explosionSound: {fileID: 0}

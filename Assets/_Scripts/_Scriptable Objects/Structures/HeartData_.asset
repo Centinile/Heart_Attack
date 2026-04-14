@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: HeartData_
   m_EditorClassIdentifier: 
   structureName: Heart
-  maxHP: 100
+  maxHP: 500
   nutrientCost: 0
   hydrationCost: 0
   nextLevelData: {fileID: 0}
   upgradeCost: 150
   icon: {fileID: 0}
-  prefab: {fileID: 0}
+  prefab: {fileID: 4024584990118977380, guid: bf2e29063007adf4cb6ebf42282e7b9e, type: 3}
   invulnerable: 0
   damageEffect: {fileID: 0}
   isMainHeart: 1

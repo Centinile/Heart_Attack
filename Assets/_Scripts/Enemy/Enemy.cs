@@ -7,113 +7,296 @@ public class Enemy : MonoBehaviour
     [Header("References")]
     [SerializeField] private EnemyData data;
     public EnemyData Data => data;
-    
-    [Header("State")]
+
+    [Header("Live State")]
+    [SerializeField] private Transform currentTarget;
     [SerializeField] private float currentHP;
     public float CurrentHP => currentHP;
     private float scaledMaxHP;
     private float scaledDamage;
-
-    [SerializeField] private bool isAttacking;
-    public bool IsAttacking => isAttacking;
-    
-    [Header("Components")]
-    private NavMeshAgent agent;
-    private Transform currentTarget;
-    private Transform heartTarget;
     private float attackTimer;
+    private float detectionTimer;
+
+    private NavMeshAgent agent;
     private NavMeshPath path;
-    
-    // Track instantiated abilities for cleanup
+    private Transform heartTarget;
     private List<AbilityBase> instantiatedAbilities = new List<AbilityBase>();
-    
-    // Properties for external access
-    public Transform CurrentTarget => currentTarget;
-    public Transform HeartTarget => heartTarget;
-    public float AttackTimer => attackTimer;
-    public bool HasPathToTarget => HasPath(currentTarget);
-    
+
+    private const float DETECTION_INTERVAL = 0.5f;
+
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        
-        if (agent != null)
-        {
-            agent.updateRotation = false;
-            agent.updateUpAxis = false;
-        }
-        
         path = new NavMeshPath();
+        if (agent != null) { agent.updateRotation = false; agent.updateUpAxis = false; }
     }
-    
+
     void Start()
     {
         if (data == null) return;
-                
-                // If scaling wasn't applied, use defaults
-        if (scaledMaxHP <= 0) 
-        {
-            scaledMaxHP = data.MaxHP;
-            scaledDamage = data.AttackDamage;
-            currentHP = scaledMaxHP;
-        }
-        
-        // Initialize health
-        currentHP = data.MaxHP;
-        
-        // Configure NavMesh agent
-        if (agent != null)
-        {
-            agent.speed = data.MoveSpeed;
-            agent.stoppingDistance = data.StoppingDistance;
-        }
-        
-        // Find the heart/base target
+        scaledMaxHP = data.MaxHP;
+        scaledDamage = data.AttackDamage;
+        currentHP = (scaledMaxHP > 0) ? scaledMaxHP : data.MaxHP;
+
+        agent.speed = data.MoveSpeed;
+        agent.stoppingDistance = data.AttackRadius * 0.9f;
+        agent.autoBraking = false;
+
         heartTarget = GameObject.FindGameObjectWithTag("Heart")?.transform;
         currentTarget = heartTarget;
-        
-        // Initialize abilities
+
+        agent.SetDestination(currentTarget.position);
+
         InitializeAbilities();
-        
-        Debug.Log($"Enemy spawned: {gameObject.name} with {instantiatedAbilities.Count} abilities");
     }
-    
-    void InitializeAbilities()
-    {
-        foreach (var ability in data.Abilities)
-        {
-            if (ability != null)
-            {
-                // Create a unique instance for this enemy
-                var abilityInstance = Instantiate(ability);
-                abilityInstance.OnAssigned(this);
-                instantiatedAbilities.Add(abilityInstance);
-            }
-        }
-    }
-    
+
     void Update()
     {
         if (data == null || heartTarget == null) return;
 
-        attackTimer -= Time.deltaTime;
-        foreach (var ability in instantiatedAbilities)
-        {
-            ability.OnUpdate(this);
-        }
-        EvaluateDetection();
+        HandleTimers();
 
+        detectionTimer -= Time.deltaTime;
+        if (detectionTimer <= 0)
+        {
+            detectionTimer = DETECTION_INTERVAL;
+            PerformTargetingLogic();
+        }
+
+        HandleAction();
+    }
+
+    #region Pathfinding
+    private void HandleTimers()
+    {
+        attackTimer -= Time.deltaTime;
+        foreach (var ability in instantiatedAbilities) ability.OnUpdate(this);
+    }
+
+    private void PerformTargetingLogic()
+    {
+        // 1. Validate Target
         if (currentTarget == null) currentTarget = heartTarget;
 
-        float distanceToTarget = Vector2.Distance(transform.position, currentTarget.position);
-        
-        // check path status every frame to handle walls appearing
-        bool hasPath = HasPath(currentTarget);
+        bool heartIsReachable = HasPath(heartTarget);
 
-        if (data.IsRanged)
-            HandleRangedBehavior(distanceToTarget, hasPath);
+        // 2. RULE: If attacking a wall but a path to the Heart is clear, go to Heart
+        if (currentTarget.CompareTag("Wall") && heartIsReachable)
+        {
+            currentTarget = heartTarget;
+            return;
+        }
+
+        // 3. RULE: Preference Override (Check for preferred targets within Detection Radius)
+        // This only triggers if we aren't already attacking something of high interest
+        if (currentTarget == heartTarget || currentTarget.CompareTag("Wall"))
+        {
+            Collider2D[] potentialTargets = Physics2D.OverlapCircleAll(transform.position, data.DetectionRadius);
+            foreach (var col in potentialTargets)
+            {
+                if (IsPreferredTarget(col.transform))
+                {
+                    currentTarget = col.transform;
+                    return; 
+                }
+            }
+        }
+
+        // 4. RULE: Blockage logic (Only if trying to get to Heart and can't)
+        if (!heartIsReachable && currentTarget == heartTarget)
+        {
+            DetermineBlockedTarget();
+        }
+    }
+
+    private bool IsPreferredTarget(Transform t)
+    {
+        if (t == null || t == heartTarget) return false;
+
+        // Compare tag to the priority setting in EnemyData
+        switch (data.TargetingPriority)
+        {
+            case TargetPriority.Defense: return t.CompareTag("Defense");
+            case TargetPriority.Resource: return t.CompareTag("Resource");
+            case TargetPriority.WallOnly: return t.CompareTag("Wall");
+            case TargetPriority.AnyNonWall: return t.CompareTag("Defense") || t.CompareTag("Resource");
+            default: return false;
+        }
+    }
+
+    private void DetermineBlockedTarget()
+    {
+        agent.CalculatePath(heartTarget.position, path);
+        if (path.corners.Length < 2) return;
+
+        // 1. Get blockage point (closest to heart)
+        Vector3 blockedPointNearHeart = path.corners[path.corners.Length - 1];
+        
+        // 2. Find wall CLOSEST TO THAT BLOCKAGE POINT (not enemy)
+        Transform targetWall = FindClosestWallToPoint(blockedPointNearHeart);
+        
+        if (targetWall != null)
+        {
+            // 3. Check for wall between enemy and target wall (closest to ENEMY)
+            Transform immediateWall = FindImmediateWallObstacle(targetWall.position);
+            currentTarget = immediateWall ?? targetWall; // Prefers immediate wall
+        }
+    }
+
+
+    private void HandleAction()
+    {
+        if (currentTarget == null) 
+        {
+            //Fallback: always move toward heart if no target
+            agent.SetDestination(heartTarget.position);
+            return;
+        }
+
+        if (IsTargetInAttackRange())
+        {
+            if (agent.hasPath) agent.ResetPath();
+            TryAttack();
+            return; //  Early return
+        }
+
+        // Test path to current target
+        NavMeshPath testPath = new NavMeshPath();
+        agent.CalculatePath(currentTarget.position, testPath);
+
+        if (testPath.status == NavMeshPathStatus.PathComplete)
+        {
+            // Path clear - move normally
+            if (Vector3.Distance(agent.destination, currentTarget.position) > 0.2f)
+            {
+                agent.SetDestination(currentTarget.position);
+            }
+        }
         else
-            HandleMeleeBehavior(distanceToTarget, hasPath);
+        {
+            // Path BLOCKED - IMMEDIATELY retarget wall closest to HEART
+            if (currentTarget == heartTarget)
+            {
+                DetermineBlockedTarget(); // This already finds wall closest to heart
+            }
+            
+            // Now try path to NEW target (wall)
+            agent.CalculatePath(currentTarget.position, testPath);
+            if (testPath.status == NavMeshPathStatus.PathComplete)
+            {
+                agent.SetDestination(currentTarget.position);
+            }
+            // If even wall path is blocked, FindImmediateWallObstacle handles closest wall to enemy
+        }
+    }
+
+
+    private bool IsTargetInAttackRange()
+    {
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, data.AttackRadius);
+        foreach (var c in hits)
+        {
+            if (c.transform == currentTarget || c.transform.IsChildOf(currentTarget)) return true;
+        }
+        return false;
+    }
+
+    private Transform FindClosestWallToPoint(Vector3 point)
+    {
+        Collider2D[] walls = Physics2D.OverlapCircleAll(point, 3.0f);
+        Transform best = null;
+        float min = Mathf.Infinity;
+        foreach (var w in walls)
+        {
+            if (w.CompareTag("Wall"))
+            {
+                float d = Vector2.Distance(point, w.transform.position);
+                if (d < min) { min = d; best = w.transform; }
+            }
+        }
+        return best;
+    }
+
+    private Transform FindImmediateWallObstacle(Vector3 targetWallPos)
+    {
+        Vector2 dir = (targetWallPos - transform.position).normalized;
+        float dist = Vector2.Distance(transform.position, targetWallPos);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, dist);
+        
+        if (hit.collider != null && hit.transform.CompareTag("Wall") && hit.transform != currentTarget)
+        {
+            return hit.transform;
+        }
+        return null;
+    }
+
+    private bool HasPath(Transform t)
+    {
+        if (t == null || !agent.isOnNavMesh) return false;
+        agent.CalculatePath(t.position, path);
+        return path.status == NavMeshPathStatus.PathComplete;
+    }
+
+    private void TryAttack()
+    {
+        if (attackTimer > 0) return;
+        Building b = currentTarget.GetComponentInParent<Building>();
+        if (b != null)
+        {
+            float dmg = (scaledDamage > 0) ? scaledDamage : data.AttackDamage;
+            b.TakeDamage(dmg);
+            attackTimer = data.AttackCooldown;
+            data.TriggerAttackAbilities(this, b);
+        }
+    }
+
+    #endregion
+
+    // --- Stats & Lifecycle ---
+    public void TakeDamage(float damage)
+    {
+        currentHP -= damage;
+        if (currentHP <= 0) DieLogic();
+    }
+
+    private void DieLogic()
+    {
+        bool deathPrevented = false;
+        foreach (var ability in instantiatedAbilities)
+        {
+            if (ability != null && ability.OnDeath(this)) deathPrevented = true;
+        }
+
+        if (!deathPrevented)
+        {
+            foreach (var a in instantiatedAbilities) if (a != null) Destroy(a);
+            Destroy(gameObject);
+        }
+        else { currentHP = scaledMaxHP; }
+    }
+
+    private void InitializeAbilities()
+    {
+        foreach (var a in data.Abilities)
+        {
+            if (a == null) continue;
+            var instance = Instantiate(a);
+            instance.OnAssigned(this);
+            instantiatedAbilities.Add(instance);
+        }
+    }
+
+    public void Heal(float amount) => currentHP = Mathf.Min(currentHP + amount, scaledMaxHP);
+
+    public void ModifySpeed(float mult, float dur) => StartCoroutine(SpeedModifierRoutine(mult, dur));
+
+    private System.Collections.IEnumerator SpeedModifierRoutine(float multiplier, float duration)
+    {
+        if (agent == null) yield break;
+        float original = agent.speed;
+        agent.speed *= multiplier;
+        yield return new WaitForSeconds(duration);
+        agent.speed = original;
     }
 
     public void ApplyScaling(float multiplier)
@@ -129,385 +312,4 @@ public class Enemy : MonoBehaviour
         
         Debug.Log($"{gameObject.name} scaled: HP {scaledMaxHP}, DMG {scaledDamage}");
     }
-    
-    void HandleRangedBehavior(float distanceToTarget, bool hasPath)
-    {
-        if (distanceToTarget <= data.AttackRadius)
-        {
-            agent.ResetPath();
-            isAttacking = true;
-            TryAttack();
-        }
-        else
-        {
-            isAttacking = false;
-            
-            if (hasPath)
-            {
-                agent.SetDestination(currentTarget.position);
-            }
-            else
-            {
-                HandleBlockedPathRanged(distanceToTarget);
-            }
-        }
-    }
-    
-    void HandleMeleeBehavior(float distanceToTarget, bool hasPath)
-    {
-        // 1. Always check if our current target's COLLIDER is within our attack radius
-        if (currentTarget != null && IsTargetInPhysicalRange())
-        {
-            agent.ResetPath();
-            isAttacking = true;
-            TryAttack();
-            return; // Exit so we don't try to move
-        }
-
-        // 2. If not in range, move toward the target
-        isAttacking = false;
-        
-        if (!hasPath)
-        {
-            HandleBlockedPathMelee();
-        }
-        else
-        {
-            agent.SetDestination(currentTarget.position);
-        }
-    }
-
-    private bool IsTargetInPhysicalRange()
-    {
-        if (currentTarget == null) return false;
-
-        // We check for any colliders within the attack radius
-        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, data.AttackRadius);
-        
-        foreach (var hit in hitColliders)
-        {
-            // If one of the colliders we are touching is our target, we are in range!
-            if (hit.transform == currentTarget || hit.transform.IsChildOf(currentTarget) || currentTarget.IsChildOf(hit.transform))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    void EvaluateDetection()
-    {
-        if (currentTarget != null && currentTarget.CompareTag("Wall") && !HasPath(heartTarget)) 
-        return;
-
-        if (isAttacking) return;
-        
-        // Find valid targets based on targeting priority
-        Transform bestTarget = FindBestTarget();
-        
-        if (bestTarget != null)
-            currentTarget = bestTarget;
-        else
-            currentTarget = heartTarget;
-    }
-    
-    /// <summary>
-    /// Finds the best target based on the enemy's targeting priority.
-    /// </summary>
-    private Transform FindBestTarget()
-    {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, data.DetectionRadius);
-        
-        Transform bestTarget = null;
-        float bestScore = Mathf.Infinity;
-        
-        foreach (Collider2D col in hits)
-        {
-            if (!IsValidTarget(col)) continue;
-            
-            float distToEnemy = Vector2.Distance(transform.position, col.transform.position);
-            
-            // Score based on targeting priority
-            float score = GetTargetScore(col.transform, distToEnemy);
-            
-            if (score < bestScore)
-            {
-                bestScore = score;
-                bestTarget = col.transform;
-            }
-        }
-        
-        return bestTarget;
-    }
-    
-    /// Calculates a score for a target based on targeting priority.
-    /// Lower score = higher priority.
-    private float GetTargetScore(Transform target, float distanceToEnemy)
-    {
-        switch (data.TargetingPriority)
-        {
-            case TargetPriority.WallOnly:
-                // Only target walls, prioritize by distance to heart
-                if (heartTarget != null)
-                {
-                    return Vector2.Distance(target.position, heartTarget.position);
-                }
-                return distanceToEnemy;
-                
-            case TargetPriority.Defense:
-                // Only target defenses, prioritize by distance to heart
-                if (heartTarget != null)
-                {
-                    return Vector2.Distance(target.position, heartTarget.position);
-                }
-                return distanceToEnemy;
-                
-            case TargetPriority.Resource:
-                // Only target resources, prioritize by distance to heart
-                if (heartTarget != null)
-                {
-                    return Vector2.Distance(target.position, heartTarget.position);
-                }
-                return distanceToEnemy;
-                
-            case TargetPriority.AnyNonWall:
-                // Target defenses or resources, prioritize by distance to heart
-                if (heartTarget != null)
-                {
-                    return Vector2.Distance(target.position, heartTarget.position);
-                }
-                return distanceToEnemy;
-                
-            case TargetPriority.None:
-                return Mathf.Infinity;
-                
-            default:
-                return distanceToEnemy;
-        }
-    }
-    
-    bool IsValidTarget(Collider2D col)
-    {
-        // If the path is blocked, ANY wall in front of us is a valid target 
-        // to clear the path, regardless of our "Priority" settings.
-        
-
-        switch (data.TargetingPriority)
-        {
-            case TargetPriority.WallOnly:
-                return col.CompareTag("Wall");
-            case TargetPriority.Defense:
-                return col.CompareTag("Defense");
-            case TargetPriority.Resource:
-                return col.CompareTag("Resource");
-            case TargetPriority.AnyNonWall:
-                return col.CompareTag("Defense") || col.CompareTag("Resource");
-            case TargetPriority.None:
-                // If priority is none, they only care about the Heart, 
-                // but the "Wall" check above still lets them break obstacles.
-                return false;
-        }
-        return false;
-    }
-    
-    bool HasPath(Transform target)
-    {
-        if (agent == null || target == null) return false;
-        
-        agent.CalculatePath(target.position, path);
-        return path.status == NavMeshPathStatus.PathComplete;
-    }
-    
-    void HandleBlockedPathRanged(float distanceToTarget)
-    {
-        if (distanceToTarget <= data.AttackRadius)
-        {
-            agent.ResetPath();
-            TryAttack();
-            return;
-        }
-        
-        AttackClosestWallToTarget();
-    }
-    
-    void HandleBlockedPathMelee()
-    {
-        AttackClosestWallToTarget();
-    }
-    
-    void AttackClosestWallToTarget()
-    {
-        // Find all walls
-        GameObject[] walls = GameObject.FindGameObjectsWithTag("Wall");
-        if (walls.Length == 0) return;
-        
-        Transform bestWall = null;
-        float bestScore = Mathf.Infinity;
-        
-        foreach (GameObject wall in walls)
-        {
-            // First preference: closest to target (heart)
-            float distToTarget = Vector2.Distance(wall.transform.position, heartTarget.position);
-            
-            if (distToTarget < bestScore)
-            {
-                // Check if path exists to this wall
-                if (HasPath(wall.transform))
-                {
-                    bestScore = distToTarget;
-                    bestWall = wall.transform;
-                }
-            }
-        }
-        
-        // If no wall has path to target, fallback to closest to enemy
-        if (bestWall == null)
-        {
-            float closestToEnemy = Mathf.Infinity;
-            
-            foreach (GameObject wall in walls)
-            {
-                float distToEnemy = Vector2.Distance(transform.position, wall.transform.position);
-                
-                if (distToEnemy < closestToEnemy)
-                {
-                    closestToEnemy = distToEnemy;
-                    bestWall = wall.transform;
-                }
-            }
-        }
-        
-        if (bestWall != null)
-        {
-            currentTarget = bestWall;
-            agent.SetDestination(bestWall.position);
-        }
-    }
-    
-    void TryAttack()
-    {
-        if (attackTimer > 0f || currentTarget == null) return;
-
-        // Use GetComponentInParent to ensure we grab the Building script 
-        // regardless of whether the collider is on a child or the root
-        Building targetBuilding = currentTarget.GetComponentInParent<Building>();
-
-        if (targetBuilding != null)
-        {
-            float damageToApply = (scaledDamage > 0) ? scaledDamage : data.AttackDamage;
-            
-            targetBuilding.TakeDamage(damageToApply);
-            
-            if (data != null)
-                data.TriggerAttackAbilities(this, targetBuilding);
-                
-            attackTimer = data.AttackCooldown;
-            Debug.Log($"<color=green>[SUCCESS]</color> Attacking {currentTarget.name}. Wall/Tower is within physical radius.");
-        }
-        else
-        {
-            // Fallback: If target is destroyed or missing script, reset
-            isAttacking = false;
-            currentTarget = heartTarget;
-        }
-    }
-    
-    public void TakeDamage(float damage)
-    {
-        currentHP -= damage;
-        
-        if (currentHP <= 0)
-        {
-            // 1. Check the LIVE instances, not the ScriptableObject Asset
-            bool deathPrevented = false;
-            
-            foreach (var ability in instantiatedAbilities)
-            {
-                // This calls OnDeath on the actual instance (e.g., DeathExplosionAbility)
-                if (ability != null && ability.OnDeath(this))
-                {
-                    deathPrevented = true;
-                }
-            }
-            
-            if (!deathPrevented)
-            {
-                Die();
-            }
-            else
-            {
-                // Optional: Reset health if an ability (like a Revive) prevented death
-                currentHP = (scaledMaxHP > 0) ? scaledMaxHP : data.MaxHP;
-            }
-        }
-    }
-    
-    void Die()
-    {
-        // 2. Cleanup: Important to destroy the instances to stop sounds/particles
-        foreach (var ability in instantiatedAbilities)
-        {
-            if (ability != null) Destroy(ability);
-        }
-        instantiatedAbilities.Clear();
-        
-        Destroy(gameObject);
-    }
-    
-
-    /// Heals the enemy by the specified amount.
-    /// <param name="amount">Amount to heal.</param>
-    public void Heal(float amount)
-    {
-        currentHP = Mathf.Min(currentHP + amount, data.MaxHP);
-    }
-    
-
-    /// Modifies the enemy's movement speed temporarily.
-    /// <param name="multiplier">Speed multiplier (1 = normal).</param>
-    /// <param name="duration">Duration in seconds.</param>
-    public void ModifySpeed(float multiplier, float duration)
-    {
-        StartCoroutine(SpeedModifierRoutine(multiplier, duration));
-    }
-    
-    System.Collections.IEnumerator SpeedModifierRoutine(float multiplier, float duration)
-    {
-        if (agent == null) yield break;
-        
-        float originalSpeed = agent.speed;
-        agent.speed = originalSpeed * multiplier;
-        
-        yield return new WaitForSeconds(duration);
-        
-        agent.speed = originalSpeed;
-    }
-    
-
-    /// Returns the position of the enemy's attack point.
-    /// Override in subclasses for custom attack origins.
-    public virtual Vector3 GetAttackPosition()
-    {
-        return transform.position + transform.up * 0.5f;
-    }
-    
-#if UNITY_EDITOR
-    void OnDrawGizmosSelected()
-    {
-        // Draw detection radius
-        Gizmos.color = new Color(0, 1, 0, 0.2f);
-        Gizmos.DrawWireSphere(transform.position, data != null ? data.DetectionRadius : 5f);
-        
-        // Draw attack radius
-        Gizmos.color = new Color(1, 0, 0, 0.2f);
-        Gizmos.DrawWireSphere(transform.position, data != null ? data.AttackRadius : 1.5f);
-        
-        // Draw line to current target
-        if (currentTarget != null)
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(transform.position, currentTarget.position);
-        }
-    }
-#endif
 }

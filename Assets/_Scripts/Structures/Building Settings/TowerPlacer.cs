@@ -6,9 +6,17 @@ using UnityEngine.EventSystems;
 public class TowerPlacer : MonoBehaviour
 {
     public static TowerPlacer Instance;
+
+    [Header("Tilemaps")]
     public Tilemap placementMap;
     public Tilemap nonPlaceableTiles;
+    [Tooltip("Paint a single tile here to designate where the Heart spawns.")]
+    public Tilemap heartSpawnMap; 
 
+    [Header("Heart Setup")]
+    public StructureData heartData;
+
+    [Header("Prefabs")]
     public GameObject ghostPrefab;
 
     private HashSet<Vector3Int> occupiedTiles = new HashSet<Vector3Int>();
@@ -19,11 +27,56 @@ public class TowerPlacer : MonoBehaviour
         Instance = this;
     }
 
+    void Start()
+    {
+        // Automatically spawn the heart at the start
+        SpawnHeartAtTargetLocation();
+    }
+
+    private void SpawnHeartAtTargetLocation()
+    {
+        if (heartSpawnMap == null || heartData == null)
+        {
+            Debug.LogWarning("TowerPlacer: HeartSpawnMap or HeartData is missing!");
+            return;
+        }
+
+        // Scan the heartSpawnMap for the first tile painted
+        foreach (var pos in heartSpawnMap.cellBounds.allPositionsWithin)
+        {
+            if (heartSpawnMap.HasTile(pos))
+            {
+                // Calculate position (matching your tower offset logic)
+                Vector3 worldCenter = heartSpawnMap.GetCellCenterWorld(pos);
+                Vector3 spawnPos = worldCenter + new Vector3(0, heartSpawnMap.cellSize.y * 0.25f);
+
+                // Instantiate and Configure
+                GameObject heartObj = Instantiate(heartData.Prefab, spawnPos, Quaternion.identity);
+                
+                Building building = heartObj.GetComponent<Building>();
+                heartData.ConfigureBuilding(building);
+                building.Initialize(heartData);
+
+                // Register the tile so no towers can be built here
+                // We use placementMap.WorldToCell to ensure the coordinate systems match
+                Vector3Int placementCell = placementMap.WorldToCell(worldCenter);
+                occupiedTiles.Add(placementCell);
+
+                Debug.Log($"Heart spawned at {placementCell}");
+                
+                // Usually there is only one heart, so we stop after finding the first tile
+                return;
+            }
+        }
+    }
+
     void Update()
     {
         HandlePlacementHover();
         HandlePlacementClick();
     }
+
+    // ... (rest of your HandlePlacementHover remains the same)
 
     void HandlePlacementHover()
     {
@@ -49,7 +102,10 @@ public class TowerPlacer : MonoBehaviour
         ghostInstance.transform.position =
             worldCenter + new Vector3(0, placementMap.cellSize.y * 0.25f);
 
-        bool valid = placementMap.HasTile(cellPos) && !occupiedTiles.Contains(cellPos);
+        // Valid if: On placement map AND NOT non-placeable AND NOT occupied
+        bool valid = placementMap.HasTile(cellPos) && 
+                     !occupiedTiles.Contains(cellPos) && 
+                     (nonPlaceableTiles == null || !nonPlaceableTiles.HasTile(cellPos));
 
         ghostInstance.GetComponent<GhostTower>().SetValid(valid);
     }
@@ -69,14 +125,14 @@ public class TowerPlacer : MonoBehaviour
 
         if(!placementMap.HasTile(cellpos)) return;
         if(occupiedTiles.Contains(cellpos)) return;
+        if(nonPlaceableTiles != null && nonPlaceableTiles.HasTile(cellpos)) return;
 
         StructureData data = TowerSelectionUI.SelectedStructureData;
-        GameObject prefab = data.Prefab;
-
+        
         if (!GameManager.Instance.SpendNutrients(data.NutrientCost))
             return;
 
-        GameObject newBuilding = Instantiate(prefab, ghostInstance.transform.position, Quaternion.identity);
+        GameObject newBuilding = Instantiate(data.Prefab, ghostInstance.transform.position, Quaternion.identity);
 
         Building building = newBuilding.GetComponent<Building>();
         data.ConfigureBuilding(building);
@@ -88,7 +144,6 @@ public class TowerPlacer : MonoBehaviour
     public void FreeTile(Vector3 worldPosition)
     {
         Vector3Int cellPos = placementMap.WorldToCell(worldPosition);
-
         if (occupiedTiles.Contains(cellPos))
         {
             occupiedTiles.Remove(cellPos);

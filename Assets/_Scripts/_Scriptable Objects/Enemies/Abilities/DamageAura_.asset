@@ -21,7 +21,4 @@ MonoBehaviour:
   usableWhileStunned: 1
   auraRadius: 2
   damagePerSecond: 5
-  targetLayers:
-    serializedVersion: 2
-    m_Bits: 0
   auraEffect: {fileID: 0}

@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHP: 20
   attackDamage: 10
-  attackRadius: 1.5
+  attackRadius: 1
   moveSpeed: 1
   isRanged: 0
   attackCooldown: 1
-  targetingPriority: 2
+  targetingPriority: 4
   detectionRadius: 5
   stoppingDistance: 1.2
   abilities:
