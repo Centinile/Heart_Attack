@@ -97,7 +97,10 @@ public class Enemy : MonoBehaviour
         if (data == null || heartTarget == null) return;
 
         attackTimer -= Time.deltaTime;
-        data.UpdatePassiveAbilities(this);
+        foreach (var ability in instantiatedAbilities)
+        {
+            ability.OnUpdate(this);
+        }
         EvaluateDetection();
 
         if (currentTarget == null) currentTarget = heartTarget;
@@ -415,8 +418,17 @@ public class Enemy : MonoBehaviour
         
         if (currentHP <= 0)
         {
-            // Trigger death abilities first
-            bool deathPrevented = data.TriggerDeathAbilities(this);
+            // 1. Check the LIVE instances, not the ScriptableObject Asset
+            bool deathPrevented = false;
+            
+            foreach (var ability in instantiatedAbilities)
+            {
+                // This calls OnDeath on the actual instance (e.g., DeathExplosionAbility)
+                if (ability != null && ability.OnDeath(this))
+                {
+                    deathPrevented = true;
+                }
+            }
             
             if (!deathPrevented)
             {
@@ -424,21 +436,22 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                // Reset HP if revived (optional: adjust as needed)
-                currentHP = Data.MaxHP;
+                // Optional: Reset health if an ability (like a Revive) prevented death
+                currentHP = (scaledMaxHP > 0) ? scaledMaxHP : data.MaxHP;
             }
         }
     }
     
     void Die()
     {
+        // 2. Cleanup: Important to destroy the instances to stop sounds/particles
         foreach (var ability in instantiatedAbilities)
-            {
-                // This triggers OnAbilityRemoved for cleanup (like destroying aura particles)
-                Destroy(ability); 
-            }
-            instantiatedAbilities.Clear();
-            Destroy(gameObject);
+        {
+            if (ability != null) Destroy(ability);
+        }
+        instantiatedAbilities.Clear();
+        
+        Destroy(gameObject);
     }
     
 

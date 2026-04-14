@@ -9,15 +9,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75daa3637f98f924ca73d6f51671b397, type: 3}
-  m_Name: SpawnSpeedBoost_
+  m_Script: {fileID: 11500000, guid: 9624b11b65dbc174f93f2ba39fb46eb3, type: 3}
+  m_Name: DeathExplosion_
   m_EditorClassIdentifier: 
-  abilityName: Spawn Speed Boost
+  abilityName: Death Explosion
   cooldown: 0
-  triggerOnSpawn: 1
+  triggerOnSpawn: 0
   triggerOnAttack: 0
-  triggerOnDeath: 0
+  triggerOnDeath: 1
   isPassive: 0
   usableWhileStunned: 1
-  speedMultiplier: 1.5
-  boostDuration: 3
+  explosionRadius: 3
+  explosionDamage: 50
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  explosionEffect: {fileID: 0}
+  explosionSound: {fileID: 0}
