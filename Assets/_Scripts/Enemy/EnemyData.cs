@@ -35,6 +35,9 @@ public class EnemyData : ScriptableObject
     
     [Tooltip("Time between attacks in seconds.")]
     [SerializeField] private float attackCooldown = 1f;
+
+    [Tooltip("If true, enemy is airborne and ignores walls.")]
+    [SerializeField] private bool isFlying = false;
     
     [Header("AI Settings")]
     [Tooltip("Priority for selecting attack targets.")]
@@ -61,6 +64,7 @@ public class EnemyData : ScriptableObject
     public float AttackRadius => attackRadius;
     public float MoveSpeed => moveSpeed;
     public bool IsRanged => isRanged;
+    public bool IsFlying => isFlying;
     public float AttackCooldown => attackCooldown;
     public TargetPriority TargetingPriority => targetingPriority;
     public float DetectionRadius => detectionRadius;

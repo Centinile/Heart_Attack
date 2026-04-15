@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
+using UnityEngine.InputSystem.Utilities;
+using System.ComponentModel;
+using Unity.Collections;
 
 public class Enemy : MonoBehaviour
 {
@@ -12,6 +15,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Transform currentTarget;
     [SerializeField] private float currentHP;
     public float CurrentHP => currentHP;
+    public bool isFlying;
     private float scaledMaxHP;
     private float scaledDamage;
     private float attackTimer;
@@ -36,11 +40,16 @@ public class Enemy : MonoBehaviour
         if (data == null) return;
         scaledMaxHP = data.MaxHP;
         scaledDamage = data.AttackDamage;
+        isFlying = data.IsFlying;
         currentHP = (scaledMaxHP > 0) ? scaledMaxHP : data.MaxHP;
 
         agent.speed = data.MoveSpeed;
         agent.stoppingDistance = data.AttackRadius * 0.9f;
         agent.autoBraking = false;
+                    
+        if (isFlying && agent != null) agent.enabled = false;
+        //agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
+        
 
         heartTarget = GameObject.FindGameObjectWithTag("Heart")?.transform;
         currentTarget = heartTarget;
@@ -77,6 +86,17 @@ public class Enemy : MonoBehaviour
     {
         // 1. Validate Target
         if (currentTarget == null) currentTarget = heartTarget;
+
+        if (isFlying)
+        {
+            // Check for preferred targets only, otherwise go straight to heart
+            Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, data.DetectionRadius);
+            foreach (var col in hits)
+                if (IsPreferredTarget(col.transform)) { currentTarget = col.transform; return; }
+
+            currentTarget = heartTarget;
+            return;
+        }
 
         bool heartIsReachable = HasPath(heartTarget);
 
@@ -148,16 +168,22 @@ public class Enemy : MonoBehaviour
     {
         if (currentTarget == null) 
         {
-            //Fallback: always move toward heart if no target
+            if (isFlying) MoveDirectlyToward(heartTarget);
             agent.SetDestination(heartTarget.position);
             return;
         }
 
         if (IsTargetInAttackRange())
         {
-            if (agent.hasPath) agent.ResetPath();
+            if (!isFlying && agent.hasPath) agent.ResetPath();
             TryAttack();
             return; //  Early return
+        }
+
+        if (isFlying)
+        {
+            MoveDirectlyToward(currentTarget);
+            return;
         }
 
         // Test path to current target
@@ -188,6 +214,13 @@ public class Enemy : MonoBehaviour
             }
             // If even wall path is blocked, FindImmediateWallObstacle handles closest wall to enemy
         }
+    }
+
+    private void MoveDirectlyToward(Transform target)
+    {
+        if (target == null) return;
+        Vector3 dir = (target.position - transform.position).normalized;
+        transform.position += dir * data.MoveSpeed * Time.deltaTime;
     }
 
 
@@ -232,6 +265,7 @@ public class Enemy : MonoBehaviour
 
     private bool HasPath(Transform t)
     {
+        if (isFlying) return true;
         if (t == null || !agent.isOnNavMesh) return false;
         agent.CalculatePath(t.position, path);
         return path.status == NavMeshPathStatus.PathComplete;

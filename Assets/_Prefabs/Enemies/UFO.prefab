@@ -104,8 +104,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: bf9e559087deb6a419732d4b5989382b, type: 2}
+  isFlying: 0
+  currentTarget: {fileID: 0}
   currentHP: 0
-  isAttacking: 0
 --- !u!195 &2503278441928525463
 NavMeshAgent:
   m_ObjectHideFlags: 0
