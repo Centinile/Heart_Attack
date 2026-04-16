@@ -10,7 +10,6 @@ public class TowerPlacer : MonoBehaviour
     [Header("Tilemaps")]
     public Tilemap placementMap;
     public Tilemap nonPlaceableTiles;
-    [Tooltip("Paint a single tile here to designate where the Heart spawns.")]
     public Tilemap heartSpawnMap; 
 
     [Header("Heart Setup")]
@@ -22,131 +21,121 @@ public class TowerPlacer : MonoBehaviour
     private HashSet<Vector3Int> occupiedTiles = new HashSet<Vector3Int>();
     private GameObject ghostInstance;
 
-    void Awake()
+    void Awake() => Instance = this;
+
+    void Start() => SpawnHeartAtTargetLocation();
+
+    void Update()
     {
-        Instance = this;
+        // 1. Right Click to Cancel Placement
+        if (Input.GetMouseButtonDown(1) && TowerSelectionUI.SelectedStructureData != null)
+        {
+            CancelPlacement();
+            return;
+        }
+
+        HandlePlacementHover();
+        HandlePlacementClick();
     }
 
-    void Start()
+    public void CancelPlacement()
     {
-        // Automatically spawn the heart at the start
-        SpawnHeartAtTargetLocation();
+        TowerSelectionUI.SelectedStructureData = null;
+        if (ghostInstance != null) Destroy(ghostInstance);
+    }
+
+    private void HandlePlacementHover()
+    {
+        if (TowerSelectionUI.SelectedStructureData == null)
+        {
+            if (ghostInstance != null) Destroy(ghostInstance);
+            return;
+        }
+
+        if (ghostInstance == null) ghostInstance = Instantiate(ghostPrefab);
+
+        ghostInstance.GetComponent<SpriteRenderer>().sprite = TowerSelectionUI.SelectedStructureData.Icon;
+
+        Vector3 mouseWorldPos = GetMouseWorldPos();
+        Vector3Int cellPos = placementMap.WorldToCell(mouseWorldPos);
+        Vector3 worldCenter = placementMap.GetCellCenterWorld(cellPos);
+
+        ghostInstance.transform.position = worldCenter + new Vector3(0, placementMap.cellSize.y * 0.25f);
+
+        bool valid = IsTileValid(cellPos);
+        ghostInstance.GetComponent<GhostTower>().SetValid(valid);
+    }
+
+    private void HandlePlacementClick()
+    {
+        // Must have data and Left Click
+        if (TowerSelectionUI.SelectedStructureData == null || !Input.GetMouseButtonDown(0)) return;
+        
+        // Ignore if clicking UI
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+
+        Vector3 mouseWorldPos = GetMouseWorldPos();
+        Vector3Int cellPos = placementMap.WorldToCell(mouseWorldPos);
+
+        if (!IsTileValid(cellPos)) return;
+
+        StructureData data = TowerSelectionUI.SelectedStructureData;
+        
+        if (!GameManager.Instance.SpendNutrients(data.NutrientCost)) return;
+
+        // Place the building
+        GameObject newBuilding = Instantiate(data.Prefab, ghostInstance.transform.position, Quaternion.identity);
+        Building building = newBuilding.GetComponent<Building>();
+        
+        // Use the ScriptableObject's own configuration logic
+        data.ConfigureBuilding(building);
+        building.Initialize(data);
+
+        occupiedTiles.Add(cellPos);
+
+        // NOTE: We do NOT set SelectedStructureData to null here, 
+        // allowing for continuous placement!
+    }
+
+    private bool IsTileValid(Vector3Int cellPos)
+    {
+        return placementMap.HasTile(cellPos) && 
+               !occupiedTiles.Contains(cellPos) && 
+               (nonPlaceableTiles == null || !nonPlaceableTiles.HasTile(cellPos));
+    }
+
+    private Vector3 GetMouseWorldPos()
+    {
+        Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        pos.z = 0;
+        return pos;
     }
 
     private void SpawnHeartAtTargetLocation()
     {
-        if (heartSpawnMap == null || heartData == null)
-        {
-            Debug.LogWarning("TowerPlacer: HeartSpawnMap or HeartData is missing!");
-            return;
-        }
+        if (heartSpawnMap == null || heartData == null) return;
 
-        // Scan the heartSpawnMap for the first tile painted
         foreach (var pos in heartSpawnMap.cellBounds.allPositionsWithin)
         {
             if (heartSpawnMap.HasTile(pos))
             {
-                // Calculate position (matching your tower offset logic)
                 Vector3 worldCenter = heartSpawnMap.GetCellCenterWorld(pos);
                 Vector3 spawnPos = worldCenter + new Vector3(0, heartSpawnMap.cellSize.y * 0.25f);
 
-                // Instantiate and Configure
                 GameObject heartObj = Instantiate(heartData.Prefab, spawnPos, Quaternion.identity);
-                
                 Building building = heartObj.GetComponent<Building>();
                 heartData.ConfigureBuilding(building);
                 building.Initialize(heartData);
 
-                // Register the tile so no towers can be built here
-                // We use placementMap.WorldToCell to ensure the coordinate systems match
-                Vector3Int placementCell = placementMap.WorldToCell(worldCenter);
-                occupiedTiles.Add(placementCell);
-
-                Debug.Log($"Heart spawned at {placementCell}");
-                
-                // Usually there is only one heart, so we stop after finding the first tile
+                occupiedTiles.Add(placementMap.WorldToCell(worldCenter));
                 return;
             }
         }
     }
 
-    void Update()
-    {
-        HandlePlacementHover();
-        HandlePlacementClick();
-    }
-
-    // ... (rest of your HandlePlacementHover remains the same)
-
-    void HandlePlacementHover()
-    {
-        if (TowerSelectionUI.SelectedStructureData == null)
-        {
-            if (ghostInstance != null)
-                Destroy(ghostInstance);
-            return;
-        }
-
-        if (ghostInstance == null)
-            ghostInstance = Instantiate(ghostPrefab);
-
-        ghostInstance.GetComponent<SpriteRenderer>().sprite =
-            TowerSelectionUI.SelectedStructureData.Icon;
-
-        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mouseWorldPos.z = 0;
-
-        Vector3Int cellPos = placementMap.WorldToCell(mouseWorldPos);
-        Vector3 worldCenter = placementMap.GetCellCenterWorld(cellPos);
-
-        ghostInstance.transform.position =
-            worldCenter + new Vector3(0, placementMap.cellSize.y * 0.25f);
-
-        // Valid if: On placement map AND NOT non-placeable AND NOT occupied
-        bool valid = placementMap.HasTile(cellPos) && 
-                     !occupiedTiles.Contains(cellPos) && 
-                     (nonPlaceableTiles == null || !nonPlaceableTiles.HasTile(cellPos));
-
-        ghostInstance.GetComponent<GhostTower>().SetValid(valid);
-    }
-
-    void HandlePlacementClick()
-    {
-        if(!Input.GetMouseButtonDown(0)) return;
-        if (TowerSelectionUI.SelectedStructureData == null) return;
-
-        if(EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
-            return;
-
-        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mouseWorldPos.z = 0;
-
-        Vector3Int cellpos = placementMap.WorldToCell(mouseWorldPos);
-
-        if(!placementMap.HasTile(cellpos)) return;
-        if(occupiedTiles.Contains(cellpos)) return;
-        if(nonPlaceableTiles != null && nonPlaceableTiles.HasTile(cellpos)) return;
-
-        StructureData data = TowerSelectionUI.SelectedStructureData;
-        
-        if (!GameManager.Instance.SpendNutrients(data.NutrientCost))
-            return;
-
-        GameObject newBuilding = Instantiate(data.Prefab, ghostInstance.transform.position, Quaternion.identity);
-
-        Building building = newBuilding.GetComponent<Building>();
-        data.ConfigureBuilding(building);
-        building.Initialize(data);
-
-        occupiedTiles.Add(cellpos); 
-    }
-
     public void FreeTile(Vector3 worldPosition)
     {
         Vector3Int cellPos = placementMap.WorldToCell(worldPosition);
-        if (occupiedTiles.Contains(cellPos))
-        {
-            occupiedTiles.Remove(cellPos);
-        }
+        occupiedTiles.Remove(cellPos);
     }
 }

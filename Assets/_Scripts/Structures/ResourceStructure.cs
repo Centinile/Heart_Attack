@@ -12,13 +12,17 @@ public class ResourceStructure : Building
         data = resourceData;
         // The base class Initialize will handle HP and StructureType, 
         // we just focus on the unique resource logic.
-        InitializeResourceLogic();
     }
 
     public override void OnPlaced()
     {
         base.OnPlaced(); // Good practice
-        InitializeResourceLogic();
+    }
+
+    public override void Initialize(StructureData structureData)
+    {
+        base.Initialize(structureData); // TryActivate runs here
+        InitializeResourceLogic();      // Hydration boost runs immediately after
     }
 
     private void InitializeResourceLogic()
@@ -45,28 +49,25 @@ public class ResourceStructure : Building
 
     private void ProduceWaveNutrients()
     {
-        // Add nutrients to the GameManager bank
+        if (!IsPowered) return;
+
         GameManager.Instance.AddNutrients(data.nutrientsPerWave);
         
         if (data.collectEffect != null)
-        {
             Instantiate(data.collectEffect, transform.position, Quaternion.identity);
-        }
     }
 
     protected override void OnDestroyed()
     {
-        // Remove the capacity if the tower is destroyed
         if (data != null && data.type == ResourceType.Hydration)
         {
+            // ModifyMaxHydration now handles depowering internally
             GameManager.Instance.ModifyMaxHydration(-data.hydrationCapacityBoost);
         }
 
         WaveManager.OnWaveCleared -= ProduceWaveNutrients;
-        
-        // IMPORTANT: Call base.OnDestroyed() to handle the rest of the cleanup 
-        // (releasing hydration cost, freeing tiles, and the actual Destroy call)
-        base.OnDestroyed();
+
+        base.OnDestroyed(); // Handles tile freeing + Destroy()
     }
 
     private void OnDisable()

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -733248038446419540}
   - component: {fileID: 2893337898319522252}
   - component: {fileID: 6308290968454192774}
+  - component: {fileID: 8269856396338626503}
   m_Layer: 3
   m_Name: Heart
   m_TagString: Heart
@@ -167,3 +168,18 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.7265625, y: 0.9140625}
   m_EdgeRadius: 0
+--- !u!114 &8269856396338626503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4024584990118977380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01ce3458873842e47b0b330bad1f8cae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unpoweredIconPrefab: {fileID: 4928553900717565511, guid: 01bb88de4b34c2f468521febed4de1b8, type: 3}
+  iconOffset: {x: 0, y: 1, z: 0}
+  unpoweredTint: {r: 0.4, g: 0.4, b: 0.4, a: 1}

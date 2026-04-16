@@ -15,7 +15,7 @@ MonoBehaviour:
   structureName: ArcherTower
   maxHP: 100
   nutrientCost: 20
-  hydrationCost: 5
+  hydrationCost: 40
   nextLevelData: {fileID: 11400000, guid: 02e5146ecb708b84e9dc77c074cdc081, type: 2}
   upgradeCost: 150
   icon: {fileID: 21300000, guid: 0a0b70cfd52e574419e377163923b946, type: 3}

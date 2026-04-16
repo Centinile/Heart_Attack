@@ -42,6 +42,9 @@ public class GameManager : MonoBehaviour
     public float CurrentHydration => currentHydration;
 
     private float usedHydration = 0f;
+    private List<Building> poweredBuildings = new List<Building>();
+    private List<Building> unpoweredBuildings = new List<Building>();
+    private bool restorePowerPending = false;
 
 
     //Helpers
@@ -99,6 +102,12 @@ public class GameManager : MonoBehaviour
             default:
                 Debug.LogWarning("State No Exist");
                 break;
+        }
+
+        if (restorePowerPending)
+        {
+            restorePowerPending = false;
+            TryRestorePower();
         }
         
     }
@@ -225,12 +234,19 @@ public class GameManager : MonoBehaviour
     {
         usedHydration -= amount;
         usedHydration = Mathf.Max(0, usedHydration);
+        ScheduleRestorePower();
         UpdateResourceUI();
     }
 
     public void ModifyMaxHydration(float amount)
     {
         currentHydration += amount;
+
+        if (amount < 0 && usedHydration > currentHydration)
+            OnHydrationCapacityReduced(-amount);
+        else if (amount > 0)
+            ScheduleRestorePower();
+
         UpdateResourceUI();
     }
 
@@ -238,6 +254,77 @@ public class GameManager : MonoBehaviour
     {
         currentNutrientsDisplay.text = currentNutrients.ToString("0");
         currentHydrationDisplay.text = $"{usedHydration:0}/{currentHydration:0}";
+    }
+
+    public void RegisterPoweredBuilding(Building building)
+    {
+        if (!poweredBuildings.Contains(building))
+            poweredBuildings.Add(building);
+    }
+
+    public void RegisterUnpoweredBuilding(Building building)
+    {
+        if (!unpoweredBuildings.Contains(building))
+            unpoweredBuildings.Add(building);
+    }
+
+    public void UnregisterPoweredBuilding(Building building)
+    {
+        poweredBuildings.Remove(building);
+    }
+
+    public void UnregisterUnpoweredBuilding(Building building)
+    {
+        unpoweredBuildings.Remove(building);
+    }
+
+    private void TryRestorePower()
+    {
+        // Walk forwards (first to lose power = first to regain it)
+        for (int i = 0; i < unpoweredBuildings.Count; i++)
+        {
+            Building b = unpoweredBuildings[i];
+            if (b == null) { unpoweredBuildings.RemoveAt(i--); continue; }
+
+            if (GameManager.Instance.TryUseHydration(b.Data.HydrationCost))
+            {
+                unpoweredBuildings.RemoveAt(i--);
+                b.SetPowered(true);
+            }
+        }
+    }
+
+    private void ScheduleRestorePower()
+    {
+        restorePowerPending = true;
+    }
+
+    // Called when a hydration source is destroyed and capacity drops
+    public void OnHydrationCapacityReduced(float lostCapacity)
+    {
+        float hydrationToReclaim = usedHydration - currentHydration;
+
+        // Collect first, don't modify the list mid-iteration
+        List<Building> toDepower = new List<Building>();
+        for (int i = poweredBuildings.Count - 1; i >= 0 && hydrationToReclaim > 0; i--)
+        {
+            Building b = poweredBuildings[i];
+            if (b == null) { poweredBuildings.RemoveAt(i); continue; }
+
+            toDepower.Add(b);
+            hydrationToReclaim -= b.Data.HydrationCost;
+        }
+
+        // Now safely depower — SetPowered will modify poweredBuildings here, not mid-loop
+        foreach (Building b in toDepower)
+        {
+            usedHydration -= b.Data.HydrationCost;
+            usedHydration = Mathf.Max(0, usedHydration);
+            b.SetPowered(false); // This calls UnregisterPoweredBuilding safely now
+        }
+
+        UpdateResourceUI();
+        // Don't call ScheduleRestorePower here — we just lost capacity, nothing to restore
     }
 
 }

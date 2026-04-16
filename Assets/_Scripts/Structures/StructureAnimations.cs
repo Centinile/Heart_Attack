@@ -1,49 +1,75 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class StructureAnimations : MonoBehaviour
 {
+    [Header("References")]
     private Animator animator;
     private SpriteRenderer spriteRenderer;
 
-    private Vector3 baseScale;
+    [Header("Unpowered Visuals")]
+    [SerializeField] private GameObject unpoweredIconPrefab;
+    [SerializeField] private Vector3 iconOffset = new Vector3(0, 1f, 0);
+    [SerializeField] private Color unpoweredTint = new Color(0.4f, 0.4f, 0.4f, 1f);
+
+    private GameObject unpoweredIconInstance;
+    private Color originalColor;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        baseScale = transform.localScale;
+        if (spriteRenderer != null)
+            originalColor = spriteRenderer.color;
     }
 
-    private void Update()
-    {
+    // --- Power Visuals ---
 
+    public void ShowUnpowered()
+    {
+        if (spriteRenderer != null)
+            spriteRenderer.color = unpoweredTint;
+
+        if (unpoweredIconPrefab != null && unpoweredIconInstance == null)
+            unpoweredIconInstance = Instantiate(unpoweredIconPrefab, 
+                transform.position + iconOffset, Quaternion.identity, transform);
     }
 
-    public void RotateToPointer(Vector2 lookDirection)
+    public void ShowPowered()
     {
-        if (lookDirection == Vector2.zero) return;
+        if (spriteRenderer != null)
+            spriteRenderer.color = originalColor;
 
-        // Just flip the sprite
-        spriteRenderer.flipX = (lookDirection.x < 0);
+        if (unpoweredIconInstance != null)
+        {
+            Destroy(unpoweredIconInstance);
+            unpoweredIconInstance = null;
+        }
     }
 
-    public void PlayAnimation(Vector2 movementInput)
-    {
-        animator.SetBool("Running", movementInput.magnitude > 0.01f);
-    }
+    // --- Animations ---
 
-    //public void PlayAnimation() => animator.SetTrigger("GetHit");
-    public void PlayDeathAnimation() => animator.SetTrigger("Destroyed");
-    public void PlayAttackAnimation() => animator.SetTrigger("Attack");
+    public void PlayIdleAnimation() => TrySetTrigger("Idle");
+    public void PlayAttackAnimation() => TrySetTrigger("Attack");
+    public void PlayDeathAnimation() => TrySetTrigger("Destroyed");
 
-    public void SetAnimatorController(RuntimeAnimatorController c) //something something, to assign an animator to player
+    public void SetAnimatorController(RuntimeAnimatorController controller)
     {
-        if (!animator)
+        if (animator == null)
             animator = GetComponent<Animator>();
 
-        animator.runtimeAnimatorController = c;
+        animator.runtimeAnimatorController = controller;
+    }
+
+    public void FlipToward(Vector2 direction)
+    {
+        if (spriteRenderer != null && direction.x != 0)
+            spriteRenderer.flipX = direction.x < 0;
+    }
+
+    private void TrySetTrigger(string triggerName)
+    {
+        if (animator != null)
+            animator.SetTrigger(triggerName);
     }
 }

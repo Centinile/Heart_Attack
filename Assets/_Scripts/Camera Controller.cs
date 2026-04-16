@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems; // Required for UI detection
 
 public class CameraController : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class CameraController : MonoBehaviour
     private Vector3 dragOrigin;
     private Camera cam;
     private float targetZoom;
+    private bool isPanning = false; // Tracks if a valid pan was initiated
 
     private void Start()
     {
@@ -32,12 +34,22 @@ public class CameraController : MonoBehaviour
 
     private void PanCamera()
     {
-        if (Input.GetMouseButtonDown(0))
+        // Start pan on Right Click (1)
+        if (Input.GetMouseButtonDown(1))
         {
+            // Block panning if hovering over a UI element
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            {
+                isPanning = false;
+                return;
+            }
+
+            isPanning = true;
             dragOrigin = cam.ScreenToWorldPoint(Input.mousePosition);
         }
 
-        if (Input.GetMouseButton(0))
+        // Continue pan on Right Click hold, but ONLY if we started a valid pan
+        if (Input.GetMouseButton(1) && isPanning)
         {
             Vector3 difference = dragOrigin - cam.ScreenToWorldPoint(Input.mousePosition);
             Vector3 targetPosition = cam.transform.position + difference;
@@ -47,15 +59,26 @@ public class CameraController : MonoBehaviour
 
             cam.transform.position = new Vector3(clampedX, clampedY, targetPosition.z);
         }
+
+        // Stop panning when Right Click is released
+        if (Input.GetMouseButtonUp(1))
+        {
+            isPanning = false;
+        }
     }
 
     private void ZoomCamera()
     {
-        // Get scroll wheel input (standard is -0.1 to 0.1)
         float scrollInput = Input.GetAxis("Mouse ScrollWheel");
         
         if (scrollInput != 0)
         {
+            // Optional: Block zooming if hovering over a UI element (useful for UI scroll lists)
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
+
             // Calculate new target zoom
             targetZoom -= scrollInput * zoomSensitivity;
             // Clamp target zoom within limits

@@ -7,6 +7,7 @@ public class DefenseTower : Building
     [SerializeField] private DefenseData defenseData; // Renamed to avoid confusion with base Data
     [SerializeField] private RangeIndicator rangeIndicator;
     [SerializeField] private SpriteRenderer towerRenderer;
+    private StructureAnimations structureAnimations;
 
     [Header("Live State")]
     [SerializeField] private TargetMode currentTargetMode = TargetMode.ClosestToHeart;
@@ -26,6 +27,7 @@ public class DefenseTower : Building
         GameObject heart = GameObject.FindGameObjectWithTag("Heart");
         if (heart != null) heartTransform = heart.transform;
         attackTimer = 0f;
+        structureAnimations = GetComponent<StructureAnimations>();
     }
 
     public void SwitchTargetMode()
@@ -150,6 +152,7 @@ public class DefenseTower : Building
 
     private void PerformAttack()
     {
+        structureAnimations?.PlayAttackAnimation();
         switch (defenseData.attackType)
         {
             case AttackType.SingleTarget: FireProjectile(currentTarget, AttackType.SingleTarget); break;
