@@ -47,11 +47,13 @@ public class Building : MonoBehaviour
     public bool IsAlive => CurrentHP > 0;
 
     private Outline outline;
+    private StructureAnimations structureAnimations;
 
     protected virtual void Awake()
     {
         outline = GetComponent<Outline>();
         if (outline != null) outline.enabled = false; 
+        structureAnimations = GetComponent<StructureAnimations>();
     }
 
     public virtual void Initialize(StructureData data)
@@ -77,12 +79,20 @@ public class Building : MonoBehaviour
 
     protected virtual void OnDestroyed()
     {
-        // One-stop shop for cleanup
-        GameManager.Instance.ReleaseHydration(Data.HydrationCost);
+        structureAnimations?.PlayDeathAnimation();
+        if (IsPowered)
+        {
+            GameManager.Instance.UnregisterPoweredBuilding(this);
+            GameManager.Instance.ReleaseHydration(Data.HydrationCost);
+        }
+        else
+        {
+            GameManager.Instance.UnregisterUnpoweredBuilding(this);
+        }
 
         if (TowerPlacer.Instance != null)
             TowerPlacer.Instance.FreeTile(transform.position);
-            
+
         Destroy(gameObject);
     }
 
@@ -95,13 +105,45 @@ public class Building : MonoBehaviour
 
     protected void TryActivate()
     {
-        // This is good logic, ensures hydration is managed on spawn
         IsPowered = GameManager.Instance.TryUseHydration(Data.HydrationCost);
-        if (IsPowered) OnPowered(); else OnUnpowered();
+        if (IsPowered)
+        {
+            GameManager.Instance.RegisterPoweredBuilding(this);
+            OnPowered();
+        }
+        else
+        {
+            GameManager.Instance.RegisterUnpoweredBuilding(this);
+            OnUnpowered();
+        }
     }
 
-    protected virtual void OnPowered() { }
-    protected virtual void OnUnpowered() { }
+    public void SetPowered(bool powered)
+    {
+        if (IsPowered == powered) return;
+        IsPowered = powered;
+
+        if (powered)
+        {
+            GameManager.Instance.RegisterPoweredBuilding(this);
+            OnPowered();
+        }
+        else
+        {
+            GameManager.Instance.UnregisterPoweredBuilding(this);
+            GameManager.Instance.RegisterUnpoweredBuilding(this);
+            OnUnpowered();
+        }
+    }
+
+    protected virtual void OnPowered()
+    {
+        structureAnimations?.ShowPowered();
+    }
+    protected virtual void OnUnpowered()
+    {
+        structureAnimations?.ShowUnpowered();
+    }
 
     public virtual void OnSelected() { if (outline != null) outline.enabled = true; }
     public virtual void OnDeselected() { if (outline != null) outline.enabled = false; }
@@ -117,6 +159,7 @@ public class Building : MonoBehaviour
         Vector3 pos = transform.position;
         Quaternion rot = transform.rotation;
 
+        bool wasPowered = IsPowered;
         // We call OnDestroyed to handle the cleanup of old hydration/tiles
         OnDestroyed();
 
@@ -124,7 +167,17 @@ public class Building : MonoBehaviour
         Building newBuilding = newObj.GetComponent<Building>();
         
         // Let initialize handle everything
-        newBuilding.Initialize(nextData);
+        newBuilding.InitializeWithoutActivation(nextData);
+        if (wasPowered && GameManager.Instance.TryUseHydration(nextData.HydrationCost))
+        {
+            newBuilding.SetPowered(true);
+        }
+        else
+        {
+            newBuilding.SetPowered(false);
+            GameManager.Instance.RegisterUnpoweredBuilding(newBuilding);
+        }
+
 
         BuildingSelector.SelectedBuilding = newBuilding;
         newBuilding.OnSelected();
@@ -134,5 +187,14 @@ public class Building : MonoBehaviour
     {
         GameManager.Instance.AddNutrients(Data.NutrientCost * 0.5f);
         OnDestroyed(); // Use the common cleanup method
+    }
+
+    public void InitializeWithoutActivation(StructureData data)
+    {
+        Data = data;
+        StructureType = data.GetStructureType();
+        MaxHP = data.MaxHP;
+        CurrentHP = MaxHP;
+        // Deliberately does NOT call TryActivate
     }
 }
