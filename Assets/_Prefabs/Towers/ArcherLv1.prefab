@@ -166,7 +166,6 @@ GameObject:
   - component: {fileID: -3924674970481793475}
   - component: {fileID: 6396465466065567474}
   - component: {fileID: -6934563520980502620}
-  - component: {fileID: -4304549995141334448}
   m_Layer: 3
   m_Name: ArcherLv1
   m_TagString: Defense
@@ -340,16 +339,3 @@ MonoBehaviour:
   unpoweredIconPrefab: {fileID: 4928553900717565511, guid: 01bb88de4b34c2f468521febed4de1b8, type: 3}
   iconOffset: {x: 0, y: 1, z: 0}
   unpoweredTint: {r: 0.4, g: 0.4, b: 0.4, a: 1}
---- !u!114 &-4304549995141334448
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4611168650507600015}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 372d11a5b56faf64897d682317f319e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: 8fc27eea14ea0594f847f98612b8755e, type: 2}
