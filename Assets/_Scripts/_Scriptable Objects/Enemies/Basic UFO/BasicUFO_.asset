@@ -18,10 +18,10 @@ MonoBehaviour:
   moveSpeed: 1
   isRanged: 0
   attackCooldown: 1
-  isFlying: 0
-  targetingPriority: 4
+  targetingPriority: 2
   detectionRadius: 5
   stoppingDistance: 1.2
   abilities:
   - {fileID: 11400000, guid: 1d5949fe31b576942a563c63ee4e24d9, type: 2}
+  - {fileID: 11400000, guid: 610f908b723fe8b4cab1ea3ae3199d2b, type: 2}
   enemyIcon: {fileID: 0}
