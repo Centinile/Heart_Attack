@@ -14,6 +14,7 @@ public abstract class AbilityBase : ScriptableObject, IAbility
     
     [Header("Trigger Settings")]
     [Tooltip("If true, this ability triggers when the enemy spawns.")]
+    
     [SerializeField] protected bool triggerOnSpawn;
     
     [Tooltip("If true, this ability triggers when the enemy attacks.")]
@@ -21,6 +22,10 @@ public abstract class AbilityBase : ScriptableObject, IAbility
     
     [Tooltip("If true, this ability triggers when the enemy dies.")]
     [SerializeField] protected bool triggerOnDeath;
+
+    [Tooltip("If true, this ability prevents the enemy from dying (e.g. a revive). " +
+         "Leave false for abilities that merely react to death (e.g. explosion).")]
+    [SerializeField] protected bool preventDeath = false;
     
     [Tooltip("If true, this ability runs every frame (passive ability).")]
     [SerializeField] protected bool isPassive;
@@ -129,7 +134,7 @@ public abstract class AbilityBase : ScriptableObject, IAbility
         {
             ExecuteAbility(user);
             lastUsedTime = Time.time;
-            return true; // Ability handled death (could revive, etc.)
+            return preventDeath; // Ability handled death (could revive, etc.)
         }
         
         return false;

@@ -22,6 +22,7 @@ public class DeathExplosionAbility : AbilityBase
         abilityName = "Death Explosion";
         cooldown = 0f;
         triggerOnDeath = true;
+        preventDeath = false;
     }
 
     protected override void ExecuteAbility(Enemy user)

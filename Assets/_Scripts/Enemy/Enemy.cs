@@ -19,24 +19,25 @@ public class Enemy : MonoBehaviour
 
     [Header("Navigation & AI")]
     private NavMeshAgent agent;
-    public Building targetBuilding;      
-    public GameObject currentMoveTarget; 
-    
-    // --- PERSISTENCE FIX ---
-    private Building lockedWall; 
+    public Building targetBuilding;
+    public GameObject currentMoveTarget;
+
+    private Building lockedWall;
     private bool isBreakingWall = false;
     private float attackTimer;
     private float detectionTimer;
-    private const float DETECTION_INTERVAL = 0.6f; 
+    private const float DETECTION_INTERVAL = 0.6f;
+
+    private int pathClearFrames = 0;
+    private const int PATH_CLEAR_FRAMES_REQUIRED = 3;
 
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        if (agent != null) 
-        { 
-            // Standard for 2D/Isometric NavMesh
-            agent.updateRotation = false; 
-            agent.updateUpAxis = false; 
+        if (agent != null)
+        {
+            agent.updateRotation = false;
+            agent.updateUpAxis = false;
         }
     }
 
@@ -61,12 +62,25 @@ public class Enemy : MonoBehaviour
         HandleCombatState();
 
         if (attackTimer > 0) attackTimer -= Time.deltaTime;
-        
+
         detectionTimer -= Time.deltaTime;
         if (detectionTimer <= 0)
         {
             detectionTimer = DETECTION_INTERVAL;
-            UpdatePathing(); 
+
+            // Check detection range for preferred targets, but not while breaking a wall
+            if (data.TargetingPriority != TargetPriority.None && !isBreakingWall)
+            {
+                Building inRange = FindPreferredTargetInRange();
+                if (inRange != null && inRange != targetBuilding)
+                {
+                    targetBuilding = inRange;
+                    UpdatePathing();
+                    return;
+                }
+            }
+
+            UpdatePathing();
         }
     }
 
@@ -87,18 +101,27 @@ public class Enemy : MonoBehaviour
         if (allBuildings.Length == 0) return;
 
         List<Building> candidates;
+
         if (data.TargetingPriority == TargetPriority.None)
-            candidates = allBuildings.Where(b => b.StructureType == StructureType.Heart).ToList();
+        {
+            // No priority — always target the heart
+            candidates = allBuildings
+                .Where(b => b.StructureType == StructureType.Heart).ToList();
+        }
         else
         {
+            // Has priority — look for preferred targets first
             candidates = allBuildings.Where(b => IsCorrectPriority(b)).ToList();
+
+            // No preferred targets exist anywhere — fall back to heart
             if (candidates.Count == 0)
-                candidates = allBuildings.Where(b => b.StructureType != StructureType.Wall).ToList();
+                candidates = allBuildings
+                    .Where(b => b.StructureType == StructureType.Heart).ToList();
         }
 
         if (candidates.Count == 0) return;
 
-        // Rule of 3
+        // Rule of 3: take 3 closest by straight-line, pick shortest NavMesh path
         targetBuilding = candidates
             .OrderBy(b => Vector3.Distance(transform.position, b.transform.position))
             .Take(3)
@@ -109,13 +132,32 @@ public class Enemy : MonoBehaviour
         UpdatePathing();
     }
 
+    // Scan detection radius for a live building matching targeting priority
+    private Building FindPreferredTargetInRange()
+    {
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, data.DetectionRadius);
+        Building best = null;
+        float bestDist = Mathf.Infinity;
+
+        foreach (var col in hits)
+        {
+            Building b = col.GetComponent<Building>();
+            if (b == null || !b.IsAlive) continue;
+            if (!IsCorrectPriority(b)) continue;
+
+            float d = Vector3.Distance(transform.position, b.transform.position);
+            if (d < bestDist) { bestDist = d; best = b; }
+        }
+        return best;
+    }
+
     private float GetEffectiveDistance(Building b)
     {
         NavMeshPath path = new NavMeshPath();
         agent.CalculatePath(b.transform.position, path);
         float d = GetPathLength(path);
-        // Wall penalty
-        if (path.status == NavMeshPathStatus.PathPartial && !data.IsFlying) d += 40f; 
+        // Penalize partial paths heavily so fully reachable targets are preferred
+        if (path.status == NavMeshPathStatus.PathPartial) d += 40f;
         return d;
     }
 
@@ -126,21 +168,30 @@ public class Enemy : MonoBehaviour
         NavMeshPath path = new NavMeshPath();
         agent.CalculatePath(targetBuilding.transform.position, path);
 
-        // 1. If we can reach the main target, clear any wall locks and go.
-        if (path.status == NavMeshPathStatus.PathComplete || data.IsFlying)
+        if (path.status == NavMeshPathStatus.PathComplete)
         {
+            // Require several consecutive clear frames before trusting the path
+            // is genuinely open — prevents NavMesh flicker near wall seams
+            if (isBreakingWall && lockedWall != null && lockedWall.IsAlive)
+            {
+                pathClearFrames++;
+                if (pathClearFrames < PATH_CLEAR_FRAMES_REQUIRED)
+                    return;
+            }
+
+            pathClearFrames = 0;
             UnlockWall();
             currentMoveTarget = targetBuilding.gameObject;
             agent.SetDestination(currentMoveTarget.transform.position);
         }
         else
         {
-            // 2. If path is blocked, ONLY search for a wall if we don't have one locked.
-            // This is the "First wall seen" logic.
+            pathClearFrames = 0;
+
+            // Only pick a new wall if we don't already have one locked —
+            // once committed, stay on it until it dies
             if (lockedWall == null || !lockedWall.IsAlive)
-            {
                 SearchForNearestWall();
-            }
         }
     }
 
@@ -149,8 +200,11 @@ public class Enemy : MonoBehaviour
         GameObject[] walls = GameObject.FindGameObjectsWithTag("Wall");
         if (walls.Length == 0) return;
 
+        // Use NavMesh path distance for stable wall selection
         GameObject closest = walls
-            .OrderBy(w => Vector3.Distance(transform.position, w.transform.position))
+            .Select(w => new { Wall = w, Dist = GetNavMeshDistanceTo(w.transform.position) })
+            .OrderBy(x => x.Dist)
+            .Select(x => x.Wall)
             .FirstOrDefault();
 
         if (closest != null)
@@ -162,22 +216,36 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private float GetNavMeshDistanceTo(Vector3 destination)
+    {
+        NavMeshPath path = new NavMeshPath();
+        agent.CalculatePath(destination, path);
+
+        if (path.corners.Length < 2)
+            return Vector3.Distance(transform.position, destination);
+
+        float dist = 0f;
+        for (int i = 0; i < path.corners.Length - 1; i++)
+            dist += Vector3.Distance(path.corners[i], path.corners[i + 1]);
+        return dist;
+    }
+
     private void UnlockWall()
     {
         lockedWall = null;
         isBreakingWall = false;
+        pathClearFrames = 0;
     }
 
     private void HandleCombatState()
     {
-        // Prioritize the locked wall over the building target
-        GameObject activeTarget = (lockedWall != null && lockedWall.IsAlive) ? lockedWall.gameObject : currentMoveTarget;
-        
+        GameObject activeTarget = (lockedWall != null && lockedWall.IsAlive)
+            ? lockedWall.gameObject
+            : currentMoveTarget;
+
         if (activeTarget == null) return;
 
         float dist = Vector3.Distance(transform.position, activeTarget.transform.position);
-        
-        // Walls in isometric often need a slightly higher range to account for the pivot
         float range = isBreakingWall ? agent.stoppingDistance + 0.4f : data.AttackRadius;
 
         if (dist <= range)
@@ -223,7 +291,9 @@ public class Enemy : MonoBehaviour
 
     private float GetPathLength(NavMeshPath path)
     {
-        if (path.corners.Length < 2) return Vector3.Distance(transform.position, targetBuilding.transform.position);
+        if (path.corners.Length < 2)
+            return Vector3.Distance(transform.position, targetBuilding.transform.position);
+
         float dist = 0f;
         for (int i = 0; i < path.corners.Length - 1; i++)
             dist += Vector3.Distance(path.corners[i], path.corners[i + 1]);
@@ -231,6 +301,7 @@ public class Enemy : MonoBehaviour
     }
 
     // --- Stats & Lifecycle ---
+
     public void TakeDamage(float damage)
     {
         currentHP -= damage;
@@ -240,7 +311,9 @@ public class Enemy : MonoBehaviour
     private void DieLogic()
     {
         bool deathPrevented = false;
-        foreach (var a in instantiatedAbilities) if (a != null && a.OnDeath(this)) deathPrevented = true;
+        foreach (var a in instantiatedAbilities)
+            if (a != null && a.OnDeath(this)) deathPrevented = true;
+
         if (!deathPrevented)
         {
             StopAllCoroutines();
@@ -281,21 +354,18 @@ public class Enemy : MonoBehaviour
         currentHP = scaledMaxHP;
     }
 
-    // --- Gizmos & Debugging ---
+    // --- Gizmos ---
+
     private void OnDrawGizmosSelected()
     {
         if (data == null) return;
 
-        // 1. Attack Range (Red)
         Gizmos.color = new Color(1, 0, 0, 0.3f);
         Gizmos.DrawWireSphere(transform.position, data.AttackRadius);
-        
-        // 2. Detection/Targeting Range (Yellow)
-        // Since the whole map is searched, we visualize the path refresh area
-        Gizmos.color = new Color(1, 1, 0, 0.2f);
-        Gizmos.DrawWireSphere(transform.position, 5f); // Visualization of local awareness
 
-        // 3. Current Target Line
+        Gizmos.color = new Color(1, 1, 0, 0.2f);
+        Gizmos.DrawWireSphere(transform.position, data.DetectionRadius);
+
         if (currentMoveTarget != null)
         {
             Gizmos.color = isBreakingWall ? Color.magenta : Color.green;
