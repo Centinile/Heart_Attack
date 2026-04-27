@@ -45,6 +45,12 @@ public class Building : MonoBehaviour
     public float CurrentHP { get; private set; }
     public float HPPercent => MaxHP > 0 ? CurrentHP / MaxHP : 0f;
     public bool IsAlive => CurrentHP > 0;
+    public float RepairCost => Mathf.Round(Data.NutrientCost * (1f - HPPercent) * 0.5f);
+
+    public bool CanRepair => IsAlive && HPPercent < 1f;
+
+    [Header("Healthbar")]
+    [SerializeField] private HealthBar healthBar;
 
     private Outline outline;
     private StructureAnimations structureAnimations;
@@ -69,12 +75,32 @@ public class Building : MonoBehaviour
     public virtual void TakeDamage(float damage)
     {
         CurrentHP = Mathf.Max(0, CurrentHP - damage);
+        healthBar?.UpdateBar(CurrentHP, MaxHP);
         if (CurrentHP <= 0) OnDestroyed();
     }
 
     public virtual void Heal(float amount)
     {
         CurrentHP = Mathf.Min(CurrentHP + amount, MaxHP);
+        healthBar?.UpdateBar(CurrentHP, MaxHP);
+    }
+
+    public virtual void Repair()
+    {
+        if (!CanRepair) return;
+
+        float cost = RepairCost;
+        Debug.Log($"[Repair] {gameObject.name} | HP: {CurrentHP:0}/{MaxHP:0} ({HPPercent:P0} full) | Missing HP: {MaxHP - CurrentHP:0} | Repair Cost: {cost} Nutrients");
+        
+        if (!GameManager.Instance.SpendNutrients(cost)) 
+        {
+            Debug.Log($"[Repair] Failed — not enough nutrients. Have: {GameManager.Instance.CurrentNutrients:0}, Need: {cost}");
+            return;
+        }
+
+        CurrentHP = MaxHP;
+        Debug.Log($"[Repair] Success — {cost} Nutrients spent. Nutrients remaining: {GameManager.Instance.CurrentNutrients:0}");
+        healthBar?.UpdateBar(CurrentHP, MaxHP);
     }
 
     protected virtual void OnDestroyed()

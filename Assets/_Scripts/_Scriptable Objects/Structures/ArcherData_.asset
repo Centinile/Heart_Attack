@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   structureName: ArcherTower
   maxHP: 100
-  nutrientCost: 20
+  nutrientCost: 200
   hydrationCost: 40
   nextLevelData: {fileID: 11400000, guid: 02e5146ecb708b84e9dc77c074cdc081, type: 2}
   upgradeCost: 150

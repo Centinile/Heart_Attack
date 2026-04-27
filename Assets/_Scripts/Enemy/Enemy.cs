@@ -31,6 +31,9 @@ public class Enemy : MonoBehaviour
     private int pathClearFrames = 0;
     private const int PATH_CLEAR_FRAMES_REQUIRED = 3;
 
+    [Header("Healthbar")]
+    [SerializeField] private HealthBar healthBar;
+
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -306,6 +309,7 @@ public class Enemy : MonoBehaviour
     {
         currentHP -= damage;
         if (currentHP <= 0) DieLogic();
+        healthBar?.UpdateBar(currentHP, scaledMaxHP);
     }
 
     private void DieLogic()
