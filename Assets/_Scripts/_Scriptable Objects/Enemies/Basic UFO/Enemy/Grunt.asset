@@ -18,7 +18,7 @@ MonoBehaviour:
   moveSpeed: 1
   isRanged: 0
   attackCooldown: 1
-  targetingPriority: 2
+  targetingPriority: 1
   detectionRadius: 5
   stoppingDistance: 1.2
   abilities:

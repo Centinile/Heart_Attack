@@ -15,7 +15,7 @@ public class SpawnSpeedBoostAbility : AbilityBase
     [SerializeField] private float speedMultiplier = 1.5f;
     
     [Tooltip("Duration of the speed boost in seconds.")]
-    [SerializeField] private float boostDuration = 3f;
+    [SerializeField] private float boostDuration = 2f;
     
     public SpawnSpeedBoostAbility()
     {
