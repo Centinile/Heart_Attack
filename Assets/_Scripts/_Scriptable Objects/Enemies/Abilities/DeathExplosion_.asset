@@ -17,8 +17,9 @@ MonoBehaviour:
   triggerOnSpawn: 0
   triggerOnAttack: 0
   triggerOnDeath: 1
+  preventDeath: 0
   isPassive: 0
   usableWhileStunned: 1
-  explosionRadius: 3
+  explosionRadius: 1
   explosionEffect: {fileID: 0}
   explosionSound: {fileID: 0}
