@@ -22,5 +22,5 @@ MonoBehaviour:
   detectionRadius: 5
   stoppingDistance: 1.2
   abilities:
-  - {fileID: 11400000, guid: 610f908b723fe8b4cab1ea3ae3199d2b, type: 2}
+  - {fileID: 11400000, guid: 0f942f017c905464f887f8fa72f80aa8, type: 2}
   enemyIcon: {fileID: 0}

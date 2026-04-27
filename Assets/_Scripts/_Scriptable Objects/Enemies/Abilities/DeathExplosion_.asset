@@ -17,12 +17,9 @@ MonoBehaviour:
   triggerOnSpawn: 0
   triggerOnAttack: 0
   triggerOnDeath: 1
+  preventDeath: 0
   isPassive: 0
   usableWhileStunned: 1
-<<<<<<<< Updated upstream:Assets/_Scripts/_Scriptable Objects/Enemies/Abilities/DeathExplosion_.asset
-  explosionRadius: 3
-========
   explosionRadius: 1
->>>>>>>> Stashed changes:Assets/_Scripts/_Scriptable Objects/Enemies/Basic UFO/Ability/DeathExplosion_.asset
   explosionEffect: {fileID: 0}
   explosionSound: {fileID: 0}
