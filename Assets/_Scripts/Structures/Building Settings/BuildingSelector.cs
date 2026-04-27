@@ -1,18 +1,23 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using TMPro;
 
 public class BuildingSelector : MonoBehaviour
 {
     public static Building SelectedBuilding;
+
     [Header("Action UI")]
     public GameObject actionPanel;
     public LayerMask buildingLayer;
+
+    [Header("Repair UI")]
+    [SerializeField] private GameObject repairButton;
+    [SerializeField] private TMP_Text repairCostText;
 
     void Start() => actionPanel.SetActive(false);
 
     void Update()
     {
-        // 1. If we are currently placing a tower, selection is disabled
         if (TowerSelectionUI.SelectedStructureData != null) return;
 
         if (Input.GetMouseButtonDown(0))
@@ -33,6 +38,11 @@ public class BuildingSelector : MonoBehaviour
             }
             Deselect();
         }
+
+        // Refresh repair button every frame so cost and visibility
+        // stay in sync as the building takes damage while selected
+        if (SelectedBuilding != null)
+            RefreshRepairUI();
     }
 
     void SelectBuilding(Building building)
@@ -43,6 +53,18 @@ public class BuildingSelector : MonoBehaviour
         SelectedBuilding = building;
         SelectedBuilding.OnSelected();
         actionPanel.SetActive(true);
+        RefreshRepairUI();
+    }
+
+    private void RefreshRepairUI()
+    {
+        if (repairButton == null) return;
+
+        bool canRepair = SelectedBuilding != null && SelectedBuilding.CanRepair;
+        repairButton.SetActive(canRepair);
+
+        if (canRepair && repairCostText != null)
+            repairCostText.text = $"Repair ({SelectedBuilding.RepairCost} Nutrients)";
     }
 
     public void Deselect()
@@ -64,8 +86,14 @@ public class BuildingSelector : MonoBehaviour
     public void SellSelected()
     {
         if (SelectedBuilding == null) return;
-
         SelectedBuilding.Sell();
         Deselect();
+    }
+
+    public void RepairSelected()
+    {
+        if (SelectedBuilding == null) return;
+        SelectedBuilding.Repair();
+        RefreshRepairUI();
     }
 }
