@@ -4,7 +4,7 @@ using UnityEngine;
     menuName = "Structure/Wall",
     fileName = "WallData_",
     order = 40)]
-public class WallData : StructureData
+public class WallData : BuildingData
 {
     [Header("Wall Settings")]
     [Tooltip("If true, enemies will attack walls to reach the heart.")]

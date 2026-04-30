@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Structure/Defense Tower", fileName = "DefenseData_")]
-public class DefenseData : StructureData
+public class DefenseData : BuildingData
 {
     [Header("Combat Stats")]
     public float damage = 10f;

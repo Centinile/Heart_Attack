@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class DefenseTower : Building
 {
     [Header("References")]
-    [SerializeField] private DefenseData defenseData; // Renamed to avoid confusion with base Data
+    [SerializeField] private DefenseData defenseData; 
     [SerializeField] private RangeIndicator rangeIndicator;
     [SerializeField] private SpriteRenderer towerRenderer;
     private StructureAnimations structureAnimations;

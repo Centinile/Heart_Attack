@@ -2,7 +2,7 @@ using UnityEngine;
 public enum ResourceType { Nutrients, Hydration }
 
 [CreateAssetMenu(menuName = "Structure/Resource", fileName = "ResourceData_", order = 30)]
-public class ResourceData : StructureData
+public class ResourceData : BuildingData
 {
     [Header("Resource Settings")]
     public ResourceType type;

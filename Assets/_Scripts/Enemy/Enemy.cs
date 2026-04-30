@@ -32,7 +32,7 @@ public class Enemy : MonoBehaviour
     private const int PATH_CLEAR_FRAMES_REQUIRED = 3;
 
     [Header("Healthbar")]
-    [SerializeField] private HealthBar healthBar;
+    [SerializeField] private HealthBarAnchor healthBar;
 
     void Awake()
     {
@@ -94,6 +94,7 @@ public class Enemy : MonoBehaviour
         currentHP = scaledMaxHP;
         agent.speed = data.MoveSpeed;
         agent.stoppingDistance = data.StoppingDistance;
+        healthBar?.Initialize(scaledMaxHP);
     }
 
     // --- Core AI Logic ---
@@ -320,6 +321,7 @@ public class Enemy : MonoBehaviour
 
         if (!deathPrevented)
         {
+            healthBar?.ReturnBar();
             StopAllCoroutines();
             foreach (var a in instantiatedAbilities) if (a != null) Destroy(a);
             Destroy(gameObject);

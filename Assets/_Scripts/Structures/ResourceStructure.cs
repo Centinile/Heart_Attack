@@ -19,7 +19,7 @@ public class ResourceStructure : Building
         base.OnPlaced(); // Good practice
     }
 
-    public override void Initialize(StructureData structureData)
+    public override void Initialize(BuildingData structureData)
     {
         base.Initialize(structureData); // TryActivate runs here
         InitializeResourceLogic();      // Hydration boost runs immediately after

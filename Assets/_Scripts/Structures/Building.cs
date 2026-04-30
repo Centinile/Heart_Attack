@@ -5,7 +5,8 @@ public enum StructureType
     Heart,
     Resource,
     Defense,
-    Wall
+    Wall,
+    Research
 }
 
 /// Defines how a defense tower selects its target.
@@ -36,7 +37,7 @@ public enum AttackType
 /// Implements common functionality shared by all structure types.
 public class Building : MonoBehaviour
 {
-    public StructureData Data { get; private set; }
+    public BuildingData Data { get; private set; }
     public int Level { get; protected set; } = 1;
     public bool IsPowered { get; protected set; }
     
@@ -48,9 +49,10 @@ public class Building : MonoBehaviour
     public float RepairCost => Mathf.Round(Data.NutrientCost * (1f - HPPercent) * 0.5f);
 
     public bool CanRepair => IsAlive && HPPercent < 1f;
+    private bool _tierLocked = false;
 
     [Header("Healthbar")]
-    [SerializeField] private HealthBar healthBar;
+    [SerializeField] private HealthBarAnchor healthBar;
 
     private Outline outline;
     private StructureAnimations structureAnimations;
@@ -62,14 +64,21 @@ public class Building : MonoBehaviour
         structureAnimations = GetComponent<StructureAnimations>();
     }
 
-    public virtual void Initialize(StructureData data)
+    public virtual void Initialize(BuildingData data)
     {
         Data = data;
         StructureType = data.GetStructureType();
         MaxHP = data.MaxHP;
         CurrentHP = MaxHP;
+        healthBar.Initialize(MaxHP);
 
         TryActivate();
+
+        if (TierUnlockManager.Instance != null)
+        {
+            TierUnlockManager.OnTierUnlocksChanged += OnTierUnlocksChanged;
+            CheckTierLock();
+        }
     }
 
     public virtual void TakeDamage(float damage)
@@ -105,7 +114,10 @@ public class Building : MonoBehaviour
 
     protected virtual void OnDestroyed()
     {
+        healthBar?.ReturnBar();
+
         structureAnimations?.PlayDeathAnimation();
+        TierUnlockManager.OnTierUnlocksChanged -= OnTierUnlocksChanged;
         if (IsPowered)
         {
             GameManager.Instance.UnregisterPoweredBuilding(this);
@@ -151,6 +163,7 @@ public class Building : MonoBehaviour
 
         if (powered)
         {
+            GameManager.Instance.UnregisterUnpoweredBuilding(this);
             GameManager.Instance.RegisterPoweredBuilding(this);
             OnPowered();
         }
@@ -179,7 +192,7 @@ public class Building : MonoBehaviour
         if (Data.NextLevelData == null || !GameManager.Instance.SpendNutrients(Data.UpgradeCost))
             return;
 
-        StructureData nextData = Data.NextLevelData;
+        BuildingData nextData = Data.NextLevelData;
 
         // Capture transform before destruction
         Vector3 pos = transform.position;
@@ -215,12 +228,39 @@ public class Building : MonoBehaviour
         OnDestroyed(); // Use the common cleanup method
     }
 
-    public void InitializeWithoutActivation(StructureData data)
+    public void InitializeWithoutActivation(BuildingData data)
     {
         Data = data;
         StructureType = data.GetStructureType();
         MaxHP = data.MaxHP;
         CurrentHP = MaxHP;
         // Deliberately does NOT call TryActivate
+    }
+
+    private void OnTierUnlocksChanged()
+    {
+        CheckTierLock();
+    }
+
+    private void CheckTierLock()
+    {
+        if (Data == null) return;
+        if (TierUnlockManager.Instance == null) return;
+
+        bool tierUnlocked = TierUnlockManager.Instance.IsTierUnlocked(Data.Tier);
+
+        if (!tierUnlocked && !_tierLocked)
+        {
+            _tierLocked = true;
+            // Only depower if currently powered — unpowered buildings are unaffected
+            if (IsPowered) SetPowered(false);
+        }
+        else if (tierUnlocked && _tierLocked)
+        {
+            _tierLocked = false;
+            // Don't call TryActivate — hydration was never released when tier-locked,
+            // so we just restore powered state directly
+            SetPowered(true);
+        }
     }
 }

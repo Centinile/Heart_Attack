@@ -166,6 +166,7 @@ GameObject:
   - component: {fileID: 8211003167203178827}
   - component: {fileID: 6396465466065567474}
   - component: {fileID: 5912818999644929591}
+  - component: {fileID: 3960615824185046062}
   m_Layer: 3
   m_Name: Nutrient Mine
   m_TagString: Defense
@@ -302,6 +303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 310c5aa2f474fc54e88a6a1ede4a0568, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthBar: {fileID: 3960615824185046062}
   data: {fileID: 11400000, guid: 94ab375209246654e95813b2500a6fc9, type: 2}
 --- !u!114 &6396465466065567474
 MonoBehaviour:
@@ -336,3 +338,15 @@ MonoBehaviour:
   unpoweredIconPrefab: {fileID: 4928553900717565511, guid: 01bb88de4b34c2f468521febed4de1b8, type: 3}
   iconOffset: {x: 0, y: 1, z: 0}
   unpoweredTint: {r: 0.4, g: 0.4, b: 0.4, a: 1}
+--- !u!114 &3960615824185046062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4611168650507600015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b97208319265344c89c0d2a5b89447e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
