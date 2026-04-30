@@ -167,6 +167,7 @@ GameObject:
   - component: {fileID: 318986498396000160}
   - component: {fileID: 7824842153479355437}
   - component: {fileID: -8698307849595338630}
+  - component: {fileID: -1358195913769069449}
   m_Layer: 3
   m_Name: Lab
   m_TagString: Defense
@@ -349,3 +350,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthBar: {fileID: 7824842153479355437}
+--- !u!114 &-1358195913769069449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4611168650507600015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79ced33d0347d4846a30625fcef1f85f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

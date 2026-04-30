@@ -167,6 +167,7 @@ GameObject:
   - component: {fileID: -519200345816809116}
   - component: {fileID: 2303668638298642103}
   - component: {fileID: 890896917582145893}
+  - component: {fileID: -8903377872745421503}
   m_Layer: 3
   m_Name: ArcherLv2
   m_TagString: Defense
@@ -353,3 +354,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b97208319265344c89c0d2a5b89447e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-8903377872745421503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4611168650507600015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d74ac103e2501446a75003fe1005114, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fogVFX: {fileID: 0}
+  baseRadius: 3
+  radiusPerBuilding: 0.5
+  maxRadius: 20
