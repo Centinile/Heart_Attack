@@ -1,16 +1,22 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 
 public class WaveManager : MonoBehaviour
 {
     public static System.Action OnWaveCleared;
+    
     [Header("Wave Setup")]
     public WaveData[] waves;
     public Button startWaveButton;
     public int currentWaveIndex;
     public bool waveRunning = false;
+
+    [Header("Tutorial Settings")]
+    public bool isTutorialLevel = false;
+    public string mainMenuSceneName = "MainMenuScene";
 
     [Header("Automation Settings")]
     public bool autoStartNextWave = false; 
@@ -55,13 +61,11 @@ public class WaveManager : MonoBehaviour
     IEnumerator RunWave()
     {
         waveRunning = true;
-        // Tell the GameManager we are in Gameplay
+        
         GameManager.Instance.EnterGameplayPhase();
 
         if (startWaveButton != null) startWaveButton.interactable = false;
 
-        // --- Freeplay Check ---
-        // If current index is at or beyond the hand-designed waves, lock into freeplay
         if (currentWaveIndex >= waves.Length) 
         {
             freeplayMode = true;
@@ -72,7 +76,6 @@ public class WaveManager : MonoBehaviour
         
         float totalNutrientReward = 0;
 
-        // --- STEP 1: SPAWNING PHASE ---
         if (!freeplayMode)
         {
             Debug.Log($"Wave {currentWaveIndex + 1}: DESIGNED");
@@ -83,7 +86,7 @@ public class WaveManager : MonoBehaviour
         else
         {
             Debug.Log($"Wave {currentWaveIndex + 1}: FREEPLAY");
-            // Freeplay logic
+            
             List<EnemyRaidGroup> selectedGroups = GenerateFreeplayWave(currentWaveIndex);
             foreach(var group in selectedGroups) totalNutrientReward += group.NutrientReward;
 
@@ -104,38 +107,38 @@ public class WaveManager : MonoBehaviour
             }
         }
 
-        // --- STEP 2: SURVIVAL PHASE ---
-        yield return new WaitForSeconds(1f); // Buffer for enemies to initialize
+        yield return new WaitForSeconds(1f); 
 
         while (GameObject.FindObjectsByType<Enemy>(FindObjectsSortMode.None).Length > 0)
         {
             yield return new WaitForSeconds(0.5f); 
         }
 
-        // --- STEP 3: WAVE CLEAR & RESTING ---
         Debug.Log($"Wave {currentWaveIndex + 1} Cleared!");
         GameManager.Instance.AddNutrients(totalNutrientReward);
 
-        // This triggers your resource structures to produce nutrients
         OnWaveCleared?.Invoke();
 
         waveRunning = false;
         currentWaveIndex++;
 
-        // Tell the GameManager to enter Resting Phase
+        if (isTutorialLevel && currentWaveIndex >= waves.Length)
+        {
+            Debug.Log("Tutorial finished. Loading Main Menu.");
+            SceneManager.LoadScene(mainMenuSceneName);
+            yield break; 
+        }
+
         GameManager.Instance.EnterRestingPhase();
 
         if (startWaveButton != null) startWaveButton.interactable = true;
 
-        // --- STEP 4: AUTOMATION ---
         if (autoStartNextWave)
         {
             yield return new WaitForSeconds(timeBetweenWaves);
             StartWave();
         }
     }
-
-    // --- SELECTION & UTILS ---
 
     void SpawnEnemy(GameObject prefab)
     {
@@ -216,10 +219,10 @@ public class WaveManager : MonoBehaviour
 
         switch (Random.Range(0, 4))
         {
-            case 0: return new Vector3(bounds.min.x - spawnOutsideOffset, y, 0); // Left
-            case 1: return new Vector3(bounds.max.x + spawnOutsideOffset, y, 0); // Right
-            case 2: return new Vector3(x, bounds.min.y - spawnOutsideOffset, 0); // Bottom
-            default: return new Vector3(x, bounds.max.y + spawnOutsideOffset, 0); // Top
+            case 0: return new Vector3(bounds.min.x - spawnOutsideOffset, y, 0); 
+            case 1: return new Vector3(bounds.max.x + spawnOutsideOffset, y, 0); 
+            case 2: return new Vector3(x, bounds.min.y - spawnOutsideOffset, 0); 
+            default: return new Vector3(x, bounds.max.y + spawnOutsideOffset, 0); 
         }
     }
 }
