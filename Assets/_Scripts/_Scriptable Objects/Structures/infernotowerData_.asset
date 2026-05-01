@@ -10,30 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51ee95539e800654b9b75b07a2ff498b, type: 3}
-  m_Name: ArcherData_
+  m_Name: infernotowerData_
   m_EditorClassIdentifier: 
-  structureName: ArcherTower
+  structureName: New Structure
   maxHP: 100
   tier: 1
-  nutrientCost: 200
-  hydrationCost: 40
-  nextLevelData: {fileID: 11400000, guid: 02e5146ecb708b84e9dc77c074cdc081, type: 2}
+  nutrientCost: 100
+  hydrationCost: 5
+  nextLevelData: {fileID: 0}
   upgradeCost: 150
-  icon: {fileID: 21300000, guid: 0a0b70cfd52e574419e377163923b946, type: 3}
-  prefab: {fileID: 4611168650507600015, guid: ae53c4d789105f14a957fd44088e289e, type: 3}
-  damage: 4
-  attackCooldown: 0.5
-  range: 7
+  icon: {fileID: 0}
+  prefab: {fileID: 0}
+  damage: 10
+  attackCooldown: 1
+  range: 5
   attackType: 0
   useFourDirectionalFacing: 0
   spriteUp: {fileID: 0}
   spriteDown: {fileID: 0}
   spriteLeft: {fileID: 0}
   spriteRight: {fileID: 0}
-  projectileData: {fileID: 11400000, guid: d500cbf7a8a33a04e920b02edf4c609b, type: 2}
+  projectileData: {fileID: 0}
   projectileSpeed: 10
   _beamRenderer: {fileID: 0}
-  maxTargets: 1
+  maxTargets: 3
   splashRadius: 2
   continuousBaseDamage: 5
   continuousMaxDamage: 50

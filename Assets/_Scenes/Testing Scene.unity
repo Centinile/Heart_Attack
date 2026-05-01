@@ -11604,7 +11604,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 3.5
+      scalar: 4.5
       minScalar: 0.5
       maxCurve:
         serializedVersion: 2
@@ -24071,7 +24071,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3076048480381741274, guid: b402cf5fcd7b32c42b8da863021acf94, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7127450174235422206, guid: b402cf5fcd7b32c42b8da863021acf94, type: 3}
       propertyPath: m_Name
@@ -24079,7 +24079,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7127450174235422206, guid: b402cf5fcd7b32c42b8da863021acf94, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

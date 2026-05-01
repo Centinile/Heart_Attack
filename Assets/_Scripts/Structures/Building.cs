@@ -30,7 +30,11 @@ public enum AttackType
     /// Damages the target and nearby enemies.
     SplashDamage,
     /// Damages all enemies in range.
-    AllInRange
+    AllInRange,
+    // Increases damage overtime
+    Continuous,
+    //Heals Buildings
+    Healing
 }
 
 
