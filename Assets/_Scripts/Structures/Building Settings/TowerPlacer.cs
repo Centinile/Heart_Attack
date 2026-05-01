@@ -13,7 +13,7 @@ public class TowerPlacer : MonoBehaviour
     public Tilemap heartSpawnMap; 
 
     [Header("Heart Setup")]
-    public StructureData heartData;
+    public BuildingData heartData;
 
     [Header("Prefabs")]
     public GameObject ghostPrefab;
@@ -62,12 +62,13 @@ public class TowerPlacer : MonoBehaviour
 
         ghostInstance.transform.position = worldCenter + new Vector3(0, placementMap.cellSize.y * 0.25f);
 
-        bool valid = IsTileValid(cellPos);
+        bool valid = IsPlacementValid(cellPos, TowerSelectionUI.SelectedStructureData);
         ghostInstance.GetComponent<GhostTower>().SetValid(valid);
     }
 
     private void HandlePlacementClick()
     {
+        BuildingData data = TowerSelectionUI.SelectedStructureData;
         // Must have data and Left Click
         if (TowerSelectionUI.SelectedStructureData == null || !Input.GetMouseButtonDown(0)) return;
         
@@ -79,7 +80,21 @@ public class TowerPlacer : MonoBehaviour
 
         if (!IsTileValid(cellPos)) return;
 
-        StructureData data = TowerSelectionUI.SelectedStructureData;
+        if (!TierUnlockManager.Instance.IsTierUnlocked(data.Tier))
+        {
+            Debug.Log($"[Placement] Blocked — {data.StructureName} requires Tier {data.Tier} to be unlocked.");
+            return;
+        }
+
+        if (data is ResearchData labData)
+        {
+            BuildingTier labTier = labData.GetUnlockedTier();
+            if (labTier != BuildingTier.Tier1 && TierUnlockManager.Instance.IsLabTierOccupied(labTier))
+            {
+                Debug.Log($"[Placement] Blocked — A Lab unlocking Tier {labTier} already exists.");
+                return;
+            }
+        }
         
         if (!GameManager.Instance.SpendNutrients(data.NutrientCost)) return;
 
@@ -102,6 +117,22 @@ public class TowerPlacer : MonoBehaviour
         return placementMap.HasTile(cellPos) && 
                !occupiedTiles.Contains(cellPos) && 
                (nonPlaceableTiles == null || !nonPlaceableTiles.HasTile(cellPos));
+    }
+
+    public bool IsPlacementValid(Vector3Int cellPos, BuildingData data)
+    {
+        if (!IsTileValid(cellPos)) return false;
+
+        if (!TierUnlockManager.Instance.IsTierUnlocked(data.Tier)) return false;
+
+        if (data is ResearchData labData)
+        {
+            BuildingTier labTier = labData.GetUnlockedTier();
+            if (labTier != BuildingTier.Tier1 && TierUnlockManager.Instance.IsLabTierOccupied(labTier))
+                return false;
+        }
+
+        return true;
     }
 
     private Vector3 GetMouseWorldPos()

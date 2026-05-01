@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class TowerSelectionUI : MonoBehaviour
 {
-    public static StructureData SelectedStructureData;
+    public static BuildingData SelectedStructureData;
 
-    public void SelectStructure(StructureData data)
+    public void SelectStructure(BuildingData data)
     {
         // Clear existing building selection first
         BuildingSelector selector = Object.FindFirstObjectByType<BuildingSelector>();

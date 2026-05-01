@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   structureName: ArcherTower
   maxHP: 100
+  tier: 1
   nutrientCost: 200
   hydrationCost: 40
   nextLevelData: {fileID: 11400000, guid: 02e5146ecb708b84e9dc77c074cdc081, type: 2}
@@ -31,5 +32,16 @@ MonoBehaviour:
   spriteRight: {fileID: 0}
   projectileData: {fileID: 11400000, guid: d500cbf7a8a33a04e920b02edf4c609b, type: 2}
   projectileSpeed: 10
+  _beamRenderer: {fileID: 0}
   maxTargets: 1
   splashRadius: 2
+  continuousBaseDamage: 5
+  continuousMaxDamage: 50
+  continuousRampTime: 4
+  continuousTickRate: 0.1
+  applyDOT: 0
+  dotDamagePerTick: 5
+  dotTickInterval: 0.5
+  dotDuration: 3
+  dotRadius: 1.5
+  dotZonePrefab: {fileID: 0}

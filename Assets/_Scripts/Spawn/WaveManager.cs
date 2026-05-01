@@ -30,10 +30,14 @@ public class WaveManager : MonoBehaviour
     public int baseFreeplayWeight = 50;
     public int weightIncreasePerWave = 5;
 
-    void Start()
+    private void Start()
     {
-        if(startWaveButton != null)
+        if (startWaveButton != null)
             startWaveButton.onClick.AddListener(StartWave);
+
+        freeplayMode      = GameManager.Instance.enableRandomWaves;
+        autoStartNextWave = GameManager.Instance.enableNoBreaks;
+        enableScaling     = GameManager.Instance.enableStatRamping;
     }
 
     public void ToggleAutoStart(bool value)

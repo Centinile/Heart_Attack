@@ -4,9 +4,10 @@ using System.Collections.Generic;
 public class DefenseTower : Building
 {
     [Header("References")]
-    [SerializeField] private DefenseData defenseData; // Renamed to avoid confusion with base Data
+    [SerializeField] private DefenseData defenseData;
     [SerializeField] private RangeIndicator rangeIndicator;
     [SerializeField] private SpriteRenderer towerRenderer;
+    [SerializeField] private BeamRenderer _beamRenderer;
     private StructureAnimations structureAnimations;
 
     [Header("Live State")]
@@ -15,11 +16,16 @@ public class DefenseTower : Building
     private float attackTimer;
     private Transform heartTransform;
 
+    // Continuous attack state
+    private float _continuousRampTimer = 0f;
+    private float _continuousTickTimer = 0f;
+    private Transform _lastContinuousTarget;
+
     protected override void Awake()
     {
         base.Awake();
-        // structureType is now set automatically via Initialize(data)
         if (towerRenderer == null) towerRenderer = GetComponentInChildren<SpriteRenderer>();
+        _beamRenderer = GetComponent<BeamRenderer>();
     }
 
     void Start()
@@ -39,22 +45,34 @@ public class DefenseTower : Building
 
     void Update()
     {
-        // 1. Only run logic if we have data AND the building is powered
         if (defenseData == null || !IsPowered) return;
+
+        if (defenseData.attackType == AttackType.Continuous)
+        {
+            HandleContinuousAttack();
+            return;
+        }
 
         if (attackTimer > 0) attackTimer -= Time.deltaTime;
 
-        if (currentTarget == null || !IsTargetValid(currentTarget))
+        // Healing doesn't need a target
+        if (defenseData.attackType == AttackType.Healing)
         {
-            currentTarget = FindTarget();
+            if (attackTimer <= 0f)
+            {
+                PerformAttack();
+                attackTimer = defenseData.attackCooldown;
+            }
+            return;
         }
+
+        if (currentTarget == null || !IsTargetValid(currentTarget))
+            currentTarget = FindTarget();
 
         if (currentTarget != null)
         {
             if (defenseData.useFourDirectionalFacing)
-            {
                 UpdateFaceDirection(currentTarget.position);
-            }
 
             if (attackTimer <= 0f)
             {
@@ -64,20 +82,84 @@ public class DefenseTower : Building
         }
     }
 
+    private void HandleContinuousAttack()
+    {
+        // Find target if we don't have one
+        if (currentTarget == null || !IsTargetValid(currentTarget))
+            currentTarget = FindTarget();
+
+        if (currentTarget == null)
+        {
+            ResetContinuousRamp();
+            _beamRenderer?.HideBeam();
+            return;
+        }
+
+        if (_lastContinuousTarget != currentTarget)
+        {
+            ResetContinuousRamp();
+            _lastContinuousTarget = currentTarget;
+        }
+
+        if (defenseData.useFourDirectionalFacing)
+            UpdateFaceDirection(currentTarget.position);
+
+        _beamRenderer?.ShowBeam(transform.position, currentTarget.position);
+
+        _continuousRampTimer += Time.deltaTime;
+        _continuousRampTimer = Mathf.Min(_continuousRampTimer, defenseData.continuousRampTime);
+
+        _continuousTickTimer -= Time.deltaTime;
+        if (_continuousTickTimer <= 0f)
+        {
+            _continuousTickTimer = defenseData.continuousTickRate;
+            ApplyContinuousDamage();
+        }
+    }
+
+    private void ApplyContinuousDamage()
+    {
+        if (currentTarget == null) return;
+
+        float t = defenseData.continuousRampTime > 0
+            ? _continuousRampTimer / defenseData.continuousRampTime
+            : 1f;
+
+        float damage = Mathf.Lerp(
+            defenseData.continuousBaseDamage,
+            defenseData.continuousMaxDamage,
+            t) * defenseData.continuousTickRate; // scale by tick rate so DPS is consistent
+
+        if (currentTarget.TryGetComponent(out Enemy enemy))
+        {
+            structureAnimations?.PlayAttackAnimation();
+            enemy.TakeDamage(damage);
+
+            if (enemy.CurrentHP <= 0)
+            {
+                ResetContinuousRamp();
+                currentTarget = null;
+            }
+        }
+    }
+
+    private void ResetContinuousRamp()
+    {
+        _continuousRampTimer = 0f;
+        _continuousTickTimer = 0f;
+        _lastContinuousTarget = null;
+        _beamRenderer?.HideBeam();
+    }
+
     private void UpdateFaceDirection(Vector3 targetPos)
     {
         if (towerRenderer == null) return;
-
         Vector2 direction = (targetPos - transform.position).normalized;
 
         if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
-        {
             towerRenderer.sprite = direction.x > 0 ? defenseData.spriteRight : defenseData.spriteLeft;
-        }
         else
-        {
             towerRenderer.sprite = direction.y > 0 ? defenseData.spriteUp : defenseData.spriteDown;
-        }
     }
 
     private Transform FindTarget()
@@ -86,10 +168,8 @@ public class DefenseTower : Building
         List<Transform> validTargets = new List<Transform>();
 
         foreach (Collider2D hit in hits)
-        {
-            if (hit.TryGetComponent(out Enemy enemy) && enemy.CurrentHP > 0) 
+            if (hit.TryGetComponent(out Enemy enemy) && enemy.CurrentHP > 0)
                 validTargets.Add(hit.transform);
-        }
 
         if (validTargets.Count == 0) return null;
 
@@ -105,48 +185,45 @@ public class DefenseTower : Building
     private Transform GetClosestToHeart(List<Transform> targets)
     {
         if (heartTransform == null) return targets[0];
-        Transform bestTarget = null;
-        float minContext = Mathf.Infinity;
-        
+        Transform best = null;
+        float min = Mathf.Infinity;
         foreach (var t in targets)
         {
             float d = Vector2.Distance(t.position, heartTransform.position);
-            if (d < minContext) { minContext = d; bestTarget = t; }
+            if (d < min) { min = d; best = t; }
         }
-        return bestTarget;
+        return best;
     }
 
     private Transform GetFarthestFromHeart(List<Transform> targets)
     {
         if (heartTransform == null) return targets[0];
-        Transform bestTarget = null;
-        float maxContext = -Mathf.Infinity;
-
+        Transform best = null;
+        float max = -Mathf.Infinity;
         foreach (var t in targets)
         {
             float d = Vector2.Distance(t.position, heartTransform.position);
-            if (d > maxContext) { maxContext = d; bestTarget = t; }
+            if (d > max) { max = d; best = t; }
         }
-        return bestTarget;
+        return best;
     }
 
     private Transform GetClosestToTower(List<Transform> targets)
     {
-        Transform bestTarget = null;
-        float minContext = Mathf.Infinity;
-
+        Transform best = null;
+        float min = Mathf.Infinity;
         foreach (var t in targets)
         {
             float d = Vector2.Distance(transform.position, t.position);
-            if (d < minContext) { minContext = d; bestTarget = t; }
+            if (d < min) { min = d; best = t; }
         }
-        return bestTarget;
+        return best;
     }
 
     private bool IsTargetValid(Transform t)
     {
         if (t == null) return false;
-        return t.TryGetComponent(out Enemy e) && e.CurrentHP > 0 && 
+        return t.TryGetComponent(out Enemy e) && e.CurrentHP > 0 &&
                Vector2.Distance(transform.position, t.position) <= defenseData.range;
     }
 
@@ -159,17 +236,17 @@ public class DefenseTower : Building
             case AttackType.MultiTarget: AttackMultipleTargets(); break;
             case AttackType.SplashDamage: FireProjectile(currentTarget, AttackType.SplashDamage); break;
             case AttackType.AllInRange: AttackAllInRange(); break;
+            case AttackType.Healing: HealNearbyBuildings(); break;
         }
     }
 
     private void FireProjectile(Transform t, AttackType type)
     {
         if (defenseData.projectileData == null) return;
-
         GameObject projObj = Instantiate(defenseData.projectileData.Prefab, transform.position, Quaternion.identity);
         if (projObj.TryGetComponent(out Projectile proj))
         {
-            float radius = (type == AttackType.SplashDamage) ? defenseData.splashRadius : 0f;
+            float radius = type == AttackType.SplashDamage ? defenseData.splashRadius : 0f;
             proj.Initialize(t, defenseData.damage, this, type, radius);
         }
     }
@@ -178,13 +255,12 @@ public class DefenseTower : Building
     {
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, defenseData.range);
         List<Transform> enemies = new List<Transform>();
-
         foreach (var hit in hits)
-        {
-            if (hit.TryGetComponent(out Enemy e) && e.CurrentHP > 0) enemies.Add(hit.transform);
-        }
+            if (hit.TryGetComponent(out Enemy e) && e.CurrentHP > 0)
+                enemies.Add(hit.transform);
 
-        enemies.Sort((a, b) => Vector2.Distance(transform.position, a.position).CompareTo(Vector2.Distance(transform.position, b.position)));
+        enemies.Sort((a, b) => Vector2.Distance(transform.position, a.position)
+            .CompareTo(Vector2.Distance(transform.position, b.position)));
 
         int limit = Mathf.Min(enemies.Count, defenseData.maxTargets);
         for (int i = 0; i < limit; i++) FireProjectile(enemies[i], AttackType.SingleTarget);
@@ -194,8 +270,19 @@ public class DefenseTower : Building
     {
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, defenseData.range);
         foreach (var hit in hits)
+            if (hit.TryGetComponent(out Enemy e) && e.CurrentHP > 0)
+                FireProjectile(hit.transform, AttackType.SingleTarget);
+    }
+
+    private void HealNearbyBuildings()
+    {
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, defenseData.range);
+        foreach (var hit in hits)
         {
-            if (hit.TryGetComponent(out Enemy e) && e.CurrentHP > 0) FireProjectile(hit.transform, AttackType.SingleTarget);
+            Building b = hit.GetComponent<Building>();
+            if (b == null || b == this) continue;
+            if (!b.IsAlive || b.HPPercent >= 1f) continue;
+            b.Heal(defenseData.damage);
         }
     }
 

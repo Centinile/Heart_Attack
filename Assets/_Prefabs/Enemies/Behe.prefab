@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2503278441928525463}
   - component: {fileID: 5218100405874627616}
   - component: {fileID: -6974122924984088197}
+  - component: {fileID: 4042287836452294586}
   m_Layer: 0
   m_Name: Behe
   m_TagString: Enemy
@@ -30,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 6344384041587836070}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.93341, y: 2.0275, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -105,7 +106,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: de74f98618e88114d9174e32e1cd3bbd, type: 2}
   currentHP: 0
-  isAttacking: 0
+  targetBuilding: {fileID: 0}
+  currentMoveTarget: {fileID: 0}
+  healthBar: {fileID: 4042287836452294586}
 --- !u!195 &2503278441928525463
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -191,3 +194,15 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &4042287836452294586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6344384041587836070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b97208319265344c89c0d2a5b89447e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

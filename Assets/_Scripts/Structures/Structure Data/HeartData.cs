@@ -4,7 +4,7 @@ using UnityEngine;
     menuName = "Structure/Heart",
     fileName = "HeartData_",
     order = 20)]
-public class HeartData : StructureData
+public class HeartData : BuildingData
 {
     [Header("Heart Settings")]
     [Tooltip("Whether the heart can be attacked directly.")]
