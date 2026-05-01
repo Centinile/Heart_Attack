@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.VFX;
 
 //have dependencies and references flow to the gamemanager instead of the other way
 //the game manager is independent from other scripts
@@ -46,9 +47,29 @@ public class GameManager : MonoBehaviour
     private List<Building> unpoweredBuildings = new List<Building>();
     private bool restorePowerPending = false;
 
+    [Header("Level Settings")]
+    public bool enableAcidRain = false;
+    public bool enableRandomWaves = false;
+    public bool enableFogOfWar = false;
+    public bool enableStatRamping = false;
+    public bool enableNoBreaks = false;
+
+    [Header("Acid Rain Settings")]
+    [SerializeField] private float acidRainDamage = 5f;
+    [SerializeField] private float acidRainInterval = 10f;
+
+    private float _acidRainTimer;
+
 
     //Helpers
     public bool isGameOver { get { return currentState == GameState.Gameover; } }
+    public VisualEffect FogOfWarEffect;
+
+    private const string KEY_ACID_RAIN     = "EnableAcidRain";
+    private const string KEY_FOG_OF_WAR    = "EnableFogOfWar";
+    private const string KEY_RANDOM_WAVES  = "EnableRandomWaves";
+    private const string KEY_STAT_RAMPING  = "EnableStatRamping";
+    private const string KEY_NO_BREAKS     = "EnableNoBreaks";
 
     void Awake()
     {
@@ -65,13 +86,28 @@ public class GameManager : MonoBehaviour
 
         DisableScreens();
         uiScreen.SetActive(true);
+
+        //enableAcidRain = PlayerPrefs.GetInt(KEY_ACID_RAIN, 0) == 1;
+        //enableFogOfWar = PlayerPrefs.GetInt(KEY_FOG_OF_WAR, 0) == 1;
+        enableRandomWaves = PlayerPrefs.GetInt(KEY_RANDOM_WAVES, 0) == 1;
+        enableStatRamping = PlayerPrefs.GetInt(KEY_STAT_RAMPING, 0) == 1;
+        enableNoBreaks = PlayerPrefs.GetInt(KEY_NO_BREAKS, 0) == 1;
     }
 
     void Start()
     {
         currentNutrients = startingNutrients;
         currentHydration = startingHydration;
+        _acidRainTimer = acidRainInterval;
+        currentState = GameState.RestingPhase;
+
+
         UpdateResourceUI();
+
+        if (enableFogOfWar && FogOfWarEffect != null)
+        {
+            FogOfWarEffect.gameObject.SetActive(true);
+        }
     }
 
     void OnDestroy()
@@ -90,6 +126,7 @@ public class GameManager : MonoBehaviour
         {
             case GameState.Gameplay:
                 CheckForPauseAndResume();
+                if (enableAcidRain) TickAcidRain();
                 break;
 
             case GameState.Paused:
@@ -325,6 +362,34 @@ public class GameManager : MonoBehaviour
 
         UpdateResourceUI();
         // Don't call ScheduleRestorePower here — we just lost capacity, nothing to restore
+    }
+
+    private void TickAcidRain()
+    {
+        _acidRainTimer -= Time.deltaTime;
+        if (_acidRainTimer > 0f) return;
+
+        _acidRainTimer = acidRainInterval;
+
+        // Damage all powered buildings except Heart
+        for (int i = poweredBuildings.Count - 1; i >= 0; i--)
+        {
+            Building b = poweredBuildings[i];
+            if (b == null) { poweredBuildings.RemoveAt(i); continue; }
+            if (b.StructureType == StructureType.Heart) continue;
+            b.TakeDamage(acidRainDamage);
+        }
+
+        // Damage all unpowered buildings except Heart
+        for (int i = unpoweredBuildings.Count - 1; i >= 0; i--)
+        {
+            Building b = unpoweredBuildings[i];
+            if (b == null) { unpoweredBuildings.RemoveAt(i); continue; }
+            if (b.StructureType == StructureType.Heart) continue;
+            b.TakeDamage(acidRainDamage);
+        }
+
+        Debug.Log($"[Acid Rain] Dealt {acidRainDamage} damage to all non-Heart buildings.");
     }
 
 }

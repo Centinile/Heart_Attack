@@ -12,19 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51ee95539e800654b9b75b07a2ff498b, type: 3}
   m_Name: infernotowerData_
   m_EditorClassIdentifier: 
-  structureName: New Structure
+  structureName: Inferno Tower
   maxHP: 100
   tier: 1
   nutrientCost: 100
   hydrationCost: 5
   nextLevelData: {fileID: 0}
   upgradeCost: 150
-  icon: {fileID: 0}
-  prefab: {fileID: 0}
+  icon: {fileID: -6324466176413781807, guid: f56aee4e617ce8d48a2659e77a722ff4, type: 3}
+  prefab: {fileID: 4611168650507600015, guid: ae53c4d789105f14a957fd44088e289e, type: 3}
   damage: 10
   attackCooldown: 1
   range: 5
-  attackType: 0
+  attackType: 4
   useFourDirectionalFacing: 0
   spriteUp: {fileID: 0}
   spriteDown: {fileID: 0}
@@ -32,13 +32,12 @@ MonoBehaviour:
   spriteRight: {fileID: 0}
   projectileData: {fileID: 0}
   projectileSpeed: 10
-  _beamRenderer: {fileID: 0}
   maxTargets: 3
   splashRadius: 2
-  continuousBaseDamage: 5
-  continuousMaxDamage: 50
-  continuousRampTime: 4
-  continuousTickRate: 0.1
+  continuousBaseDamage: 10
+  continuousMaxDamage: 100
+  continuousRampTime: 1.5
+  continuousTickRate: 0.7
   applyDOT: 0
   dotDamagePerTick: 5
   dotTickInterval: 0.5
