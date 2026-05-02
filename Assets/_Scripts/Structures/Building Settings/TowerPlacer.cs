@@ -60,7 +60,10 @@ public class TowerPlacer : MonoBehaviour
         Vector3Int cellPos = placementMap.WorldToCell(mouseWorldPos);
         Vector3 worldCenter = placementMap.GetCellCenterWorld(cellPos);
 
-        ghostInstance.transform.position = worldCenter;
+        ghostInstance.transform.position = new Vector3(
+            worldCenter.x,
+            worldCenter.y + heartSpawnMap.cellSize.y * -0.1f,
+            0f);
 
         bool valid = IsPlacementValid(cellPos, TowerSelectionUI.SelectedStructureData);
         ghostInstance.GetComponent<GhostTower>().SetValid(valid);
@@ -151,7 +154,10 @@ public class TowerPlacer : MonoBehaviour
             if (heartSpawnMap.HasTile(pos))
             {
                 Vector3 worldCenter = heartSpawnMap.GetCellCenterWorld(pos);
-                Vector3 spawnPos = worldCenter; 
+                Vector3 spawnPos = new Vector3(
+                    worldCenter.x,
+                    worldCenter.y + heartSpawnMap.cellSize.y * -0.1f,
+                    0f);
 
                 GameObject heartObj = Instantiate(heartData.Prefab, spawnPos, Quaternion.identity);
                 Building building = heartObj.GetComponent<Building>();

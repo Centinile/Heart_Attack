@@ -32,11 +32,21 @@ public class EnemyAnimations : MonoBehaviour
 
     public void PlayAnimation(Vector2 movementInput)
     {
-        animator.SetBool("Running", movementInput.magnitude > 0.01f);
+        animator.SetBool("Moving", movementInput.magnitude > 0.01f);
     }
 
     public void PlayHitAnimation() => animator.SetTrigger("GetHit");
-    public void PlayDeathAnimation() => animator.SetTrigger("Die");
+    public float PlayDeathAnimation()
+    {
+        animator.SetTrigger("Die");
+
+        foreach (var clip in animator.runtimeAnimatorController.animationClips)
+        {
+            if (clip.name == "Die")
+                return clip.length;
+        }
+        return 0f;
+    }
     public void PlayAttackAnimation() => animator.SetTrigger("Attack");
 
     public void SetAnimatorController(RuntimeAnimatorController c) //something something, to assign an animator to player
@@ -46,4 +56,6 @@ public class EnemyAnimations : MonoBehaviour
 
         animator.runtimeAnimatorController = c;
     }
+
+    
 }

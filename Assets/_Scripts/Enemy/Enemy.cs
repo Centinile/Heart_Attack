@@ -2,12 +2,14 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class Enemy : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private EnemyData data;
+    [SerializeField] private EnemyAnimations enemyAnimations;
     public EnemyData Data => data;
 
     [Header("Live State")]
@@ -37,6 +39,7 @@ public class Enemy : MonoBehaviour
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        enemyAnimations = GetComponent<EnemyAnimations>();
         if (agent != null)
         {
             agent.updateRotation = false;
@@ -54,6 +57,12 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         foreach (var a in instantiatedAbilities) a?.OnUpdate(this);
+
+        // Update movement animation and facing every frame
+        Vector2 velocity = new Vector2(agent.velocity.x, agent.velocity.y);
+        enemyAnimations?.PlayAnimation(velocity);
+        if (velocity != Vector2.zero)
+            enemyAnimations?.RotateToPointer(velocity);
 
         if (targetBuilding == null || !targetBuilding.IsAlive)
         {
@@ -159,8 +168,7 @@ public class Enemy : MonoBehaviour
     {
         NavMeshPath path = new NavMeshPath();
         agent.CalculatePath(b.transform.position, path);
-        float d = GetPathLength(path);
-        // Penalize partial paths heavily so fully reachable targets are preferred
+        float d = GetPathLength(path, b); // pass b directly
         if (path.status == NavMeshPathStatus.PathPartial) d += 40f;
         return d;
     }
@@ -270,6 +278,8 @@ public class Enemy : MonoBehaviour
 
     private void Attack(GameObject target)
     {
+        enemyAnimations?.PlayAttackAnimation();
+
         if (target.TryGetComponent<Building>(out Building b))
         {
             b.TakeDamage(scaledDamage > 0 ? scaledDamage : data.AttackDamage);
@@ -293,10 +303,10 @@ public class Enemy : MonoBehaviour
         };
     }
 
-    private float GetPathLength(NavMeshPath path)
+    private float GetPathLength(NavMeshPath path, Building b)
     {
         if (path.corners.Length < 2)
-            return Vector3.Distance(transform.position, targetBuilding.transform.position);
+            return Vector3.Distance(transform.position, b.transform.position); // use b, not targetBuilding
 
         float dist = 0f;
         for (int i = 0; i < path.corners.Length - 1; i++)
@@ -322,11 +332,29 @@ public class Enemy : MonoBehaviour
         if (!deathPrevented)
         {
             healthBar?.ReturnBar();
+            agent.isStopped = true; // stop moving during death animation
             StopAllCoroutines();
             foreach (var a in instantiatedAbilities) if (a != null) Destroy(a);
-            Destroy(gameObject);
+
+            float deathDuration = enemyAnimations != null
+                ? enemyAnimations.PlayDeathAnimation()
+                : 0f;
+
+            if (deathDuration > 0f)
+                StartCoroutine(DestroyAfterDelay(deathDuration));
+            else
+                Destroy(gameObject);
         }
-        else { currentHP = scaledMaxHP; }
+        else
+        {
+            currentHP = scaledMaxHP;
+        }
+    }
+
+    private IEnumerator DestroyAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Destroy(gameObject);
     }
 
     private void InitializeAbilities()

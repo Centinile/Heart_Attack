@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class StructureAnimations : MonoBehaviour
@@ -18,7 +19,6 @@ public class StructureAnimations : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-
         if (spriteRenderer != null)
             originalColor = spriteRenderer.color;
     }
@@ -31,7 +31,7 @@ public class StructureAnimations : MonoBehaviour
             spriteRenderer.color = unpoweredTint;
 
         if (unpoweredIconPrefab != null && unpoweredIconInstance == null)
-            unpoweredIconInstance = Instantiate(unpoweredIconPrefab, 
+            unpoweredIconInstance = Instantiate(unpoweredIconPrefab,
                 transform.position + iconOffset, Quaternion.identity, transform);
     }
 
@@ -49,15 +49,27 @@ public class StructureAnimations : MonoBehaviour
 
     // --- Animations ---
 
-    public void PlayIdleAnimation() => TrySetTrigger("Idle");
     public void PlayAttackAnimation() => TrySetTrigger("Attack");
-    public void PlayDeathAnimation() => TrySetTrigger("Destroyed");
+
+    // Returns the clip length so Building can delay Destroy
+    public float PlayDeathAnimation()
+    {
+        if (animator == null) return 0f;
+        animator.SetTrigger("Destroyed");
+
+        // Find the Destroyed clip length
+        foreach (var clip in animator.runtimeAnimatorController.animationClips)
+        {
+            if (clip.name == "Destroyed")
+                return clip.length;
+        }
+        return 0f;
+    }
 
     public void SetAnimatorController(RuntimeAnimatorController controller)
     {
         if (animator == null)
             animator = GetComponent<Animator>();
-
         animator.runtimeAnimatorController = controller;
     }
 
