@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: -6732908411709560933}
   - component: {fileID: 7140211121655054214}
   - component: {fileID: 9078799215478322376}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pakyu
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -133,7 +133,7 @@ NavMeshAgent:
   m_Height: 0.8
   m_BaseOffset: 0.4
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 0
 --- !u!58 &5218100405874627616
 CircleCollider2D:
   m_ObjectHideFlags: 0

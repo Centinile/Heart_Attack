@@ -5,7 +5,7 @@ using System.Linq;
 using System.Collections;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IEnemy
 {
     [Header("References")]
     [SerializeField] private EnemyData data;

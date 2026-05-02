@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 3254270152383593422}
   - component: {fileID: -7169618700048717458}
   - component: {fileID: -2160075033205589835}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Behe
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -242,4 +242,4 @@ NavMeshAgent:
   m_Height: 0.8
   m_BaseOffset: 0.4
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 0

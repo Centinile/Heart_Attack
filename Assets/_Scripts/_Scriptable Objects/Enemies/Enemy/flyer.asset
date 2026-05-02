@@ -10,18 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 283b3799aa6c3234ba9b2c130d13851c, type: 3}
-  m_Name: EliteUFO_
+  m_Name: flyer
   m_EditorClassIdentifier: 
-  maxHP: 30
-  attackDamage: 10
-  attackRadius: 1
-  moveSpeed: 1.5
+  maxHP: 100
+  attackDamage: 15
+  attackRadius: 0.9
+  moveSpeed: 2
   isRanged: 0
   attackCooldown: 1
-  isFlying: 0
-  targetingPriority: 1
+  targetingPriority: 2
   detectionRadius: 5
   stoppingDistance: 1.2
   abilities:
-  - {fileID: 11400000, guid: 1d5949fe31b576942a563c63ee4e24d9, type: 2}
+  - {fileID: 11400000, guid: d7e25f1984e04ee4a8e6db2f339d7b4f, type: 2}
   enemyIcon: {fileID: 0}
