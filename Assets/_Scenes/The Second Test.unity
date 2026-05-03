@@ -23442,8 +23442,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waves:
-  - {fileID: 11400000, guid: 19b49a3db35aefc45b55a22c55524cfc, type: 2}
   - {fileID: 11400000, guid: 4868847a1c84879489dcfb256c6435ae, type: 2}
+  - {fileID: 11400000, guid: 19b49a3db35aefc45b55a22c55524cfc, type: 2}
   - {fileID: 11400000, guid: 6861aedf032c99244989f11c8f4a1621, type: 2}
   startWaveButton: {fileID: 0}
   currentWaveIndex: 0
@@ -23552,7 +23552,6 @@ GameObject:
   - component: {fileID: 272135544}
   - component: {fileID: 272135548}
   - component: {fileID: 272135547}
-  - component: {fileID: 272135546}
   - component: {fileID: 272135545}
   m_Layer: 5
   m_Name: Defense Tower Tab
@@ -23629,36 +23628,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_IsOn: 1
---- !u!114 &272135546
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 272135543}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Content: {fileID: 30563712}
-  m_Horizontal: 1
-  m_Vertical: 0
-  m_MovementType: 1
-  m_Elasticity: 0.1
-  m_Inertia: 1
-  m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
-  m_Viewport: {fileID: 2050840210}
-  m_HorizontalScrollbar: {fileID: 0}
-  m_VerticalScrollbar: {fileID: 0}
-  m_HorizontalScrollbarVisibility: 0
-  m_VerticalScrollbarVisibility: 0
-  m_HorizontalScrollbarSpacing: 0
-  m_VerticalScrollbarSpacing: 0
-  m_OnValueChanged:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &272135547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30291,7 +30260,6 @@ GameObject:
   - component: {fileID: 290941454}
   - component: {fileID: 290941453}
   - component: {fileID: 290941452}
-  - component: {fileID: 290941451}
   m_Layer: 5
   m_Name: Resource View
   m_TagString: Untagged
@@ -30312,25 +30280,13 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 267717021}
-  m_Father: {fileID: 1000437105}
+  m_Father: {fileID: 567243222}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 112.37961, y: -23.111755}
   m_SizeDelta: {x: 393.22668, y: -27.549105}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!225 &290941451
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 290941449}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
 --- !u!114 &290941452
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31922,6 +31878,86 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 557460973}
   m_CullTransparentMesh: 1
+--- !u!1 &567243221
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 567243222}
+  - component: {fileID: 567243224}
+  - component: {fileID: 567243223}
+  m_Layer: 5
+  m_Name: Resource Scroll
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &567243222
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567243221}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 290941450}
+  m_Father: {fileID: 1000437105}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &567243223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567243221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Content: {fileID: 267717021}
+  m_Horizontal: 1
+  m_Vertical: 0
+  m_MovementType: 1
+  m_Elasticity: 0.1
+  m_Inertia: 1
+  m_DecelerationRate: 0.135
+  m_ScrollSensitivity: 1
+  m_Viewport: {fileID: 290941450}
+  m_HorizontalScrollbar: {fileID: 0}
+  m_VerticalScrollbar: {fileID: 0}
+  m_HorizontalScrollbarVisibility: 0
+  m_VerticalScrollbarVisibility: 0
+  m_HorizontalScrollbarSpacing: 0
+  m_VerticalScrollbarSpacing: 0
+  m_OnValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!225 &567243224
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567243221}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &577086298
 GameObject:
   m_ObjectHideFlags: 0
@@ -33297,7 +33333,6 @@ GameObject:
   - component: {fileID: 815517631}
   - component: {fileID: 815517635}
   - component: {fileID: 815517634}
-  - component: {fileID: 815517633}
   - component: {fileID: 815517632}
   m_Layer: 5
   m_Name: Resource Tower Tab
@@ -33374,36 +33409,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_IsOn: 1
---- !u!114 &815517633
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 815517630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Content: {fileID: 267717021}
-  m_Horizontal: 1
-  m_Vertical: 0
-  m_MovementType: 1
-  m_Elasticity: 0.1
-  m_Inertia: 1
-  m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
-  m_Viewport: {fileID: 290941450}
-  m_HorizontalScrollbar: {fileID: 0}
-  m_VerticalScrollbar: {fileID: 0}
-  m_HorizontalScrollbarVisibility: 0
-  m_VerticalScrollbarVisibility: 0
-  m_HorizontalScrollbarSpacing: 0
-  m_VerticalScrollbarSpacing: 0
-  m_OnValueChanged:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &815517634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33928,8 +33933,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2050840210}
-  - {fileID: 290941450}
+  - {fileID: 2057438067}
+  - {fileID: 567243222}
   m_Father: {fileID: 1460729608}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -71006,8 +71011,8 @@ MonoBehaviour:
   - {fileID: 272135545}
   - {fileID: 815517632}
   pages:
-  - {fileID: 2050840211}
-  - {fileID: 290941451}
+  - {fileID: 2057438069}
+  - {fileID: 567243224}
   onPageIndexChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -73125,30 +73130,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dea7d0cc61e25eb409413a6e9bbde37a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionPanel: {fileID: 0}
+  actionPanel: {fileID: 84788550}
   buildingLayer:
     serializedVersion: 2
     m_Bits: 8
   repairButton: {fileID: 0}
   repairCostText: {fileID: 0}
-  statsPanel: {fileID: 0}
+  statsPanel: {fileID: 84788550}
   structureNameLabel: {fileID: 0}
-  structureNameValue: {fileID: 0}
-  maxHPLabel: {fileID: 0}
-  maxHPValue: {fileID: 0}
-  damageLabel: {fileID: 0}
-  damageValue: {fileID: 0}
-  nutrientCostLabel: {fileID: 0}
-  nutrientCostValue: {fileID: 0}
-  hydrationCostLabel: {fileID: 0}
-  hydrationCostValue: {fileID: 0}
-  upgradeCostLabel: {fileID: 0}
-  upgradeCostValue: {fileID: 0}
-  nutrientsPerWaveLabel: {fileID: 0}
-  nutrientsPerWaveValue: {fileID: 0}
-  hydrationCapacityBoostLabel: {fileID: 0}
-  hydrationCapacityBoostValue: {fileID: 0}
-  slideDuration: 0.3
+  structureNameValue: {fileID: 557460975}
+  maxHPLabel: {fileID: 1953153559}
+  maxHPValue: {fileID: 643896286}
+  damageLabel: {fileID: 995265674}
+  damageValue: {fileID: 1583443091}
+  nutrientCostLabel: {fileID: 1014875275}
+  nutrientCostValue: {fileID: 1788798490}
+  hydrationCostLabel: {fileID: 775519722}
+  hydrationCostValue: {fileID: 1701900760}
+  upgradeCostLabel: {fileID: 1642367356}
+  upgradeCostValue: {fileID: 1229189573}
+  nutrientsPerWaveLabel: {fileID: 1222892250}
+  nutrientsPerWaveValue: {fileID: 227093836}
+  hydrationCapacityBoostLabel: {fileID: 1536299540}
+  hydrationCapacityBoostValue: {fileID: 1524562976}
+  slideDuration: 0.5
   slideCurve:
     serializedVersion: 2
     m_Curve:
@@ -73643,7 +73648,6 @@ GameObject:
   - component: {fileID: 2050840214}
   - component: {fileID: 2050840213}
   - component: {fileID: 2050840212}
-  - component: {fileID: 2050840211}
   m_Layer: 5
   m_Name: Defense View
   m_TagString: Untagged
@@ -73664,25 +73668,13 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 30563712}
-  m_Father: {fileID: 1000437105}
+  m_Father: {fileID: 2057438067}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 112.75295, y: -24.39682}
   m_SizeDelta: {x: 365.3107, y: -27.855762}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!225 &2050840211
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2050840209}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!114 &2050840212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73865,6 +73857,86 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2053598950}
   m_CullTransparentMesh: 1
+--- !u!1 &2057438066
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2057438067}
+  - component: {fileID: 2057438069}
+  - component: {fileID: 2057438068}
+  m_Layer: 5
+  m_Name: Defense Scroll
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2057438067
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2057438066}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2050840210}
+  m_Father: {fileID: 1000437105}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2057438068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2057438066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Content: {fileID: 30563712}
+  m_Horizontal: 1
+  m_Vertical: 0
+  m_MovementType: 1
+  m_Elasticity: 0.1
+  m_Inertia: 1
+  m_DecelerationRate: 0.135
+  m_ScrollSensitivity: 1
+  m_Viewport: {fileID: 2050840210}
+  m_HorizontalScrollbar: {fileID: 0}
+  m_VerticalScrollbar: {fileID: 0}
+  m_HorizontalScrollbarVisibility: 0
+  m_VerticalScrollbarVisibility: 0
+  m_HorizontalScrollbarSpacing: 0
+  m_VerticalScrollbarSpacing: 0
+  m_OnValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!225 &2057438069
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2057438066}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &677327512830609935
 PrefabInstance:
   m_ObjectHideFlags: 0
