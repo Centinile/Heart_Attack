@@ -336,25 +336,14 @@ public class Enemy : MonoBehaviour, IEnemy
             StopAllCoroutines();
             foreach (var a in instantiatedAbilities) if (a != null) Destroy(a);
 
-            float deathDuration = enemyAnimations != null
-                ? enemyAnimations.PlayDeathAnimation()
-                : 0f;
+            enemyAnimations.PlayDeathAnimation();
+            Destroy(gameObject);
 
-            if (deathDuration > 0f)
-                StartCoroutine(DestroyAfterDelay(deathDuration));
-            else
-                Destroy(gameObject);
         }
         else
         {
             currentHP = scaledMaxHP;
         }
-    }
-
-    private IEnumerator DestroyAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        Destroy(gameObject);
     }
 
     private void InitializeAbilities()

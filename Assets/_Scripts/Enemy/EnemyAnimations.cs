@@ -36,17 +36,10 @@ public class EnemyAnimations : MonoBehaviour
     }
 
     public void PlayHitAnimation() => animator.SetTrigger("GetHit");
-    public float PlayDeathAnimation()
-    {
-        animator.SetTrigger("Die");
+    public void PlayDeathAnimation() => animator.SetTrigger("Die");
 
-        foreach (var clip in animator.runtimeAnimatorController.animationClips)
-        {
-            if (clip.name == "Die")
-                return clip.length;
-        }
-        return 0f;
-    }
+
+    
     public void PlayAttackAnimation() => animator.SetTrigger("Attack");
 
     public void SetAnimatorController(RuntimeAnimatorController c) //something something, to assign an animator to player

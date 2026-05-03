@@ -10,29 +10,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51ee95539e800654b9b75b07a2ff498b, type: 3}
-  m_Name: ArcherLv2Data_
+  m_Name: BuilderHutData_
   m_EditorClassIdentifier: 
-  structureName: ArcherTower
+  structureName: BuilderHut
   maxHP: 100
   tier: 1
-  nutrientCost: 20
-  hydrationCost: 40
-  nextLevelData: {fileID: 11400000}
+  nutrientCost: 50
+  hydrationCost: 5
+  nextLevelData: {fileID: 0}
   upgradeCost: 150
-  icon: {fileID: 5136992363456170433, guid: 903642b33ece7a34cb0bfd4070beed78, type: 3}
-  prefab: {fileID: 4611168650507600015, guid: da9667e0895eed04986935c4f845e169, type: 3}
-  damage: 6
-  attackCooldown: 0.5
+  icon: {fileID: -1393901754148368072, guid: 5372365288bb9d644931149f1ca31b32, type: 3}
+  prefab: {fileID: 4611168650507600015, guid: 8e3095beea78c4248b78dc9c5f39a890, type: 3}
+  damage: 20
+  attackCooldown: 2
   range: 7
-  attackType: 1
+  attackType: 5
   useFourDirectionalFacing: 0
   spriteUp: {fileID: 0}
   spriteDown: {fileID: 0}
   spriteLeft: {fileID: 0}
   spriteRight: {fileID: 0}
-  projectileData: {fileID: 11400000, guid: d500cbf7a8a33a04e920b02edf4c609b, type: 2}
+  projectileData: {fileID: 0}
   projectileSpeed: 10
-  maxTargets: 8
+  maxTargets: 3
   splashRadius: 2
   continuousBaseDamage: 5
   continuousMaxDamage: 50
