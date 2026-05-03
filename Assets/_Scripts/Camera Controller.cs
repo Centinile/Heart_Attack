@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.EventSystems; // Required for UI detection
+using UnityEngine.EventSystems;
 
 public class CameraController : MonoBehaviour
 {
@@ -13,12 +13,15 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float minZoom = 2f;
     [SerializeField] private float maxZoom = 8f;
     [SerializeField] private float zoomSensitivity = 2f;
-    [SerializeField] private float zoomLerpSpeed = 10f; // For smoothness
+    [SerializeField] private float zoomLerpSpeed = 10f;
+
+    [Header("WASD Pan Settings")]
+    [SerializeField] private float wasdPanSpeed = 8f;
 
     private Vector3 dragOrigin;
     private Camera cam;
     private float targetZoom;
-    private bool isPanning = false; // Tracks if a valid pan was initiated
+    private bool isPanning = false;
 
     private void Start()
     {
@@ -28,16 +31,52 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate()
     {
-        PanCamera();
+        WASDPan();
+        MouseDragPan();
         ZoomCamera();
     }
 
-    private void PanCamera()
+    // ── WASD panning ────────────────────────────────────────────────────
+
+    private void WASDPan()
     {
-        // Start pan on Right Click (1)
+        // Don't move camera if typing in a UI field
+        if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject != null)
+        {
+            var sel = EventSystem.current.currentSelectedGameObject;
+            if (sel.GetComponent<TMPro.TMP_InputField>() != null ||
+                sel.GetComponent<UnityEngine.UI.InputField>() != null)
+                return;
+        }
+
+        float h = 0f;
+        float v = 0f;
+
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))  h = -1f;
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) h =  1f;
+        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))  v = -1f;
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))    v =  1f;
+
+        if (h == 0f && v == 0f) return;
+
+        // Scale speed by current zoom so panning feels consistent at all zoom levels
+        float scaledSpeed = wasdPanSpeed * (cam.orthographicSize / 5f);
+
+        Vector3 move = new Vector3(h, v, 0f) * scaledSpeed * Time.deltaTime;
+        Vector3 target = cam.transform.position + move;
+
+        cam.transform.position = new Vector3(
+            Mathf.Clamp(target.x, minX, maxX),
+            Mathf.Clamp(target.y, minY, maxY),
+            cam.transform.position.z);
+    }
+
+    // ── Right-click drag pan (unchanged) ────────────────────────────────
+
+    private void MouseDragPan()
+    {
         if (Input.GetMouseButtonDown(1))
         {
-            // Block panning if hovering over a UI element
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
             {
                 isPanning = false;
@@ -48,44 +87,36 @@ public class CameraController : MonoBehaviour
             dragOrigin = cam.ScreenToWorldPoint(Input.mousePosition);
         }
 
-        // Continue pan on Right Click hold, but ONLY if we started a valid pan
         if (Input.GetMouseButton(1) && isPanning)
         {
             Vector3 difference = dragOrigin - cam.ScreenToWorldPoint(Input.mousePosition);
             Vector3 targetPosition = cam.transform.position + difference;
 
-            float clampedX = Mathf.Clamp(targetPosition.x, minX, maxX);
-            float clampedY = Mathf.Clamp(targetPosition.y, minY, maxY);
-
-            cam.transform.position = new Vector3(clampedX, clampedY, targetPosition.z);
+            cam.transform.position = new Vector3(
+                Mathf.Clamp(targetPosition.x, minX, maxX),
+                Mathf.Clamp(targetPosition.y, minY, maxY),
+                targetPosition.z);
         }
 
-        // Stop panning when Right Click is released
         if (Input.GetMouseButtonUp(1))
-        {
             isPanning = false;
-        }
     }
+
+    // ── Scroll zoom (unchanged) ─────────────────────────────────────────
 
     private void ZoomCamera()
     {
         float scrollInput = Input.GetAxis("Mouse ScrollWheel");
-        
+
         if (scrollInput != 0)
         {
-            // Optional: Block zooming if hovering over a UI element (useful for UI scroll lists)
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
-            {
                 return;
-            }
 
-            // Calculate new target zoom
             targetZoom -= scrollInput * zoomSensitivity;
-            // Clamp target zoom within limits
             targetZoom = Mathf.Clamp(targetZoom, minZoom, maxZoom);
         }
 
-        // Smoothly transition to the target zoom
         cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, targetZoom, Time.deltaTime * zoomLerpSpeed);
     }
 }

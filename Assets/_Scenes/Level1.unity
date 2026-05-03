@@ -30754,6 +30754,7 @@ MonoBehaviour:
   maxZoom: 12
   zoomSensitivity: 2
   zoomLerpSpeed: 10
+  wasdPanSpeed: 8
 --- !u!114 &250428428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31565,6 +31566,7 @@ GameObject:
   m_Component:
   - component: {fileID: 595006396}
   - component: {fileID: 595006397}
+  - component: {fileID: 595006398}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -31616,6 +31618,36 @@ MonoBehaviour:
   acidRainDamage: 5
   acidRainInterval: 3
   FogOfWarEffect: {fileID: 221966936}
+--- !u!114 &595006398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 595006395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91bb472624e1e0446a82b96a470579b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tabs:
+  - tabName: Defense
+    tabToggle: {fileID: 1288918559}
+    towerSlots:
+    - {fileID: 11400000, guid: 8fc27eea14ea0594f847f98612b8755e, type: 2}
+    - {fileID: 11400000, guid: 9df5388ef3d9735429b14793c7587ca3, type: 2}
+    - {fileID: 11400000, guid: e8b3ee59554980244809935bbab5cbee, type: 2}
+    - {fileID: 11400000, guid: 566af7a99f87fef418b4c85f6cee26d7, type: 2}
+    - {fileID: 11400000, guid: fb976aeb45235134ca3eda3d5372c19a, type: 2}
+  - tabName: Resource
+    tabToggle: {fileID: 261417309}
+    towerSlots:
+    - {fileID: 11400000, guid: 94ab375209246654e95813b2500a6fc9, type: 2}
+    - {fileID: 11400000, guid: 2d7a18ebd45235241a446b9d6f62ef37, type: 2}
+    - {fileID: 11400000, guid: 40adc2a06a0e19d4793704c02f3e3b36, type: 2}
+  pausePanel: {fileID: 0}
+  sceneController: {fileID: 611159195}
+  mainMenuSceneName: MainMenu
 --- !u!1 &597806074
 GameObject:
   m_ObjectHideFlags: 0
