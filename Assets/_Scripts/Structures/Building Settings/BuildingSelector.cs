@@ -293,4 +293,9 @@ public class BuildingSelector : MonoBehaviour
         SelectedBuilding.Repair();
         RefreshRepairUI();
     }
+
+    public void SelectBuildingExternal(Building building)
+    {
+        SelectBuilding(building);
+    }
 }

@@ -1,13 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-public enum TargetFilter
-{
-    Both,
-    GroundOnly,
-    FlyingOnly
-}
-
 [CreateAssetMenu(menuName = "Structure/Defense Tower", fileName = "DefenseData_")]
 public class DefenseData : BuildingData
 {
@@ -17,9 +10,6 @@ public class DefenseData : BuildingData
     public float attackCooldown = 1f; 
     public float range = 5f;
     public AttackType attackType = AttackType.SingleTarget;
-
-    [Header("Target Filter")]
-    public TargetFilter targetFilter = TargetFilter.Both;
     
     [Header("Visuals (4-Directional)")]
     public bool useFourDirectionalFacing = false;

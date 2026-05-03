@@ -107,11 +107,9 @@ public class WaveManager : MonoBehaviour
         // --- STEP 2: SURVIVAL PHASE ---
         yield return new WaitForSeconds(1f); // Buffer for enemies to initialize
 
-        while (
-            GameObject.FindObjectsByType<Enemy>(FindObjectsSortMode.None).Length > 0 ||
-            GameObject.FindObjectsByType<FlyingEnemy>(FindObjectsSortMode.None).Length > 0)
+        while (GameObject.FindObjectsByType<Enemy>(FindObjectsSortMode.None).Length > 0)
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.5f); 
         }
 
         // --- STEP 3: WAVE CLEAR & RESTING ---
@@ -123,20 +121,6 @@ public class WaveManager : MonoBehaviour
 
         waveRunning = false;
         currentWaveIndex++;
-
-        int wavesToWin = GameManager.Instance.WavesToWin;
-
-        // 0 means endless — no win condition
-        if (wavesToWin > 0 && currentWaveIndex >= wavesToWin)
-        {
-            Debug.Log($"<color=green><b>Win condition met after {currentWaveIndex} waves!</b></color>");
-            GameManager.Instance.WinGame();
-            yield break; // stop the wave coroutine entirely
-        }
-
-        // Only enter freeplay if past the designed waves AND no win condition triggered
-        if (currentWaveIndex >= waves.Length)
-            freeplayMode = true;
 
         // Tell the GameManager to enter Resting Phase
         GameManager.Instance.EnterRestingPhase();

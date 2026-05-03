@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-
 public class DefenseTower : Building
 {
     [Header("References")]
@@ -169,25 +168,8 @@ public class DefenseTower : Building
         List<Transform> validTargets = new List<Transform>();
 
         foreach (Collider2D hit in hits)
-        {
-            bool isGround = hit.TryGetComponent(out Enemy _);
-            bool isFlying = hit.TryGetComponent(out FlyingEnemy _);
-
-            // Skip if doesn't match filter
-            bool valid = defenseData.targetFilter switch
-            {
-                TargetFilter.GroundOnly => isGround,
-                TargetFilter.FlyingOnly => isFlying,
-                _ => isGround || isFlying // Both
-            };
-
-            if (!valid) continue;
-
-            // Check HP via IEnemy
-            IEnemy enemy = hit.GetComponent<IEnemy>();
-            if (enemy != null && enemy.CurrentHP > 0)
+            if (hit.TryGetComponent(out Enemy enemy) && enemy.CurrentHP > 0)
                 validTargets.Add(hit.transform);
-        }
 
         if (validTargets.Count == 0) return null;
 
@@ -241,20 +223,8 @@ public class DefenseTower : Building
     private bool IsTargetValid(Transform t)
     {
         if (t == null) return false;
-
-        bool isGround = t.TryGetComponent(out Enemy groundEnemy) && groundEnemy.CurrentHP > 0;
-        bool isFlying = t.TryGetComponent(out FlyingEnemy flyingEnemy) && flyingEnemy.CurrentHP > 0;
-
-        bool matchesFilter = defenseData.targetFilter switch
-        {
-            TargetFilter.GroundOnly => isGround,
-            TargetFilter.FlyingOnly => isFlying,
-            _ => isGround || isFlying
-        };
-
-        if (!matchesFilter) return false;
-
-        return Vector2.Distance(transform.position, t.position) <= defenseData.range;
+        return t.TryGetComponent(out Enemy e) && e.CurrentHP > 0 &&
+               Vector2.Distance(transform.position, t.position) <= defenseData.range;
     }
 
     private void PerformAttack()
@@ -285,13 +255,9 @@ public class DefenseTower : Building
     {
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, defenseData.range);
         List<Transform> enemies = new List<Transform>();
-
         foreach (var hit in hits)
-        {
-            if (!MatchesTargetFilter(hit)) continue;
-            IEnemy e = hit.GetComponent<IEnemy>();
-            if (e != null && e.CurrentHP > 0) enemies.Add(hit.transform);
-        }
+            if (hit.TryGetComponent(out Enemy e) && e.CurrentHP > 0)
+                enemies.Add(hit.transform);
 
         enemies.Sort((a, b) => Vector2.Distance(transform.position, a.position)
             .CompareTo(Vector2.Distance(transform.position, b.position)));
@@ -304,24 +270,8 @@ public class DefenseTower : Building
     {
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, defenseData.range);
         foreach (var hit in hits)
-        {
-            if (!MatchesTargetFilter(hit)) continue;
-            IEnemy e = hit.GetComponent<IEnemy>();
-            if (e != null && e.CurrentHP > 0) FireProjectile(hit.transform, AttackType.SingleTarget);
-        }
-    }
-
-    private bool MatchesTargetFilter(Collider2D hit)
-    {
-        bool isGround = hit.TryGetComponent(out Enemy _);
-        bool isFlying = hit.TryGetComponent(out FlyingEnemy _);
-
-        return defenseData.targetFilter switch
-        {
-            TargetFilter.GroundOnly => isGround,
-            TargetFilter.FlyingOnly => isFlying,
-            _ => isGround || isFlying
-        };
+            if (hit.TryGetComponent(out Enemy e) && e.CurrentHP > 0)
+                FireProjectile(hit.transform, AttackType.SingleTarget);
     }
 
     private void HealNearbyBuildings()

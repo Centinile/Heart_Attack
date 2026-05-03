@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: test wave 3
   m_EditorClassIdentifier: 
   spawnEntries:
-  - prefab: {fileID: 6344384041587836070, guid: 6566b014f46abea4aa0a897846eba3b9, type: 3}
-    count: 50
+  - prefab: {fileID: 6344384041587836070, guid: 15988e63095ea344d92ccd764de51605, type: 3}
+    count: 16
   WaveWeight: 5
   NutrientReward: 100

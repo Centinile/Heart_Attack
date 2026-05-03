@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
 
     public enum GameState //define the different states of the game
     {
-        Gameplay, RestingPhase, Paused, Gameover, Victory
+        Gameplay, RestingPhase, Paused, Gameover
     }
 
     public GameState currentState; //stores the current state of the game
@@ -21,10 +21,9 @@ public class GameManager : MonoBehaviour
 
     [Header("Screens")]
     public GameObject pauseScreen;
-    public GameObject GameOverScreen;
+    public GameObject resultsScreen;
     //public GameObject selectionBorder;
     public GameObject uiScreen;
-    public GameObject victoryScreen;
 
 
     [Header("Stat Displays")]
@@ -64,7 +63,6 @@ public class GameManager : MonoBehaviour
 
     //Helpers
     public bool isGameOver { get { return currentState == GameState.Gameover; } }
-    public int WavesToWin { get; private set; }
     public VisualEffect FogOfWarEffect;
 
     private const string KEY_ACID_RAIN     = "EnableAcidRain";
@@ -72,7 +70,6 @@ public class GameManager : MonoBehaviour
     private const string KEY_RANDOM_WAVES  = "EnableRandomWaves";
     private const string KEY_STAT_RAMPING  = "EnableStatRamping";
     private const string KEY_NO_BREAKS     = "EnableNoBreaks";
-    private const string KEY_WAVES_TO_WIN = "WavesToWin";
 
     void Awake()
     {
@@ -95,7 +92,6 @@ public class GameManager : MonoBehaviour
         enableRandomWaves = PlayerPrefs.GetInt(KEY_RANDOM_WAVES, 0) == 1;
         enableStatRamping = PlayerPrefs.GetInt(KEY_STAT_RAMPING, 0) == 1;
         enableNoBreaks = PlayerPrefs.GetInt(KEY_NO_BREAKS, 0) == 1;
-        WavesToWin = PlayerPrefs.GetInt(KEY_WAVES_TO_WIN, 0);
     }
 
     void Start()
@@ -121,16 +117,6 @@ public class GameManager : MonoBehaviour
         {
             Instance = null;
         }
-    }
-
-    public void WinGame()
-    {
-        if (currentState == GameState.Gameover || currentState == GameState.Victory) return;
-        ChangeState(GameState.Victory);
-        Time.timeScale = 0f;
-        victoryScreen.SetActive(true);
-        uiScreen.SetActive(false);
-        Debug.Log("<color=green><b>You Win!</b></color>");
     }
 
     void Update()
@@ -208,10 +194,12 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        if (currentState == GameState.Victory) return;
+
+        //set the Game Over Variables here
         ChangeState(GameState.Gameover);
         Time.timeScale = 0f;
-        DisplayResults(); // loss screen
+        DisplayResults();
+
     }
 
     public void EnterRestingPhase()
@@ -238,15 +226,14 @@ public class GameManager : MonoBehaviour
 
     public void DisplayResults()
     {
-        GameOverScreen.SetActive(true);
+        resultsScreen.SetActive(true);
         uiScreen.SetActive(false);
     }
 
     void DisableScreens()
     {
         pauseScreen.SetActive(false);
-        victoryScreen.SetActive(false);
-        GameOverScreen.SetActive(false);
+        resultsScreen.SetActive(false);
     }
 
 

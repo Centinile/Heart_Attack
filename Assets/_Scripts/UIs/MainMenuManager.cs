@@ -25,17 +25,11 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private Image fadeOverlay;         // Full-screen black Image on a top-level Canvas
     [SerializeField] private float sceneFadeDuration = 0.4f;
 
-    [Header("Difficulty")]
-    [SerializeField] private TMPro.TMP_Dropdown difficultyDropdown;
-    // Options: Easy = 20, Normal = 40, Hard = 60, Endless = 0 (no win condition)
-    private static readonly int[] waveCounts = { 20, 40, 60, 0 };
-
     private const string KEY_ACID_RAIN   = "EnableAcidRain";
     private const string KEY_FOG_OF_WAR  = "EnableFogOfWar";
     private const string KEY_RANDOM_WAVES = "EnableRandomWaves";
     private const string KEY_STAT_RAMPING = "EnableStatRamping";
     private const string KEY_NO_BREAKS   = "EnableNoBreaks";
-    private const string KEY_WAVES_TO_WIN = "WavesToWin";
 
     private void Awake()
     {
@@ -75,18 +69,6 @@ public class MainMenuManager : MonoBehaviour
             fadeOverlay.gameObject.SetActive(true);
             StartCoroutine(FadeOverlay(1f, 0f, sceneFadeDuration));
         }
-
-        int savedDifficulty = PlayerPrefs.GetInt("Difficulty", 1); // default Normal
-        difficultyDropdown.value = savedDifficulty;
-        difficultyDropdown.onValueChanged.AddListener(index =>
-        {
-            PlayerPrefs.SetInt("Difficulty", index);
-            PlayerPrefs.SetInt(KEY_WAVES_TO_WIN, waveCounts[index]);
-        });
-
-        // Set initial value in case it was never set
-        if (!PlayerPrefs.HasKey(KEY_WAVES_TO_WIN))
-            PlayerPrefs.SetInt(KEY_WAVES_TO_WIN, waveCounts[savedDifficulty]);
     }
 
     // ── Public button callbacks ────────────────────────────────────────
