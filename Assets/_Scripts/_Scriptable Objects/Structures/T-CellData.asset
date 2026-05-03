@@ -10,34 +10,34 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51ee95539e800654b9b75b07a2ff498b, type: 3}
-  m_Name: infernotowerData_
+  m_Name: T-CellData
   m_EditorClassIdentifier: 
-  structureName: Inferno Tower
+  structureName: T-Cell Launcher
   maxHP: 100
   tier: 1
   nutrientCost: 100
   hydrationCost: 5
   nextLevelData: {fileID: 0}
   upgradeCost: 150
-  icon: {fileID: -6324466176413781807, guid: f56aee4e617ce8d48a2659e77a722ff4, type: 3}
-  prefab: {fileID: 4611168650507600015, guid: ae53c4d789105f14a957fd44088e289e, type: 3}
-  damage: 10
-  attackCooldown: 1
-  range: 5
-  attackType: 4
+  icon: {fileID: 204987173645444385, guid: d7a0acedb1db35345af197289f4da90c, type: 3}
+  prefab: {fileID: 4611168650507600015, guid: becceb0a1e98d274cbfe1d8184e9506f, type: 3}
+  damage: 50
+  attackCooldown: 5
+  range: 9
+  attackType: 2
   useFourDirectionalFacing: 0
   spriteUp: {fileID: 0}
   spriteDown: {fileID: 0}
   spriteLeft: {fileID: 0}
   spriteRight: {fileID: 0}
-  projectileData: {fileID: 0}
-  projectileSpeed: 10
+  projectileData: {fileID: 11400000, guid: d500cbf7a8a33a04e920b02edf4c609b, type: 2}
+  projectileSpeed: 60
   maxTargets: 3
-  splashRadius: 2
-  continuousBaseDamage: 10
-  continuousMaxDamage: 100
-  continuousRampTime: 1.5
-  continuousTickRate: 0.7
+  splashRadius: 5
+  continuousBaseDamage: 5
+  continuousMaxDamage: 50
+  continuousRampTime: 4
+  continuousTickRate: 0.1
   applyDOT: 0
   dotDamagePerTick: 5
   dotTickInterval: 0.5

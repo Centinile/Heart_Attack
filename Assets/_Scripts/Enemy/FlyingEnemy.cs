@@ -147,9 +147,6 @@ public class FlyingEnemy : MonoBehaviour, IEnemy
 
     private void DieLogic()
     {
-        if (isDead) return;
-        isDead = true;
-
         bool deathPrevented = false;
         foreach (var a in instantiatedAbilities)
             if (a != null && a.OnDeath(this)) deathPrevented = true;
@@ -157,29 +154,18 @@ public class FlyingEnemy : MonoBehaviour, IEnemy
         if (!deathPrevented)
         {
             healthBar?.ReturnBar();
+            StopAllCoroutines();
             foreach (var a in instantiatedAbilities) if (a != null) Destroy(a);
 
-            float deathDuration = enemyAnimations != null
-                ? enemyAnimations.PlayDeathAnimation()
-                : 0f;
+            enemyAnimations.PlayDeathAnimation();
 
-            if (deathDuration > 0f)
-                StartCoroutine(DestroyAfterDelay(deathDuration));
-            else
-                Destroy(gameObject);
         }
         else
         {
-            isDead = false;
             currentHP = scaledMaxHP;
         }
     }
 
-    private IEnumerator DestroyAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        Destroy(gameObject);
-    }
 
     private void InitializeAbilities()
     {
