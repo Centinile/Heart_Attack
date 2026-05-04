@@ -17,9 +17,9 @@ MonoBehaviour:
   tier: 1
   nutrientCost: 20
   hydrationCost: 40
-  nextLevelData: {fileID: 0}
+  nextLevelData: {fileID: 11400000}
   upgradeCost: 150
-  icon: {fileID: 21300000, guid: d1371205877538447ad2ea473179746d, type: 3}
+  icon: {fileID: 5136992363456170433, guid: 903642b33ece7a34cb0bfd4070beed78, type: 3}
   prefab: {fileID: 4611168650507600015, guid: da9667e0895eed04986935c4f845e169, type: 3}
   damage: 6
   attackCooldown: 0.5
@@ -34,3 +34,13 @@ MonoBehaviour:
   projectileSpeed: 10
   maxTargets: 8
   splashRadius: 2
+  continuousBaseDamage: 5
+  continuousMaxDamage: 50
+  continuousRampTime: 4
+  continuousTickRate: 0.1
+  applyDOT: 0
+  dotDamagePerTick: 5
+  dotTickInterval: 0.5
+  dotDuration: 3
+  dotRadius: 1.5
+  dotZonePrefab: {fileID: 0}

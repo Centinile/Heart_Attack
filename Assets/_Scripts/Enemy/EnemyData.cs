@@ -71,7 +71,7 @@ public class EnemyData : ScriptableObject
     /// Creates a new ability instance and assigns it to the specified enemy.
     /// Called by the Enemy component during initialization.
     /// <param name="enemy">The Enemy component to assign abilities to.</param>
-    public void InitializeAbilities(Enemy enemy)
+    public void InitializeAbilities(IEnemy enemy)
     {
         foreach (var ability in abilities)
         {
@@ -87,7 +87,7 @@ public class EnemyData : ScriptableObject
     /// Called when the enemy attacks. Triggers all abilities with attack triggers.
     /// <param name="enemy">The Enemy component that attacked.</param>
     /// <param name="target">The Building component that was attacked.</param>
-    public void TriggerAttackAbilities(Enemy enemy, Building target)
+    public void TriggerAttackAbilities(IEnemy enemy, Building target)
     {
         foreach (var ability in abilities)
         {
@@ -99,7 +99,7 @@ public class EnemyData : ScriptableObject
     /// Called when the enemy dies. Triggers all abilities with death triggers. Returns true if any ability prevented the death.
     /// <param name="enemy">The Enemy component that is dying.</param>
     /// <returns>True if death was prevented by an ability.</returns>
-    public bool TriggerDeathAbilities(Enemy enemy)
+    public bool TriggerDeathAbilities(IEnemy enemy)
     {
         bool deathPrevented = false;
         
@@ -117,7 +117,7 @@ public class EnemyData : ScriptableObject
 
     /// Called every frame to update passive abilities.
     /// <param name="enemy">The Enemy component to update.</param>
-    public void UpdatePassiveAbilities(Enemy enemy)
+    public void UpdatePassiveAbilities(IEnemy enemy)
     {
         foreach (var ability in abilities)
         {

@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51ee95539e800654b9b75b07a2ff498b, type: 3}
+  m_Name: BuilderHutData_
+  m_EditorClassIdentifier: 
+  structureName: BuilderHut
+  maxHP: 100
+  tier: 1
+  nutrientCost: 50
+  hydrationCost: 5
+  nextLevelData: {fileID: 0}
+  upgradeCost: 150
+  icon: {fileID: -1393901754148368072, guid: 5372365288bb9d644931149f1ca31b32, type: 3}
+  prefab: {fileID: 4611168650507600015, guid: 8e3095beea78c4248b78dc9c5f39a890, type: 3}
+  damage: 20
+  attackCooldown: 2
+  range: 7
+  attackType: 5
+  useFourDirectionalFacing: 0
+  spriteUp: {fileID: 0}
+  spriteDown: {fileID: 0}
+  spriteLeft: {fileID: 0}
+  spriteRight: {fileID: 0}
+  projectileData: {fileID: 0}
+  projectileSpeed: 10
+  maxTargets: 3
+  splashRadius: 2
+  continuousBaseDamage: 5
+  continuousMaxDamage: 50
+  continuousRampTime: 4
+  continuousTickRate: 0.1
+  applyDOT: 0
+  dotDamagePerTick: 5
+  dotTickInterval: 0.5
+  dotDuration: 3
+  dotRadius: 1.5
+  dotZonePrefab: {fileID: 0}

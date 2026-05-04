@@ -61,6 +61,7 @@ public class Building : MonoBehaviour
 
     private Outline outline;
     private StructureAnimations structureAnimations;
+    
 
     protected virtual void Awake()
     {
@@ -120,9 +121,12 @@ public class Building : MonoBehaviour
     protected virtual void OnDestroyed()
     {
         healthBar?.ReturnBar();
-
-        structureAnimations?.PlayDeathAnimation();
         TierUnlockManager.OnTierUnlocksChanged -= OnTierUnlocksChanged;
+        
+        TowerPlacer.Instance?.FreeTile(transform.position); // single canonical call
+        
+        structureAnimations?.PlayDeathAnimation();
+
         if (IsPowered)
         {
             GameManager.Instance.UnregisterPoweredBuilding(this);
@@ -132,9 +136,6 @@ public class Building : MonoBehaviour
         {
             GameManager.Instance.UnregisterUnpoweredBuilding(this);
         }
-
-        if (TowerPlacer.Instance != null)
-            TowerPlacer.Instance.FreeTile(transform.position);
 
         Destroy(gameObject);
     }
@@ -230,7 +231,7 @@ public class Building : MonoBehaviour
     public virtual void Sell()
     {
         GameManager.Instance.AddNutrients(Data.NutrientCost * 0.5f);
-        OnDestroyed(); // Use the common cleanup method
+        OnDestroyed();
     }
 
     public void InitializeWithoutActivation(BuildingData data)

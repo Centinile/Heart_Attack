@@ -60,7 +60,9 @@ public class TowerPlacer : MonoBehaviour
         Vector3Int cellPos = placementMap.WorldToCell(mouseWorldPos);
         Vector3 worldCenter = placementMap.GetCellCenterWorld(cellPos);
 
-        ghostInstance.transform.position = worldCenter + new Vector3(0, placementMap.cellSize.y * 0.25f);
+        ghostInstance.transform.position = new Vector3(
+            worldCenter.x,
+            worldCenter.y + heartSpawnMap.cellSize.y);
 
         bool valid = IsPlacementValid(cellPos, TowerSelectionUI.SelectedStructureData);
         ghostInstance.GetComponent<GhostTower>().SetValid(valid);
@@ -69,47 +71,33 @@ public class TowerPlacer : MonoBehaviour
     private void HandlePlacementClick()
     {
         BuildingData data = TowerSelectionUI.SelectedStructureData;
-        // Must have data and Left Click
-        if (TowerSelectionUI.SelectedStructureData == null || !Input.GetMouseButtonDown(0)) return;
-        
-        // Ignore if clicking UI
+        if (data == null || !Input.GetMouseButtonDown(0)) return;
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
 
         Vector3 mouseWorldPos = GetMouseWorldPos();
         Vector3Int cellPos = placementMap.WorldToCell(mouseWorldPos);
 
         if (!IsTileValid(cellPos)) return;
-
-        if (!TierUnlockManager.Instance.IsTierUnlocked(data.Tier))
-        {
-            Debug.Log($"[Placement] Blocked — {data.StructureName} requires Tier {data.Tier} to be unlocked.");
-            return;
-        }
+        if (!TierUnlockManager.Instance.IsTierUnlocked(data.Tier)) return;
 
         if (data is ResearchData labData)
         {
             BuildingTier labTier = labData.GetUnlockedTier();
             if (labTier != BuildingTier.Tier1 && TierUnlockManager.Instance.IsLabTierOccupied(labTier))
-            {
-                Debug.Log($"[Placement] Blocked — A Lab unlocking Tier {labTier} already exists.");
                 return;
-            }
         }
-        
+
         if (!GameManager.Instance.SpendNutrients(data.NutrientCost)) return;
 
-        // Place the building
         GameObject newBuilding = Instantiate(data.Prefab, ghostInstance.transform.position, Quaternion.identity);
         Building building = newBuilding.GetComponent<Building>();
-        
-        // Use the ScriptableObject's own configuration logic
         data.ConfigureBuilding(building);
         building.Initialize(data);
-
         occupiedTiles.Add(cellPos);
 
-        // NOTE: We do NOT set SelectedStructureData to null here, 
-        // allowing for continuous placement!
+        // Select the placed building — this triggers the slide-in via BuildingSelector
+        BuildingSelector selector = Object.FindFirstObjectByType<BuildingSelector>();
+        if (selector != null) selector.SelectBuildingExternal(building);
     }
 
     private bool IsTileValid(Vector3Int cellPos)
@@ -151,7 +139,9 @@ public class TowerPlacer : MonoBehaviour
             if (heartSpawnMap.HasTile(pos))
             {
                 Vector3 worldCenter = heartSpawnMap.GetCellCenterWorld(pos);
-                Vector3 spawnPos = worldCenter + new Vector3(0, heartSpawnMap.cellSize.y * 0.25f);
+                Vector3 spawnPos = new Vector3(
+                    worldCenter.x,
+                    worldCenter.y + heartSpawnMap.cellSize.y - 0.02f);
 
                 GameObject heartObj = Instantiate(heartData.Prefab, spawnPos, Quaternion.identity);
                 Building building = heartObj.GetComponent<Building>();
@@ -164,9 +154,18 @@ public class TowerPlacer : MonoBehaviour
         }
     }
 
+    public void FreeTile(Vector3Int cellPos)
+    {
+        occupiedTiles.Remove(cellPos);
+    }
+
     public void FreeTile(Vector3 worldPosition)
     {
-        Vector3Int cellPos = placementMap.WorldToCell(worldPosition);
-        occupiedTiles.Remove(cellPos);
+        // Undo the y-offset before converting — mirrors how cellPos was captured at placement
+        Vector3 corrected = new Vector3(
+            worldPosition.x,
+            worldPosition.y - heartSpawnMap.cellSize.y,
+            worldPosition.z);
+        occupiedTiles.Remove(placementMap.WorldToCell(corrected));
     }
 }
