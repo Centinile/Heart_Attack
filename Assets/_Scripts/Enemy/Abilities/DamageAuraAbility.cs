@@ -27,7 +27,7 @@ public class DamageAuraAbility : AbilityBase
         isPassive = true;
     }
     
-    protected override void ExecuteAbility(IEnemy user)
+    protected override void ExecuteAbility(Enemy user)
     {
         if (user == null) return;
         
@@ -54,7 +54,7 @@ public class DamageAuraAbility : AbilityBase
         Debug.Log($"Aura Damage: Dealt {damageThisTick} damage to {damagedBuildings.Count} unique buildings.");
     }
     
-    protected override void OnAbilityAssigned(IEnemy user)
+    protected override void OnAbilityAssigned(Enemy user)
     {
         base.OnAbilityAssigned(user);
         

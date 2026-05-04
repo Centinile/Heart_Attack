@@ -25,7 +25,7 @@ public class DeathExplosionAbility : AbilityBase
         preventDeath = false;
     }
 
-    protected override void ExecuteAbility(IEnemy user)
+    protected override void ExecuteAbility(Enemy user)
     {
         if (user == null) return;
 

@@ -477,7 +477,7 @@ MonoBehaviour:
   particlePerStripCount: 16
   needsComputeBounds: 0
   boundsMode: 0
-  m_Space: 1
+  m_Space: 0
 --- !u!114 &114512514798047786
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2343,7 +2343,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEditor.VFX.OrientedBox, Unity.VisualEffectGraph.Editor,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"center":{"x":0.8066787719726563,"y":2.2973673343658449,"z":0.0},"angles":{"x":0.0,"y":0.0,"z":0.0},"size":{"x":66.70048522949219,"y":44.15680694580078,"z":1.0}}'
+      m_SerializableObject: '{"center":{"x":0.491058349609375,"y":-0.82220458984375,"z":0.0},"angles":{"x":0.0,"y":0.0,"z":0.0},"size":{"x":68.43486022949219,"y":40.729270935058597,"z":1.0}}'
     m_Space: 1
   m_Property:
     name: Box
@@ -3136,8 +3136,8 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEditor.VFX.Sphere, Unity.VisualEffectGraph.Editor,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"center":{"x":0.26303863525390627,"y":1.0358381271362305,"z":0.0},"radius":4.885064125061035}'
-    m_Space: 1
+      m_SerializableObject: '{"center":{"x":41.615379333496097,"y":-14.811208724975586,"z":0.0},"radius":19.325565338134767}'
+    m_Space: 0
   m_Property:
     name: Sphere
     m_serializedType:
@@ -4489,8 +4489,8 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEditor.VFX.TSphere, Unity.VisualEffectGraph.Editor,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"transform":{"position":{"x":-0.5195572376251221,"y":1.866172432899475,"z":0.0},"angles":{"x":0.0,"y":0.0,"z":0.0},"scale":{"x":1.0,"y":1.0,"z":1.0}},"radius":0.3400000035762787}'
-    m_Space: 1
+      m_SerializableObject: '{"transform":{"position":{"x":1.1407523155212403,"y":1.369084119796753,"z":0.0},"angles":{"x":0.0,"y":0.0,"z":0.0},"scale":{"x":1.0,"y":1.0,"z":1.0}},"radius":0.3400000035762787}'
+    m_Space: 0
   m_Property:
     name: sphere
     m_serializedType:

@@ -15,9 +15,7 @@ GameObject:
   - component: {fileID: 5218100405874627616}
   - component: {fileID: -6974122924984088197}
   - component: {fileID: 3050348443475716267}
-  - component: {fileID: -5027914741527649430}
-  - component: {fileID: 2966505858959382660}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Salty
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -107,7 +105,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: e436f6c9ae0d41c46b96a39e7576b8e8, type: 2}
-  enemyAnimations: {fileID: 2966505858959382660}
   currentHP: 0
   targetBuilding: {fileID: 0}
   currentMoveTarget: {fileID: 0}
@@ -133,7 +130,7 @@ NavMeshAgent:
   m_Height: 0.8
   m_BaseOffset: 0.4
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 0
+  m_ObstacleAvoidanceType: 4
 --- !u!58 &5218100405874627616
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -207,39 +204,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b97208319265344c89c0d2a5b89447e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!95 &-5027914741527649430
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6344384041587836070}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 1458bacf35b751048828e4d99fe9ff2d, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2966505858959382660
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6344384041587836070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d00ac968fbbb6f48a47a1ae652f907f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

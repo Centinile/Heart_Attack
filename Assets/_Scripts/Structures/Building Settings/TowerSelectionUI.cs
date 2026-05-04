@@ -4,12 +4,13 @@ public class TowerSelectionUI : MonoBehaviour
 {
     public static BuildingData SelectedStructureData;
 
-    [SerializeField] private BuildingSelector buildingSelector; // wire up in inspector
-
     public void SelectStructure(BuildingData data)
     {
-        if (buildingSelector != null) buildingSelector.Deselect(); // slides out if open
+        // Clear existing building selection first
+        BuildingSelector selector = Object.FindFirstObjectByType<BuildingSelector>();
+        if (selector != null) selector.Deselect();
 
+        // Toggle selection
         if (SelectedStructureData == data)
         {
             SelectedStructureData = null;

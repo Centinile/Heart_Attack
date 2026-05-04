@@ -16,24 +16,24 @@ public interface IAbility
     
     /// Executes the ability's effect.
     /// <param name="user">The Enemy component executing the ability.</param>
-    void Execute(IEnemy user);
+    void Execute(Enemy user);
     
     /// Called when the ability is assigned to an enemy at spawn. Use for initialization that requires enemy context.
     /// <param name="user">The Enemy component this ability is assigned to.</param>
-    void OnAssigned(IEnemy user);
+    void OnAssigned(Enemy user);
     
     /// Called when the enemy dies. Return true if the ability handles death (revive, etc).
     /// <param name="user">The Enemy component that is dying.</param>
     /// <returns>True if death should be prevented, false otherwise.</returns>
-    bool OnDeath(IEnemy user);
+    bool OnDeath(Enemy user);
     
     /// Called every frame for passive abilities.
     /// <param name="user">The Enemy component this ability belongs to.</param>
-    void OnUpdate(IEnemy user);
+    void OnUpdate(Enemy user);
     
 
     /// Called when the enemy successfully attacks a target.
     /// <param name="user">The Enemy component executing the attack.</param>
     /// <param name="target">The Building component that was attacked.</param>
-    void OnAttack(IEnemy user, Building target);
+    void OnAttack(Enemy user, Building target);
 }

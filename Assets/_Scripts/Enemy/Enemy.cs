@@ -2,14 +2,12 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 using System.Linq;
-using System.Collections;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class Enemy : MonoBehaviour, IEnemy
+public class Enemy : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private EnemyData data;
-    [SerializeField] private EnemyAnimations enemyAnimations;
     public EnemyData Data => data;
 
     [Header("Live State")]
@@ -39,7 +37,6 @@ public class Enemy : MonoBehaviour, IEnemy
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        enemyAnimations = GetComponent<EnemyAnimations>();
         if (agent != null)
         {
             agent.updateRotation = false;
@@ -54,48 +51,41 @@ public class Enemy : MonoBehaviour, IEnemy
         DetermineTarget();
     }
 
-void Update()
-{
-    foreach (var a in instantiatedAbilities) a?.OnUpdate(this);
-
-    Vector2 velocity = new Vector2(agent.velocity.x, agent.velocity.y);
-    enemyAnimations?.PlayAnimation(velocity);
-    if (velocity != Vector2.zero)
-        enemyAnimations?.RotateToPointer(velocity);
-
-    if (targetBuilding == null || !targetBuilding.IsAlive)
+    void Update()
     {
-        UnlockWall();
-        DetermineTarget();
-        return;
-    }
+        foreach (var a in instantiatedAbilities) a?.OnUpdate(this);
 
-    // FIX 1: Guard HandleCombatState so it doesn't run while UpdatePathing
-    // is still settling (pathClearFrames hasn't confirmed yet)
-    if (!isBreakingWall || lockedWall == null || !lockedWall.IsAlive)
-        HandleCombatState();
-
-    if (attackTimer > 0) attackTimer -= Time.deltaTime;
-
-    detectionTimer -= Time.deltaTime;
-    if (detectionTimer <= 0)
-    {
-        detectionTimer = DETECTION_INTERVAL;
-
-        if (data.TargetingPriority != TargetPriority.None && !isBreakingWall)
+        if (targetBuilding == null || !targetBuilding.IsAlive)
         {
-            Building inRange = FindPreferredTargetInRange();
-            if (inRange != null && inRange != targetBuilding)
-            {
-                targetBuilding = inRange;
-                UpdatePathing();
-                return;
-            }
+            UnlockWall();
+            DetermineTarget();
+            return;
         }
 
-        UpdatePathing();
+        HandleCombatState();
+
+        if (attackTimer > 0) attackTimer -= Time.deltaTime;
+
+        detectionTimer -= Time.deltaTime;
+        if (detectionTimer <= 0)
+        {
+            detectionTimer = DETECTION_INTERVAL;
+
+            // Check detection range for preferred targets, but not while breaking a wall
+            if (data.TargetingPriority != TargetPriority.None && !isBreakingWall)
+            {
+                Building inRange = FindPreferredTargetInRange();
+                if (inRange != null && inRange != targetBuilding)
+                {
+                    targetBuilding = inRange;
+                    UpdatePathing();
+                    return;
+                }
+            }
+
+            UpdatePathing();
+        }
     }
-}
 
     private void InitializeStats()
     {
@@ -169,42 +159,45 @@ void Update()
     {
         NavMeshPath path = new NavMeshPath();
         agent.CalculatePath(b.transform.position, path);
-        float d = GetPathLength(path, b); // pass b directly
+        float d = GetPathLength(path);
+        // Penalize partial paths heavily so fully reachable targets are preferred
         if (path.status == NavMeshPathStatus.PathPartial) d += 40f;
         return d;
     }
 
-private void UpdatePathing()
-{
-    if (targetBuilding == null) return;
-
-    NavMeshPath path = new NavMeshPath();
-    agent.CalculatePath(targetBuilding.transform.position, path);
-
-    if (path.status == NavMeshPathStatus.PathComplete)
+    private void UpdatePathing()
     {
-        if (isBreakingWall && lockedWall != null && lockedWall.IsAlive)
+        if (targetBuilding == null) return;
+
+        NavMeshPath path = new NavMeshPath();
+        agent.CalculatePath(targetBuilding.transform.position, path);
+
+        if (path.status == NavMeshPathStatus.PathComplete)
         {
-            pathClearFrames++;
-            if (pathClearFrames < PATH_CLEAR_FRAMES_REQUIRED)
-                return; // FIX 2: Don't call SetDestination mid-confirmation
+            // Require several consecutive clear frames before trusting the path
+            // is genuinely open — prevents NavMesh flicker near wall seams
+            if (isBreakingWall && lockedWall != null && lockedWall.IsAlive)
+            {
+                pathClearFrames++;
+                if (pathClearFrames < PATH_CLEAR_FRAMES_REQUIRED)
+                    return;
+            }
+
+            pathClearFrames = 0;
+            UnlockWall();
+            currentMoveTarget = targetBuilding.gameObject;
+            agent.SetDestination(currentMoveTarget.transform.position);
         }
+        else
+        {
+            pathClearFrames = 0;
 
-        pathClearFrames = 0;
-        UnlockWall();
-        currentMoveTarget = targetBuilding.gameObject;
-        agent.isStopped = false; // FIX 3: Ensure agent isn't stopped from combat state
-        agent.SetDestination(currentMoveTarget.transform.position);
+            // Only pick a new wall if we don't already have one locked —
+            // once committed, stay on it until it dies
+            if (lockedWall == null || !lockedWall.IsAlive)
+                SearchForNearestWall();
+        }
     }
-    else
-    {
-        pathClearFrames = 0;
-
-        if (lockedWall == null || !lockedWall.IsAlive)
-            SearchForNearestWall();
-        // FIX 4: If wall is already locked and alive, do nothing — don't re-search
-    }
-}
 
     private void SearchForNearestWall()
     {
@@ -250,8 +243,7 @@ private void UpdatePathing()
 
     private void HandleCombatState()
     {
-        // FIX 5: Resolve active target once, consistently
-        GameObject activeTarget = (isBreakingWall && lockedWall != null && lockedWall.IsAlive)
+        GameObject activeTarget = (lockedWall != null && lockedWall.IsAlive)
             ? lockedWall.gameObject
             : currentMoveTarget;
 
@@ -271,20 +263,13 @@ private void UpdatePathing()
         }
         else
         {
-            // FIX 6: Only SetDestination here if UpdatePathing isn't managing it
-            // to avoid the two-system conflict
-            if (!isBreakingWall)
-            {
-                agent.isStopped = false;
-                agent.SetDestination(activeTarget.transform.position);
-            }
+            agent.isStopped = false;
+            agent.SetDestination(activeTarget.transform.position);
         }
     }
 
     private void Attack(GameObject target)
     {
-        enemyAnimations?.PlayAttackAnimation();
-
         if (target.TryGetComponent<Building>(out Building b))
         {
             b.TakeDamage(scaledDamage > 0 ? scaledDamage : data.AttackDamage);
@@ -308,10 +293,10 @@ private void UpdatePathing()
         };
     }
 
-    private float GetPathLength(NavMeshPath path, Building b)
+    private float GetPathLength(NavMeshPath path)
     {
         if (path.corners.Length < 2)
-            return Vector3.Distance(transform.position, b.transform.position); // use b, not targetBuilding
+            return Vector3.Distance(transform.position, targetBuilding.transform.position);
 
         float dist = 0f;
         for (int i = 0; i < path.corners.Length - 1; i++)
@@ -337,18 +322,11 @@ private void UpdatePathing()
         if (!deathPrevented)
         {
             healthBar?.ReturnBar();
-            agent.isStopped = true; // stop moving during death animation
             StopAllCoroutines();
             foreach (var a in instantiatedAbilities) if (a != null) Destroy(a);
-
-            enemyAnimations.PlayDeathAnimation();
             Destroy(gameObject);
-
         }
-        else
-        {
-            currentHP = scaledMaxHP;
-        }
+        else { currentHP = scaledMaxHP; }
     }
 
     private void InitializeAbilities()
