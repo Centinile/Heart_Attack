@@ -43,14 +43,16 @@ public class BuildingSelector : MonoBehaviour
     [SerializeField] private TMP_Text hydrationCapacityBoostLabel;
     [SerializeField] private TMP_Text hydrationCapacityBoostValue;
 
+    [SerializeField] private TMP_Text descriptionValue;
+
     // ── Slide animation ────────────────────────────────────────────────
     [Header("Slide Animation")]
     [SerializeField] private float slideDuration = 0.3f;
     [SerializeField] private AnimationCurve slideCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
     private RectTransform _panelRect;
-    private Vector2 _restingPosition;  // where the panel sits when fully visible
-    private Vector2 _hiddenPosition;   // off-screen to the right
+    private Vector2 _restingPosition;
+    private Vector2 _hiddenPosition;
     private Coroutine _slideCoroutine;
 
     // ──────────────────────────────────────────────────────────────────
@@ -58,12 +60,8 @@ public class BuildingSelector : MonoBehaviour
     void Start()
     {
         _panelRect = actionPanel.GetComponent<RectTransform>();
-
-        // Record the position set in the editor — that is the fully-open resting spot.
         _restingPosition = _panelRect.anchoredPosition;
 
-        // Hide immediately so it doesn't flash, then defer the width calculation
-        // to the end of the first frame when Unity has finished its layout pass.
         actionPanel.SetActive(false);
         if (statsPanel != null) statsPanel.SetActive(false);
 
@@ -72,15 +70,9 @@ public class BuildingSelector : MonoBehaviour
 
     private IEnumerator InitAfterLayout()
     {
-        // Wait one frame so RectTransform.rect.width is populated correctly.
         yield return null;
-
         Canvas.ForceUpdateCanvases();
-
-        // Hidden = resting position shifted right by the panel's own width.
         _hiddenPosition = _restingPosition + new Vector2(_panelRect.rect.width, 0f);
-
-        // Snap to hidden position while the panel is still inactive.
         _panelRect.anchoredPosition = _hiddenPosition;
     }
 
@@ -115,7 +107,6 @@ public class BuildingSelector : MonoBehaviour
     {
         if (SelectedBuilding == building) return;
 
-        // Swap without sliding out first — just update content and slide in.
         if (SelectedBuilding != null)
         {
             SelectedBuilding.OnDeselected();
@@ -126,7 +117,7 @@ public class BuildingSelector : MonoBehaviour
         SelectedBuilding.OnSelected();
 
         RefreshRepairUI();
-        RefreshStatsUI();
+        PopulateStats(building.Data);
         SlideIn();
     }
 
@@ -156,7 +147,7 @@ public class BuildingSelector : MonoBehaviour
         float elapsed = 0f;
         while (elapsed < slideDuration)
         {
-            elapsed += Time.unscaledDeltaTime;  // unscaled so it works during pause menus
+            elapsed += Time.unscaledDeltaTime;
             float t = slideCurve.Evaluate(Mathf.Clamp01(elapsed / slideDuration));
             _panelRect.anchoredPosition = Vector2.LerpUnclamped(from, to, t);
             yield return null;
@@ -167,13 +158,16 @@ public class BuildingSelector : MonoBehaviour
 
     // ── Stat helpers ───────────────────────────────────────────────────
 
-    private void RefreshStatsUI()
+    // Single source of truth for populating the stats panel from any BuildingData
+    private void PopulateStats(BuildingData data)
     {
-        if (statsPanel == null || SelectedBuilding == null) return;
+        if (statsPanel == null || data == null)
+        {
+            if (statsPanel != null) statsPanel.SetActive(false);
+            return;
+        }
 
-        BuildingData data = SelectedBuilding.Data;
-        if (data == null) { statsPanel.SetActive(false); return; }
-
+        // Hide all rows first
         SetRowVisible(structureNameLabel,          structureNameValue,          false);
         SetRowVisible(maxHPLabel,                  maxHPValue,                  false);
         SetRowVisible(damageLabel,                 damageValue,                 false);
@@ -182,6 +176,13 @@ public class BuildingSelector : MonoBehaviour
         SetRowVisible(upgradeCostLabel,            upgradeCostValue,            false);
         SetRowVisible(nutrientsPerWaveLabel,       nutrientsPerWaveValue,       false);
         SetRowVisible(hydrationCapacityBoostLabel, hydrationCapacityBoostValue, false);
+
+        // Description — shown for all types
+        if (descriptionValue != null)
+        {
+            descriptionValue.text = data.Description;
+            descriptionValue.gameObject.SetActive(!string.IsNullOrEmpty(data.Description));
+        }
 
         switch (data.GetStructureType())
         {
@@ -215,11 +216,10 @@ public class BuildingSelector : MonoBehaviour
     {
         if (!(d is ResourceData rd)) return;
 
-        ShowRow(maxHPLabel,                  maxHPValue,                  "Max HP",                   d.MaxHP.ToString());
-        ShowRow(nutrientsPerWaveLabel,       nutrientsPerWaveValue,       "Nutrients/Wave",            rd.nutrientsPerWave.ToString());
-        ShowRow(hydrationCapacityBoostLabel, hydrationCapacityBoostValue, "Hydration Capacity Boost",  rd.hydrationCapacityBoost.ToString());
+        ShowRow(maxHPLabel,                  maxHPValue,                  "Max HP",                  d.MaxHP.ToString());
+        ShowRow(nutrientsPerWaveLabel,       nutrientsPerWaveValue,       "Nutrients/Wave",           rd.nutrientsPerWave.ToString());
+        ShowRow(hydrationCapacityBoostLabel, hydrationCapacityBoostValue, "Hydration Capacity Boost", rd.hydrationCapacityBoost.ToString());
 
-        // Mine also shows costs; Water Pump does not
         if (d.StructureName == "Mine")
         {
             ShowRow(nutrientCostLabel,  nutrientCostValue,  "Nutrient Cost",  d.NutrientCost.ToString());
@@ -297,5 +297,12 @@ public class BuildingSelector : MonoBehaviour
     public void SelectBuildingExternal(Building building)
     {
         SelectBuilding(building);
+    }
+
+    // Called from TowerSelectionUI when hovering/selecting from the build menu
+    public void ShowDataStats(BuildingData data)
+    {
+        PopulateStats(data);
+        SlideIn();
     }
 }

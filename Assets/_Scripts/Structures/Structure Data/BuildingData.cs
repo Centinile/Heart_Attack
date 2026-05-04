@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public abstract class BuildingData : ScriptableObject
@@ -6,6 +7,7 @@ public abstract class BuildingData : ScriptableObject
     [SerializeField] private string structureName = "New Structure";
     [SerializeField] private float maxHP = 100f;
     [SerializeField] private BuildingTier tier = BuildingTier.Tier1;
+    [SerializeField] private string description = "Structure Description";
 
     [Header("Economy")]
     [SerializeField] private float nutrientCost = 100f;
@@ -28,6 +30,7 @@ public abstract class BuildingData : ScriptableObject
     public BuildingData NextLevelData => nextLevelData;
     public Sprite Icon => icon;
     public GameObject Prefab => prefab;
+    public String Description => description;
 
     public abstract StructureType GetStructureType();
 

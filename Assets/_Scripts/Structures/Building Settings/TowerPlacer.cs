@@ -20,10 +20,15 @@ public class TowerPlacer : MonoBehaviour
 
     private HashSet<Vector3Int> occupiedTiles = new HashSet<Vector3Int>();
     private GameObject ghostInstance;
+    private BuildingSelector _buildingSelector;
 
     void Awake() => Instance = this;
 
-    void Start() => SpawnHeartAtTargetLocation();
+    void Start()
+    {
+        _buildingSelector = Object.FindFirstObjectByType<BuildingSelector>();
+        SpawnHeartAtTargetLocation();
+    }
 
     void Update()
     {
@@ -42,6 +47,7 @@ public class TowerPlacer : MonoBehaviour
     {
         TowerSelectionUI.SelectedStructureData = null;
         if (ghostInstance != null) Destroy(ghostInstance);
+        _buildingSelector?.Deselect();
     }
 
     private void HandlePlacementHover()
