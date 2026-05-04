@@ -69,6 +69,8 @@ public class GameManager : MonoBehaviour
 
     public bool isGameOver => currentState == GameState.Gameover;
 
+    private const string KEY_ACID_RAIN    = "EnableAcidRain";
+    private const string KEY_FOG_OF_WAR   = "EnableFogOfWar";
     private const string KEY_RANDOM_WAVES = "EnableRandomWaves";
     private const string KEY_STAT_RAMPING = "EnableStatRamping";
     private const string KEY_NO_BREAKS    = "EnableNoBreaks";
@@ -90,8 +92,8 @@ public class GameManager : MonoBehaviour
         DisableScreens();
         uiScreen.SetActive(true);
 
-        enableAcidRain    = PlayerPrefs.GetInt("EnableAcidRain",    0) == 1;
-        enableFogOfWar    = PlayerPrefs.GetInt("EnableFogOfWar",    0) == 1;
+        enableAcidRain    = PlayerPrefs.GetInt(KEY_ACID_RAIN, 0) == 1;
+        enableFogOfWar    = PlayerPrefs.GetInt(KEY_FOG_OF_WAR, 0) == 1;
         enableRandomWaves = PlayerPrefs.GetInt(KEY_RANDOM_WAVES, 0) == 1;
         enableStatRamping = PlayerPrefs.GetInt(KEY_STAT_RAMPING, 0) == 1;
         enableNoBreaks    = PlayerPrefs.GetInt(KEY_NO_BREAKS,    0) == 1;

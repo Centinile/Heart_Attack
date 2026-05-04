@@ -8,7 +8,7 @@ public class SceneController : MonoBehaviour
 {
     [Header("Loading Screen Settings")]
     [SerializeField] private string loadingSceneName = "LoadingScreen";
-    private static string targetSceneName;
+    [SerializeField] private string targetSceneName = "GameScene";
 
     // Removed static Instance, DontDestroyOnLoad, and Awake singleton logic
 
@@ -18,7 +18,7 @@ public class SceneController : MonoBehaviour
     public void SceneChange(string sceneName)
     {
         targetSceneName = sceneName;
-        SceneManager.LoadScene(loadingSceneName);  // Load loading screen first
+        //SceneManager.LoadScene(loadingSceneName);  // Load loading screen first
         Time.timeScale = 1;
     }
 

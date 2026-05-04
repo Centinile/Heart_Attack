@@ -30574,7 +30574,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3076048480381741274, guid: b402cf5fcd7b32c42b8da863021acf94, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7127450174235422206, guid: b402cf5fcd7b32c42b8da863021acf94, type: 3}
       propertyPath: m_Name
@@ -30582,7 +30582,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7127450174235422206, guid: b402cf5fcd7b32c42b8da863021acf94, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -32240,6 +32240,7 @@ MonoBehaviour:
   enableNoBreaks: 0
   acidRainDamage: 5
   acidRainInterval: 3
+  acidRainEffect: {fileID: 1270753626348271689}
   easyWaves: 2
   mediumWaves: 20
   hardWaves: 30
@@ -32394,6 +32395,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadingSceneName: LoadingScreen
+  targetSceneName: GameScene
 --- !u!1 &635826354
 GameObject:
   m_ObjectHideFlags: 0
@@ -75141,22 +75143,31 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rain
       objectReference: {fileID: 0}
+    - target: {fileID: 7547074293205994005, guid: 46fbfd510e184cf418909cf43c25e20d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46fbfd510e184cf418909cf43c25e20d, type: 3}
+--- !u!198 &1270753626348271689 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 2614419955215378854, guid: 46fbfd510e184cf418909cf43c25e20d, type: 3}
+  m_PrefabInstance: {fileID: 1270753626348271688}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 250428430}
+  - {fileID: 113621359}
   - {fileID: 910666125}
   - {fileID: 417905552}
   - {fileID: 2116187660}
   - {fileID: 2052610380}
   - {fileID: 381067}
-  - {fileID: 113621359}
   - {fileID: 487028045}
   - {fileID: 1709989435}
   - {fileID: 2110832205}

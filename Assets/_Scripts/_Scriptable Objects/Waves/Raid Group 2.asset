@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Raid Group 2
   m_EditorClassIdentifier: 
   spawnEntries:
-  - prefab: {fileID: 6344384041587836070, guid: 15988e63095ea344d92ccd764de51605, type: 3}
+  - prefab: {fileID: 6344384041587836070, guid: 7f98ca1ef66481b438f87c0b56a887b7, type: 3}
     count: 8
   weightCost: 5
+  NutrientReward: 0
+  selectionWeight: 10
+  raidName: 
