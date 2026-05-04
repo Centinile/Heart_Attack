@@ -15,6 +15,7 @@ MonoBehaviour:
   structureName: ArcherTower
   maxHP: 100
   tier: 1
+  description: Structure Description
   nutrientCost: 200
   hydrationCost: 40
   nextLevelData: {fileID: 11400000, guid: 02e5146ecb708b84e9dc77c074cdc081, type: 2}
@@ -25,6 +26,7 @@ MonoBehaviour:
   attackCooldown: 0.5
   range: 7
   attackType: 0
+  targetFilter: 0
   useFourDirectionalFacing: 0
   spriteUp: {fileID: 0}
   spriteDown: {fileID: 0}

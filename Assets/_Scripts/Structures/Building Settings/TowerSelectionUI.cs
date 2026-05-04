@@ -6,18 +6,21 @@ public class TowerSelectionUI : MonoBehaviour
 
     public void SelectStructure(BuildingData data)
     {
-        // Clear existing building selection first
         BuildingSelector selector = Object.FindFirstObjectByType<BuildingSelector>();
-        if (selector != null) selector.Deselect();
 
-        // Toggle selection
         if (SelectedStructureData == data)
         {
+            // Toggling off — deselect and slide out
             SelectedStructureData = null;
+            selector?.Deselect();
+            return;
         }
-        else
-        {
-            SelectedStructureData = data;
-        }
+
+        // Deselect any placed building first
+        if (BuildingSelector.SelectedBuilding != null)
+            selector?.Deselect();
+
+        SelectedStructureData = data;
+        selector?.ShowDataStats(data);
     }
 }

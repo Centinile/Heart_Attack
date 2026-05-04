@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using TMPro;
@@ -17,7 +18,7 @@ public class BuildingSelector : MonoBehaviour
     [Header("Stats Display")]
     [SerializeField] private GameObject statsPanel;
 
-    // ── Stat rows: assign each Label + Value pair in the Inspector ──
+    // ── Stat rows ──────────────────────────────────────────────────────
     [SerializeField] private TMP_Text structureNameLabel;
     [SerializeField] private TMP_Text structureNameValue;
 
@@ -42,14 +43,37 @@ public class BuildingSelector : MonoBehaviour
     [SerializeField] private TMP_Text hydrationCapacityBoostLabel;
     [SerializeField] private TMP_Text hydrationCapacityBoostValue;
 
+    [SerializeField] private TMP_Text descriptionValue;
 
+    // ── Slide animation ────────────────────────────────────────────────
+    [Header("Slide Animation")]
+    [SerializeField] private float slideDuration = 0.3f;
+    [SerializeField] private AnimationCurve slideCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
-    // ─────────────────────────────────────────────────────────────────
+    private RectTransform _panelRect;
+    private Vector2 _restingPosition;
+    private Vector2 _hiddenPosition;
+    private Coroutine _slideCoroutine;
+
+    // ──────────────────────────────────────────────────────────────────
 
     void Start()
     {
+        _panelRect = actionPanel.GetComponent<RectTransform>();
+        _restingPosition = _panelRect.anchoredPosition;
+
         actionPanel.SetActive(false);
         if (statsPanel != null) statsPanel.SetActive(false);
+
+        StartCoroutine(InitAfterLayout());
+    }
+
+    private IEnumerator InitAfterLayout()
+    {
+        yield return null;
+        Canvas.ForceUpdateCanvases();
+        _hiddenPosition = _restingPosition + new Vector2(_panelRect.rect.width, 0f);
+        _panelRect.anchoredPosition = _hiddenPosition;
     }
 
     void Update()
@@ -75,8 +99,6 @@ public class BuildingSelector : MonoBehaviour
             Deselect();
         }
 
-        // Refresh repair button every frame so cost and visibility
-        // stay in sync as the building takes damage while selected
         if (SelectedBuilding != null)
             RefreshRepairUI();
     }
@@ -84,49 +106,95 @@ public class BuildingSelector : MonoBehaviour
     void SelectBuilding(Building building)
     {
         if (SelectedBuilding == building) return;
-        Deselect();
+
+        if (SelectedBuilding != null)
+        {
+            SelectedBuilding.OnDeselected();
+            SelectedBuilding = null;
+        }
 
         SelectedBuilding = building;
         SelectedBuilding.OnSelected();
 
-        // Open the whole panel
-        actionPanel.SetActive(true);
-
         RefreshRepairUI();
-        RefreshStatsUI();
+        PopulateStats(building.Data);
+        SlideIn();
     }
 
-    // ── Stat helpers ─────────────────────────────────────────────────
+    // ── Slide ──────────────────────────────────────────────────────────
 
-    private void RefreshStatsUI()
+    private void SlideIn()
     {
-        if (statsPanel == null || SelectedBuilding == null) return;
+        if (_slideCoroutine != null) StopCoroutine(_slideCoroutine);
+        actionPanel.SetActive(true);
+        _slideCoroutine = StartCoroutine(
+            SlideCoroutine(_panelRect.anchoredPosition, _restingPosition));
+    }
 
-        BuildingData data = SelectedBuilding.Data; // expose BuildingData via a public property on Building
-        if (data == null) { statsPanel.SetActive(false); return; }
+    private void SlideOut(System.Action onComplete = null)
+    {
+        if (_slideCoroutine != null) StopCoroutine(_slideCoroutine);
+        _slideCoroutine = StartCoroutine(
+            SlideCoroutine(_panelRect.anchoredPosition, _hiddenPosition, () =>
+            {
+                actionPanel.SetActive(false);
+                onComplete?.Invoke();
+            }));
+    }
 
-        // Hide every row first, then show only what this building needs
-        SetRowVisible(structureNameLabel,         structureNameValue,         false);
-        SetRowVisible(maxHPLabel,                 maxHPValue,                 false);
-        SetRowVisible(damageLabel,                damageValue,                false);
-        SetRowVisible(nutrientCostLabel,          nutrientCostValue,          false);
-        SetRowVisible(hydrationCostLabel,         hydrationCostValue,         false);
-        SetRowVisible(upgradeCostLabel,           upgradeCostValue,           false);
-        SetRowVisible(nutrientsPerWaveLabel,      nutrientsPerWaveValue,      false);
-        SetRowVisible(hydrationCapacityBoostLabel,hydrationCapacityBoostValue,false);
+    private IEnumerator SlideCoroutine(Vector2 from, Vector2 to, System.Action onComplete = null)
+    {
+        float elapsed = 0f;
+        while (elapsed < slideDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = slideCurve.Evaluate(Mathf.Clamp01(elapsed / slideDuration));
+            _panelRect.anchoredPosition = Vector2.LerpUnclamped(from, to, t);
+            yield return null;
+        }
+        _panelRect.anchoredPosition = to;
+        onComplete?.Invoke();
+    }
+
+    // ── Stat helpers ───────────────────────────────────────────────────
+
+    // Single source of truth for populating the stats panel from any BuildingData
+    private void PopulateStats(BuildingData data)
+    {
+        if (statsPanel == null || data == null)
+        {
+            if (statsPanel != null) statsPanel.SetActive(false);
+            return;
+        }
+
+        // Hide all rows first
+        SetRowVisible(structureNameLabel,          structureNameValue,          false);
+        SetRowVisible(maxHPLabel,                  maxHPValue,                  false);
+        SetRowVisible(damageLabel,                 damageValue,                 false);
+        SetRowVisible(nutrientCostLabel,           nutrientCostValue,           false);
+        SetRowVisible(hydrationCostLabel,          hydrationCostValue,          false);
+        SetRowVisible(upgradeCostLabel,            upgradeCostValue,            false);
+        SetRowVisible(nutrientsPerWaveLabel,       nutrientsPerWaveValue,       false);
+        SetRowVisible(hydrationCapacityBoostLabel, hydrationCapacityBoostValue, false);
+
+        // Description — shown for all types
+        if (descriptionValue != null)
+        {
+            descriptionValue.text = data.Description;
+            descriptionValue.gameObject.SetActive(!string.IsNullOrEmpty(data.Description));
+        }
 
         switch (data.GetStructureType())
         {
-            case StructureType.Defense:  ShowDefenseStats(data);   break;
-            case StructureType.Heart:    ShowHeartStats(data);     break;
-            case StructureType.Resource: ShowResourceStats(data);  break;
-            case StructureType.Wall:     ShowWallStats(data);      break;
+            case StructureType.Defense:  ShowDefenseStats(data);  break;
+            case StructureType.Heart:    ShowHeartStats(data);    break;
+            case StructureType.Resource: ShowResourceStats(data); break;
+            case StructureType.Wall:     ShowWallStats(data);     break;
         }
 
         statsPanel.SetActive(true);
     }
 
-    // Defense towers (Archer, Inferno, etc.): Structure Name, Max HP, Damage, Nutrient Cost, Hydration Cost, Upgrade Cost
     private void ShowDefenseStats(BuildingData d)
     {
         ShowRow(structureNameLabel, structureNameValue, "Structure",      d.StructureName);
@@ -138,25 +206,20 @@ public class BuildingSelector : MonoBehaviour
         ShowRow(upgradeCostLabel,   upgradeCostValue,   "Upgrade Cost",   d.UpgradeCost.ToString());
     }
 
-    // Heart: Max HP, Upgrade Cost
     private void ShowHeartStats(BuildingData d)
     {
         ShowRow(maxHPLabel,       maxHPValue,       "Max HP",       d.MaxHP.ToString());
         ShowRow(upgradeCostLabel, upgradeCostValue, "Upgrade Cost", d.UpgradeCost.ToString());
     }
 
-    // Resource buildings — Mine and Water Pump both use ResourceData
-    // Mine:       Max HP, Nutrients Per Wave, Hydration Capacity Boost, Nutrient Cost, Hydration Cost, Upgrade Cost
-    // Water Pump: Max HP, Nutrients Per Wave, Hydration Capacity Boost, Upgrade Cost
     private void ShowResourceStats(BuildingData d)
     {
         if (!(d is ResourceData rd)) return;
 
-        ShowRow(maxHPLabel,                  maxHPValue,                  "Max HP",                   d.MaxHP.ToString());
+        ShowRow(maxHPLabel,                  maxHPValue,                  "Max HP",                  d.MaxHP.ToString());
         ShowRow(nutrientsPerWaveLabel,       nutrientsPerWaveValue,       "Nutrients/Wave",           rd.nutrientsPerWave.ToString());
         ShowRow(hydrationCapacityBoostLabel, hydrationCapacityBoostValue, "Hydration Capacity Boost", rd.hydrationCapacityBoost.ToString());
 
-        // Mine also shows costs; Water Pump does not
         if (d.StructureName == "Mine")
         {
             ShowRow(nutrientCostLabel,  nutrientCostValue,  "Nutrient Cost",  d.NutrientCost.ToString());
@@ -166,7 +229,6 @@ public class BuildingSelector : MonoBehaviour
         ShowRow(upgradeCostLabel, upgradeCostValue, "Upgrade Cost", d.UpgradeCost.ToString());
     }
 
-    // Wall: Max HP, Nutrient Cost, Upgrade Cost
     private void ShowWallStats(BuildingData d)
     {
         ShowRow(maxHPLabel,        maxHPValue,        "Max HP",        d.MaxHP.ToString());
@@ -174,12 +236,12 @@ public class BuildingSelector : MonoBehaviour
         ShowRow(upgradeCostLabel,  upgradeCostValue,  "Upgrade Cost",  d.UpgradeCost.ToString());
     }
 
-    // ── Row utilities ─────────────────────────────────────────────────
+    // ── Row utilities ──────────────────────────────────────────────────
 
     private void ShowRow(TMP_Text label, TMP_Text value, string labelText, string valueText)
     {
-        if (label != null) { label.text = labelText;  label.gameObject.SetActive(true); }
-        if (value != null) { value.text = valueText;  value.gameObject.SetActive(true); }
+        if (label != null) { label.text = labelText; label.gameObject.SetActive(true); }
+        if (value != null) { value.text = valueText; value.gameObject.SetActive(true); }
     }
 
     private void SetRowVisible(TMP_Text label, TMP_Text value, bool visible)
@@ -188,20 +250,18 @@ public class BuildingSelector : MonoBehaviour
         if (value != null) value.gameObject.SetActive(visible);
     }
 
-    // ── Repair UI ─────────────────────────────────────────────────────
+    // ── Repair UI ──────────────────────────────────────────────────────
 
     private void RefreshRepairUI()
     {
         if (repairButton == null) return;
-
         bool canRepair = SelectedBuilding != null && SelectedBuilding.CanRepair;
         repairButton.SetActive(canRepair);
-
         if (canRepair && repairCostText != null)
             repairCostText.text = $"Repair ({SelectedBuilding.RepairCost} Nutrients)";
     }
 
-    // ── Public button callbacks ───────────────────────────────────────
+    // ── Public button callbacks ────────────────────────────────────────
 
     public void Deselect()
     {
@@ -210,8 +270,8 @@ public class BuildingSelector : MonoBehaviour
             SelectedBuilding.OnDeselected();
             SelectedBuilding = null;
         }
-        actionPanel.SetActive(false);
         if (statsPanel != null) statsPanel.SetActive(false);
+        SlideOut();
     }
 
     public void UpgradeSelected()
@@ -232,5 +292,17 @@ public class BuildingSelector : MonoBehaviour
         if (SelectedBuilding == null) return;
         SelectedBuilding.Repair();
         RefreshRepairUI();
+    }
+
+    public void SelectBuildingExternal(Building building)
+    {
+        SelectBuilding(building);
+    }
+
+    // Called from TowerSelectionUI when hovering/selecting from the build menu
+    public void ShowDataStats(BuildingData data)
+    {
+        PopulateStats(data);
+        SlideIn();
     }
 }
