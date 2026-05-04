@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.VFX;
 
-//have dependencies and references flow to the gamemanager instead of the other way
-//the game manager is independent from other scripts
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
@@ -14,32 +12,28 @@ public class GameManager : MonoBehaviour
     public static System.Action OnGameOver;
     public static System.Action OnVictory;
 
-    public enum GameState //define the different states of the game
+    public enum GameState
     {
         Gameplay, RestingPhase, Paused, Gameover, Victory
     }
 
-    public GameState currentState; //stores the current state of the game
-    public GameState previousState; //store the previous state of the game
+    public GameState currentState;
+    public GameState previousState;
 
     [Header("Screens")]
     public GameObject pauseScreen;
     public GameObject GameOverScreen;
-    //public GameObject selectionBorder;
     public GameObject uiScreen;
     public GameObject victoryScreen;
-
+    public GameObject waveClearPanel;
 
     [Header("Stat Displays")]
-    public TMP_Text currentNutrientsDisplay; //currency
-    public TMP_Text currentHydrationDisplay; //energy
-
-    //[Header("Results Screen Displays")]
+    public TMP_Text currentNutrientsDisplay;
+    public TMP_Text currentHydrationDisplay;
 
     [Header("Resources")]
     [SerializeField] private float startingNutrients = 500f;
     [SerializeField] private float startingHydration = 50f;
-    
 
     private float currentNutrients;
     private float currentHydration;
@@ -62,49 +56,47 @@ public class GameManager : MonoBehaviour
     [Header("Acid Rain Settings")]
     [SerializeField] private float acidRainDamage = 5f;
     [SerializeField] private float acidRainInterval = 10f;
-
+    [SerializeField] public ParticleSystem acidRainEffect;
     private float _acidRainTimer;
-
-
-    //Helpers
-    public bool isGameOver { get { return currentState == GameState.Gameover; } }
 
     [Header("Wave Goals")]
     [SerializeField] private int easyWaves = 1;
     [SerializeField] private int mediumWaves = 20;
     [SerializeField] private int hardWaves = 30;
     public int WavesToWin { get; private set; }
+
     public VisualEffect FogOfWarEffect;
 
-    private const string KEY_ACID_RAIN     = "EnableAcidRain";
-    private const string KEY_FOG_OF_WAR    = "EnableFogOfWar";
-    private const string KEY_RANDOM_WAVES  = "EnableRandomWaves";
-    private const string KEY_STAT_RAMPING  = "EnableStatRamping";
-    private const string KEY_NO_BREAKS     = "EnableNoBreaks";
-    private const string KEY_DIFFICULTY = "Difficulty"; // 0=Easy, 1=Medium, 2=Hard
+    public bool isGameOver => currentState == GameState.Gameover;
+
+    private const string KEY_RANDOM_WAVES = "EnableRandomWaves";
+    private const string KEY_STAT_RAMPING = "EnableStatRamping";
+    private const string KEY_NO_BREAKS    = "EnableNoBreaks";
+    private const string KEY_DIFFICULTY   = "Difficulty";
+
+    // ── Lifecycle ──────────────────────────────────────────────────────
 
     void Awake()
     {
-
-        if (Instance == null) //the usual GameManager Instance checker
-        {
+        if (Instance == null)
             Instance = this;
-        }
         else
         {
-            Debug.LogWarning("Extra " + this + "Deleted");
+            Debug.LogWarning("Extra " + this + " Deleted");
             Destroy(gameObject);
+            return;
         }
 
         DisableScreens();
         uiScreen.SetActive(true);
 
-        //enableAcidRain = PlayerPrefs.GetInt(KEY_ACID_RAIN, 0) == 1;
-        //enableFogOfWar = PlayerPrefs.GetInt(KEY_FOG_OF_WAR, 0) == 1;
+        enableAcidRain    = PlayerPrefs.GetInt("EnableAcidRain",    0) == 1;
+        enableFogOfWar    = PlayerPrefs.GetInt("EnableFogOfWar",    0) == 1;
         enableRandomWaves = PlayerPrefs.GetInt(KEY_RANDOM_WAVES, 0) == 1;
         enableStatRamping = PlayerPrefs.GetInt(KEY_STAT_RAMPING, 0) == 1;
-        enableNoBreaks = PlayerPrefs.GetInt(KEY_NO_BREAKS, 0) == 1;
-        int difficulty = PlayerPrefs.GetInt(KEY_DIFFICULTY, 0); // default Easy
+        enableNoBreaks    = PlayerPrefs.GetInt(KEY_NO_BREAKS,    0) == 1;
+
+        int difficulty = PlayerPrefs.GetInt(KEY_DIFFICULTY, 0);
         WavesToWin = difficulty switch
         {
             1 => mediumWaves,
@@ -117,58 +109,34 @@ public class GameManager : MonoBehaviour
     {
         currentNutrients = startingNutrients;
         currentHydration = startingHydration;
-        _acidRainTimer = acidRainInterval;
-        currentState = GameState.RestingPhase;
-
+        _acidRainTimer   = acidRainInterval;
+        currentState     = GameState.RestingPhase;
 
         UpdateResourceUI();
 
         if (enableFogOfWar && FogOfWarEffect != null)
-        {
             FogOfWarEffect.gameObject.SetActive(true);
-        }
+
+        if (enableAcidRain && acidRainEffect != null)
+            acidRainEffect.gameObject.SetActive(true);
+
+        // Subscribe to wave cleared event
+        WaveManager.OnWaveCleared += ShowWaveClear;
     }
 
     void OnDestroy()
     {
-        Debug.Log($"[GameManager] OnDestroy: Destroyed in scene '{gameObject.scene.name}' at frame {Time.frameCount}, time {Time.time}. Call stack:\n{System.Environment.StackTrace}");
+        WaveManager.OnWaveCleared -= ShowWaveClear;
+
         if (Instance == this)
-        {
             Instance = null;
-        }
     }
 
-    public void CheckVictory(int wavesCleared)
-    {
-        if (WavesToWin > 0 && wavesCleared >= WavesToWin)
-            WinGame();
-    }
-
-    public void WinGame()
-    {
-        if (currentState == GameState.Gameover || currentState == GameState.Victory) return;
-        ChangeState(GameState.Victory);
-        Time.timeScale = 0f;
-        OnVictory?.Invoke();
-        if (victoryScreen != null)
-        {
-            victoryScreen.SetActive(true); // Results parent
-
-            // Find and activate Congratulations child directly
-            Transform congratsChild = victoryScreen.transform.Find("Congratulations!");
-            if (congratsChild == null)
-                congratsChild = victoryScreen.transform.Find("Congratulations");
-            if (congratsChild != null)
-                congratsChild.gameObject.SetActive(true);
-        }
-        uiScreen.SetActive(false);
-        Debug.Log("<color=green><b>You Win!</b></color>");
-    }
+    // ── Update ─────────────────────────────────────────────────────────
 
     void Update()
     {
-        switch (currentState) //switch case for the current game state,
-                              //codes under the cases only run when that specific gamestate is currently active, very easy to handle sh*t
+        switch (currentState)
         {
             case GameState.Gameplay:
                 CheckForPauseAndResume();
@@ -198,50 +166,48 @@ public class GameManager : MonoBehaviour
             restorePowerPending = false;
             TryRestorePower();
         }
-        
     }
 
-    public void ChangeState(GameState newState) //defines the method to change the state of the game
+    // ── State ──────────────────────────────────────────────────────────
+
+    public void ChangeState(GameState newState)
     {
         previousState = currentState;
-        currentState = newState;
+        currentState  = newState;
     }
 
-    public void PauseGame()
+    public void EnterGameplayPhase()
     {
-        if (currentState != GameState.Paused)
-        {
-            ChangeState(GameState.Paused);
-            Time.timeScale = 0f;
-            pauseScreen.SetActive(true);
-            Debug.Log("Game is Paused");
-        }
+        if (currentState == GameState.Gameover) return;
+        ChangeState(GameState.Gameplay);
+        Debug.Log("<color=red>Wave Started!</color>");
     }
 
-    public void ResumeGame()
+    public void EnterRestingPhase()
     {
-        if (currentState == GameState.Paused)
-        {
-            ChangeState(previousState);
-            Time.timeScale = 1f;
-            pauseScreen.SetActive(false);
-            Debug.Log("Game is Resumed");
-        }
+        if (currentState == GameState.Gameover || currentState == GameState.Victory) return;
+        ChangeState(GameState.RestingPhase);
+        Debug.Log("<color=green>Resting Phase Started.</color>");
     }
 
-    public void CheckForPauseAndResume()
+    // ── Victory / Game Over ────────────────────────────────────────────
+
+    /// <summary>Called by WaveManager after each wave to check win condition.</summary>
+    public void CheckVictory(int wavesCleared)
     {
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton9))
-        {
-            if (currentState == GameState.Paused)
-            {
-                ResumeGame();
-            }
-            else
-            {
-                PauseGame();
-            }
-        }
+        if (WavesToWin > 0 && wavesCleared >= WavesToWin)
+            WinGame();
+    }
+
+    public void WinGame()
+    {
+        if (currentState == GameState.Gameover || currentState == GameState.Victory) return;
+        ChangeState(GameState.Victory);
+        Time.timeScale = 0f;
+        OnVictory?.Invoke();
+        if (victoryScreen != null) victoryScreen.SetActive(true);
+        uiScreen.SetActive(false);
+        Debug.Log("<color=green><b>You Win!</b></color>");
     }
 
     public void GameOver()
@@ -250,63 +216,96 @@ public class GameManager : MonoBehaviour
         ChangeState(GameState.Gameover);
         Time.timeScale = 0f;
         OnGameOver?.Invoke();
-        DisplayResults(); // loss screen
-    }
-
-    public void EnterRestingPhase()
-    {
-        if (currentState == GameState.Gameover) return;
-        
-        ChangeState(GameState.RestingPhase);
-        Debug.Log("<color=green>Resting Phase Started.</color>");
-        // Here you could trigger a UI animation or sound effect
-    }
-
-    public void EnterGameplayPhase()
-    {
-        if (currentState == GameState.Gameover) return;
-
-        ChangeState(GameState.Gameplay);
-        Debug.Log("<color=red>Wave Started!</color>");
-    }
-
-    public void RestingPhase()
-    {
-        
+        DisplayResults();
     }
 
     public void DisplayResults()
     {
-        // Activate the Results parent so children can show
-        if (GameOverScreen != null)
-        {
-            GameOverScreen.SetActive(true); // Results parent
-
-            // Find and activate Game Over Text child directly
-            Transform gameOverChild = GameOverScreen.transform.Find("Game Over Text");
-            if (gameOverChild != null)
-                gameOverChild.gameObject.SetActive(true);
-        }
+        if (GameOverScreen != null) GameOverScreen.SetActive(true);
         uiScreen.SetActive(false);
     }
 
+    // ── Pause ──────────────────────────────────────────────────────────
+
+    public void PauseGame()
+    {
+        if (currentState == GameState.Paused) return;
+        ChangeState(GameState.Paused);
+        Time.timeScale = 0f;
+        pauseScreen.SetActive(true);
+    }
+
+    public void ResumeGame()
+    {
+        if (currentState != GameState.Paused) return;
+        ChangeState(previousState);
+        Time.timeScale = 1f;
+        pauseScreen.SetActive(false);
+    }
+
+    public void CheckForPauseAndResume()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton9))
+        {
+            if (currentState == GameState.Paused) ResumeGame();
+            else PauseGame();
+        }
+    }
+
+    // ── Wave Clear Banner ──────────────────────────────────────────────
+
+    public void ShowWaveClear()
+    {
+        // Don't show wave clear if game is over or won
+        if (currentState == GameState.Gameover || currentState == GameState.Victory) return;
+
+        // Don't show wave clear on the final wave — victory screen will show instead
+        WaveManager waveManager = Object.FindFirstObjectByType<WaveManager>();
+        if (waveManager != null && WavesToWin > 0 && waveManager.currentWaveIndex + 1 >= WavesToWin) return;
+
+        StartCoroutine(WaveClearRoutine());
+    }
+
+    private IEnumerator WaveClearRoutine()
+    {
+        if (waveClearPanel == null) yield break;
+
+        // Activate Results parent if Wave Clear is nested inside it
+        Transform parent = waveClearPanel.transform.parent;
+        bool wasParentInactive = parent != null && !parent.gameObject.activeSelf;
+        if (wasParentInactive) parent.gameObject.SetActive(true);
+
+        waveClearPanel.SetActive(true);
+        yield return new WaitForSecondsRealtime(3f);
+        waveClearPanel.SetActive(false);
+
+        // Re-hide parent only if we activated it and no siblings are active
+        if (wasParentInactive && parent != null)
+        {
+            bool anyActive = false;
+            foreach (Transform child in parent)
+                if (child.gameObject.activeSelf) { anyActive = true; break; }
+            if (!anyActive) parent.gameObject.SetActive(false);
+        }
+    }
+
+    // ── Screens ────────────────────────────────────────────────────────
+
     void DisableScreens()
     {
-        pauseScreen.SetActive(false);
-        victoryScreen.SetActive(false);
-        GameOverScreen.SetActive(false);
+        if (pauseScreen    != null) pauseScreen.SetActive(false);
+        if (victoryScreen  != null) victoryScreen.SetActive(false);
+        if (GameOverScreen != null) GameOverScreen.SetActive(false);
+        if (waveClearPanel != null) waveClearPanel.SetActive(false);
     }
 
+    // ── Resources ──────────────────────────────────────────────────────
 
-    public bool CanAfford(float amount)
-    {
-        return currentNutrients >= amount;
-    }
+    public bool CanAfford(float amount) => currentNutrients >= amount;
 
     public bool SpendNutrients(float amount)
     {
         if (!CanAfford(amount)) return false;
-
         currentNutrients -= amount;
         UpdateResourceUI();
         return true;
@@ -320,9 +319,7 @@ public class GameManager : MonoBehaviour
 
     public bool TryUseHydration(float amount)
     {
-        if (usedHydration + amount > currentHydration)
-            return false;
-
+        if (usedHydration + amount > currentHydration) return false;
         usedHydration += amount;
         UpdateResourceUI();
         return true;
@@ -330,8 +327,7 @@ public class GameManager : MonoBehaviour
 
     public void ReleaseHydration(float amount)
     {
-        usedHydration -= amount;
-        usedHydration = Mathf.Max(0, usedHydration);
+        usedHydration = Mathf.Max(0, usedHydration - amount);
         ScheduleRestorePower();
         UpdateResourceUI();
     }
@@ -339,12 +335,10 @@ public class GameManager : MonoBehaviour
     public void ModifyMaxHydration(float amount)
     {
         currentHydration += amount;
-
         if (amount < 0 && usedHydration > currentHydration)
             OnHydrationCapacityReduced(-amount);
         else if (amount > 0)
             ScheduleRestorePower();
-
         UpdateResourceUI();
     }
 
@@ -354,37 +348,30 @@ public class GameManager : MonoBehaviour
         currentHydrationDisplay.text = $"{usedHydration:0}/{currentHydration:0}";
     }
 
+    // ── Power ──────────────────────────────────────────────────────────
+
     public void RegisterPoweredBuilding(Building building)
     {
-        if (!poweredBuildings.Contains(building))
-            poweredBuildings.Add(building);
+        if (!poweredBuildings.Contains(building)) poweredBuildings.Add(building);
     }
 
     public void RegisterUnpoweredBuilding(Building building)
     {
-        if (!unpoweredBuildings.Contains(building))
-            unpoweredBuildings.Add(building);
+        if (!unpoweredBuildings.Contains(building)) unpoweredBuildings.Add(building);
     }
 
-    public void UnregisterPoweredBuilding(Building building)
-    {
-        poweredBuildings.Remove(building);
-    }
+    public void UnregisterPoweredBuilding(Building building)   => poweredBuildings.Remove(building);
+    public void UnregisterUnpoweredBuilding(Building building) => unpoweredBuildings.Remove(building);
 
-    public void UnregisterUnpoweredBuilding(Building building)
-    {
-        unpoweredBuildings.Remove(building);
-    }
+    private void ScheduleRestorePower() => restorePowerPending = true;
 
     private void TryRestorePower()
     {
-        // Walk forwards (first to lose power = first to regain it)
         for (int i = 0; i < unpoweredBuildings.Count; i++)
         {
             Building b = unpoweredBuildings[i];
             if (b == null) { unpoweredBuildings.RemoveAt(i--); continue; }
-
-            if (GameManager.Instance.TryUseHydration(b.Data.HydrationCost))
+            if (TryUseHydration(b.Data.HydrationCost))
             {
                 unpoweredBuildings.RemoveAt(i--);
                 b.SetPowered(true);
@@ -392,47 +379,36 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void ScheduleRestorePower()
-    {
-        restorePowerPending = true;
-    }
-
-    // Called when a hydration source is destroyed and capacity drops
     public void OnHydrationCapacityReduced(float lostCapacity)
     {
-        float hydrationToReclaim = usedHydration - currentHydration;
-
-        // Collect first, don't modify the list mid-iteration
+        float toReclaim = usedHydration - currentHydration;
         List<Building> toDepower = new List<Building>();
-        for (int i = poweredBuildings.Count - 1; i >= 0 && hydrationToReclaim > 0; i--)
+
+        for (int i = poweredBuildings.Count - 1; i >= 0 && toReclaim > 0; i--)
         {
             Building b = poweredBuildings[i];
             if (b == null) { poweredBuildings.RemoveAt(i); continue; }
-
             toDepower.Add(b);
-            hydrationToReclaim -= b.Data.HydrationCost;
+            toReclaim -= b.Data.HydrationCost;
         }
 
-        // Now safely depower — SetPowered will modify poweredBuildings here, not mid-loop
         foreach (Building b in toDepower)
         {
-            usedHydration -= b.Data.HydrationCost;
-            usedHydration = Mathf.Max(0, usedHydration);
-            b.SetPowered(false); // This calls UnregisterPoweredBuilding safely now
+            usedHydration = Mathf.Max(0, usedHydration - b.Data.HydrationCost);
+            b.SetPowered(false);
         }
 
         UpdateResourceUI();
-        // Don't call ScheduleRestorePower here — we just lost capacity, nothing to restore
     }
+
+    // ── Acid Rain ──────────────────────────────────────────────────────
 
     private void TickAcidRain()
     {
         _acidRainTimer -= Time.deltaTime;
         if (_acidRainTimer > 0f) return;
-
         _acidRainTimer = acidRainInterval;
 
-        // Damage all powered buildings except Heart
         for (int i = poweredBuildings.Count - 1; i >= 0; i--)
         {
             Building b = poweredBuildings[i];
@@ -441,7 +417,6 @@ public class GameManager : MonoBehaviour
             b.TakeDamage(acidRainDamage);
         }
 
-        // Damage all unpowered buildings except Heart
         for (int i = unpoweredBuildings.Count - 1; i >= 0; i--)
         {
             Building b = unpoweredBuildings[i];
@@ -452,5 +427,4 @@ public class GameManager : MonoBehaviour
 
         Debug.Log($"[Acid Rain] Dealt {acidRainDamage} damage to all non-Heart buildings.");
     }
-
 }

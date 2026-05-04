@@ -31524,7 +31524,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 421047494}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1125755366}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &421047494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31950,7 +31962,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Main Menu
+  m_text: Endless
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -32213,8 +32225,10 @@ MonoBehaviour:
   currentState: 0
   previousState: 0
   pauseScreen: {fileID: 2022721261}
-  resultsScreen: {fileID: 1125755366}
+  GameOverScreen: {fileID: 1017544678}
   uiScreen: {fileID: 819964155}
+  victoryScreen: {fileID: 287389109}
+  waveClearPanel: {fileID: 715374895}
   currentNutrientsDisplay: {fileID: 1629677951}
   currentHydrationDisplay: {fileID: 148029555}
   startingNutrients: 500
@@ -32226,6 +32240,9 @@ MonoBehaviour:
   enableNoBreaks: 0
   acidRainDamage: 5
   acidRainInterval: 3
+  easyWaves: 2
+  mediumWaves: 20
+  hardWaves: 30
   FogOfWarEffect: {fileID: 221966936}
 --- !u!114 &595006398
 MonoBehaviour:
@@ -70202,6 +70219,8 @@ GameObject:
   - component: {fileID: 1125755367}
   - component: {fileID: 1125755369}
   - component: {fileID: 1125755368}
+  - component: {fileID: 1125755371}
+  - component: {fileID: 1125755370}
   m_Layer: 5
   m_Name: Results
   m_TagString: Untagged
@@ -70269,6 +70288,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1125755366}
   m_CullTransparentMesh: 1
+--- !u!114 &1125755370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1125755366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0b458e4ffc2404428d5e5a0277ed524, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waveCompleteBanner: {fileID: 715374895}
+  gameOverText: {fileID: 1017544678}
+  congratulations: {fileID: 287389109}
+--- !u!225 &1125755371
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1125755366}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1140491391
 GameObject:
   m_ObjectHideFlags: 0
