@@ -11,9 +11,12 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    public static System.Action OnGameOver;
+    public static System.Action OnVictory;
+
     public enum GameState //define the different states of the game
     {
-        Gameplay, RestingPhase, Paused, Gameover
+        Gameplay, RestingPhase, Paused, Gameover, Victory
     }
 
     public GameState currentState; //stores the current state of the game
@@ -21,9 +24,10 @@ public class GameManager : MonoBehaviour
 
     [Header("Screens")]
     public GameObject pauseScreen;
-    public GameObject resultsScreen;
+    public GameObject GameOverScreen;
     //public GameObject selectionBorder;
     public GameObject uiScreen;
+    public GameObject victoryScreen;
 
 
     [Header("Stat Displays")]
@@ -35,6 +39,7 @@ public class GameManager : MonoBehaviour
     [Header("Resources")]
     [SerializeField] private float startingNutrients = 500f;
     [SerializeField] private float startingHydration = 50f;
+    
 
     private float currentNutrients;
     private float currentHydration;
@@ -63,6 +68,12 @@ public class GameManager : MonoBehaviour
 
     //Helpers
     public bool isGameOver { get { return currentState == GameState.Gameover; } }
+
+    [Header("Wave Goals")]
+    [SerializeField] private int easyWaves = 1;
+    [SerializeField] private int mediumWaves = 20;
+    [SerializeField] private int hardWaves = 30;
+    public int WavesToWin { get; private set; }
     public VisualEffect FogOfWarEffect;
 
     private const string KEY_ACID_RAIN     = "EnableAcidRain";
@@ -70,6 +81,7 @@ public class GameManager : MonoBehaviour
     private const string KEY_RANDOM_WAVES  = "EnableRandomWaves";
     private const string KEY_STAT_RAMPING  = "EnableStatRamping";
     private const string KEY_NO_BREAKS     = "EnableNoBreaks";
+    private const string KEY_DIFFICULTY = "Difficulty"; // 0=Easy, 1=Medium, 2=Hard
 
     void Awake()
     {
@@ -92,6 +104,13 @@ public class GameManager : MonoBehaviour
         enableRandomWaves = PlayerPrefs.GetInt(KEY_RANDOM_WAVES, 0) == 1;
         enableStatRamping = PlayerPrefs.GetInt(KEY_STAT_RAMPING, 0) == 1;
         enableNoBreaks = PlayerPrefs.GetInt(KEY_NO_BREAKS, 0) == 1;
+        int difficulty = PlayerPrefs.GetInt(KEY_DIFFICULTY, 0); // default Easy
+        WavesToWin = difficulty switch
+        {
+            1 => mediumWaves,
+            2 => hardWaves,
+            _ => easyWaves
+        };
     }
 
     void Start()
@@ -119,6 +138,33 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void CheckVictory(int wavesCleared)
+    {
+        if (WavesToWin > 0 && wavesCleared >= WavesToWin)
+            WinGame();
+    }
+
+    public void WinGame()
+    {
+        if (currentState == GameState.Gameover || currentState == GameState.Victory) return;
+        ChangeState(GameState.Victory);
+        Time.timeScale = 0f;
+        OnVictory?.Invoke();
+        if (victoryScreen != null)
+        {
+            victoryScreen.SetActive(true); // Results parent
+
+            // Find and activate Congratulations child directly
+            Transform congratsChild = victoryScreen.transform.Find("Congratulations!");
+            if (congratsChild == null)
+                congratsChild = victoryScreen.transform.Find("Congratulations");
+            if (congratsChild != null)
+                congratsChild.gameObject.SetActive(true);
+        }
+        uiScreen.SetActive(false);
+        Debug.Log("<color=green><b>You Win!</b></color>");
+    }
+
     void Update()
     {
         switch (currentState) //switch case for the current game state,
@@ -134,6 +180,12 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.RestingPhase:
+                break;
+
+            case GameState.Gameover:
+                break;
+
+            case GameState.Victory:
                 break;
 
             default:
@@ -194,12 +246,11 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-
-        //set the Game Over Variables here
+        if (currentState == GameState.Victory) return;
         ChangeState(GameState.Gameover);
         Time.timeScale = 0f;
-        DisplayResults();
-
+        OnGameOver?.Invoke();
+        DisplayResults(); // loss screen
     }
 
     public void EnterRestingPhase()
@@ -226,14 +277,24 @@ public class GameManager : MonoBehaviour
 
     public void DisplayResults()
     {
-        resultsScreen.SetActive(true);
+        // Activate the Results parent so children can show
+        if (GameOverScreen != null)
+        {
+            GameOverScreen.SetActive(true); // Results parent
+
+            // Find and activate Game Over Text child directly
+            Transform gameOverChild = GameOverScreen.transform.Find("Game Over Text");
+            if (gameOverChild != null)
+                gameOverChild.gameObject.SetActive(true);
+        }
         uiScreen.SetActive(false);
     }
 
     void DisableScreens()
     {
         pauseScreen.SetActive(false);
-        resultsScreen.SetActive(false);
+        victoryScreen.SetActive(false);
+        GameOverScreen.SetActive(false);
     }
 
 

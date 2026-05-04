@@ -1,6 +1,7 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using System.Collections;
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -15,6 +16,9 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private Toggle statRampingToggle;
     [SerializeField] private Toggle noBreaksToggle;
 
+    [Header("Difficulty")]
+    [SerializeField] private TMP_Dropdown difficultyDropdown;
+
     [Header("Level Select Panel")]
     [SerializeField] private GameObject levelSelectPanel;
     [SerializeField] private float panelFadeDuration = 0.25f;
@@ -22,18 +26,18 @@ public class MainMenuManager : MonoBehaviour
     private Coroutine _panelCoroutine;
 
     [Header("Scene Transition")]
-    [SerializeField] private Image fadeOverlay;         // Full-screen black Image on a top-level Canvas
+    [SerializeField] private Image fadeOverlay;
     [SerializeField] private float sceneFadeDuration = 0.4f;
 
-    private const string KEY_ACID_RAIN   = "EnableAcidRain";
-    private const string KEY_FOG_OF_WAR  = "EnableFogOfWar";
+    private const string KEY_ACID_RAIN    = "EnableAcidRain";
+    private const string KEY_FOG_OF_WAR   = "EnableFogOfWar";
     private const string KEY_RANDOM_WAVES = "EnableRandomWaves";
     private const string KEY_STAT_RAMPING = "EnableStatRamping";
-    private const string KEY_NO_BREAKS   = "EnableNoBreaks";
+    private const string KEY_NO_BREAKS    = "EnableNoBreaks";
+    private const string KEY_DIFFICULTY   = "Difficulty";
 
     private void Awake()
     {
-        // ── Level Select Panel setup ───────────────────────────────────
         if (levelSelectPanel != null)
         {
             _levelSelectGroup = levelSelectPanel.GetComponent<CanvasGroup>();
@@ -49,7 +53,7 @@ public class MainMenuManager : MonoBehaviour
 
     private void Start()
     {
-        // ── Toggles ────────────────────────────────────────────────────
+        // Toggles
         acidRainToggle.isOn    = PlayerPrefs.GetInt(KEY_ACID_RAIN,    0) == 1;
         fogOfWarToggle.isOn    = PlayerPrefs.GetInt(KEY_FOG_OF_WAR,   0) == 1;
         randomWavesToggle.isOn = PlayerPrefs.GetInt(KEY_RANDOM_WAVES, 0) == 1;
@@ -62,10 +66,16 @@ public class MainMenuManager : MonoBehaviour
         statRampingToggle.onValueChanged.AddListener(v => PlayerPrefs.SetInt(KEY_STAT_RAMPING, v ? 1 : 0));
         noBreaksToggle.onValueChanged.AddListener(v    => PlayerPrefs.SetInt(KEY_NO_BREAKS,    v ? 1 : 0));
 
-        // ── Fade overlay setup ─────────────────────────────────────────
+        // Difficulty dropdown — default 0 (Easy) if no pref saved
+        if (difficultyDropdown != null)
+        {
+            difficultyDropdown.value = PlayerPrefs.GetInt(KEY_DIFFICULTY, 0);
+            difficultyDropdown.onValueChanged.AddListener(v => PlayerPrefs.SetInt(KEY_DIFFICULTY, v));
+        }
+
+        // Fade in from black
         if (fadeOverlay != null)
         {
-            // Fade in from black when the scene loads
             fadeOverlay.gameObject.SetActive(true);
             StartCoroutine(FadeOverlay(1f, 0f, sceneFadeDuration));
         }
@@ -73,7 +83,6 @@ public class MainMenuManager : MonoBehaviour
 
     // ── Public button callbacks ────────────────────────────────────────
 
-    /// <summary>Called by the "Select Level" button.</summary>
     public void OpenLevelSelectPanel()
     {
         if (levelSelectPanel == null) return;
@@ -81,20 +90,17 @@ public class MainMenuManager : MonoBehaviour
         SetPanelVisible(true);
     }
 
-    /// <summary>Called by the X / close button inside the Level Select Panel.</summary>
     public void CloseLevelSelectPanel()
     {
         SetPanelVisible(false, () => levelSelectPanel.SetActive(false));
     }
 
-    /// <summary>Called by the Play / Start button to load the game scene.</summary>
     public void StartGame()
     {
         PlayerPrefs.Save();
         StartCoroutine(FadeAndLoad(gameSceneName));
     }
 
-    /// <summary>Called by the Quit button.</summary>
     public void QuitGame()
     {
 #if UNITY_EDITOR
@@ -109,9 +115,7 @@ public class MainMenuManager : MonoBehaviour
     private void SetPanelVisible(bool visible, System.Action onComplete = null)
     {
         if (_panelCoroutine != null) StopCoroutine(_panelCoroutine);
-        float target = visible ? 1f : 0f;
-        _panelCoroutine = StartCoroutine(FadePanel(target, onComplete));
-
+        _panelCoroutine = StartCoroutine(FadePanel(visible ? 1f : 0f, onComplete));
         _levelSelectGroup.interactable   = visible;
         _levelSelectGroup.blocksRaycasts = visible;
     }
@@ -124,8 +128,7 @@ public class MainMenuManager : MonoBehaviour
         while (elapsed < panelFadeDuration)
         {
             elapsed += Time.unscaledDeltaTime;
-            _levelSelectGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha,
-                                                  elapsed / panelFadeDuration);
+            _levelSelectGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsed / panelFadeDuration);
             yield return null;
         }
 
@@ -163,7 +166,6 @@ public class MainMenuManager : MonoBehaviour
         c.a = to;
         fadeOverlay.color = c;
 
-        if (to == 0f)
-            fadeOverlay.gameObject.SetActive(false);
+        if (to == 0f) fadeOverlay.gameObject.SetActive(false);
     }
 }

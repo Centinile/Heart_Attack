@@ -121,6 +121,21 @@ public class WaveManager : MonoBehaviour
 
         waveRunning = false;
         currentWaveIndex++;
+        GameManager.Instance.CheckVictory(currentWaveIndex);
+        // Tell the GameManager to enter Resting Phase
+        // (won't fire if WinGame already changed state)
+        if (GameManager.Instance.currentState != GameManager.GameState.Victory)
+        {
+            GameManager.Instance.EnterRestingPhase();
+
+            if (startWaveButton != null) startWaveButton.interactable = true;
+
+            if (autoStartNextWave)
+            {
+                yield return new WaitForSeconds(timeBetweenWaves);
+                StartWave();
+            }
+        }
 
         // Tell the GameManager to enter Resting Phase
         GameManager.Instance.EnterRestingPhase();
