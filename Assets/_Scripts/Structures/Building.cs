@@ -60,7 +60,7 @@ public class Building : MonoBehaviour
     [SerializeField] private HealthBarAnchor healthBar;
 
     private Outline outline;
-    private StructureAnimations structureAnimations;
+    protected StructureAnimations structureAnimations;
     
 
     protected virtual void Awake()
@@ -124,8 +124,13 @@ public class Building : MonoBehaviour
         TierUnlockManager.OnTierUnlocksChanged -= OnTierUnlocksChanged;
         
         TowerPlacer.Instance?.FreeTile(transform.position); // single canonical call
+
+        float deathDuration = 0f;
+        if (structureAnimations != null)
+        {
+            deathDuration = structureAnimations.PlayDeathAnimation();
+        }
         
-        structureAnimations?.PlayDeathAnimation();
 
         if (IsPowered)
         {
@@ -136,6 +141,8 @@ public class Building : MonoBehaviour
         {
             GameManager.Instance.UnregisterUnpoweredBuilding(this);
         }
+
+        
 
         Destroy(gameObject);
     }

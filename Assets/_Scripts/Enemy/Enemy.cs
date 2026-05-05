@@ -54,48 +54,54 @@ public class Enemy : MonoBehaviour, IEnemy
         DetermineTarget();
     }
 
-void Update()
-{
-    foreach (var a in instantiatedAbilities) a?.OnUpdate(this);
-
-    Vector2 velocity = new Vector2(agent.velocity.x, agent.velocity.y);
-    enemyAnimations?.PlayAnimation(velocity);
-    if (velocity != Vector2.zero)
-        enemyAnimations?.RotateToPointer(velocity);
-
-    if (targetBuilding == null || !targetBuilding.IsAlive)
+    public void SetHP(float amount)
     {
-        UnlockWall();
-        DetermineTarget();
-        return;
+        currentHP = Mathf.Clamp(amount, 0, scaledMaxHP);
+        healthBar?.UpdateBar(currentHP, scaledMaxHP);
     }
 
-    // FIX 1: Guard HandleCombatState so it doesn't run while UpdatePathing
-    // is still settling (pathClearFrames hasn't confirmed yet)
-    if (!isBreakingWall || lockedWall == null || !lockedWall.IsAlive)
-        HandleCombatState();
-
-    if (attackTimer > 0) attackTimer -= Time.deltaTime;
-
-    detectionTimer -= Time.deltaTime;
-    if (detectionTimer <= 0)
+    void Update()
     {
-        detectionTimer = DETECTION_INTERVAL;
+        foreach (var a in instantiatedAbilities) a?.OnUpdate(this);
 
-        if (data.TargetingPriority != TargetPriority.None && !isBreakingWall)
+        Vector2 velocity = new Vector2(agent.velocity.x, agent.velocity.y);
+        enemyAnimations?.PlayAnimation(velocity);
+        if (velocity != Vector2.zero)
+            enemyAnimations?.RotateToPointer(velocity);
+
+        if (targetBuilding == null || !targetBuilding.IsAlive)
         {
-            Building inRange = FindPreferredTargetInRange();
-            if (inRange != null && inRange != targetBuilding)
-            {
-                targetBuilding = inRange;
-                UpdatePathing();
-                return;
-            }
+            UnlockWall();
+            DetermineTarget();
+            return;
         }
 
-        UpdatePathing();
+        // FIX 1: Guard HandleCombatState so it doesn't run while UpdatePathing
+        // is still settling (pathClearFrames hasn't confirmed yet)
+        if (!isBreakingWall || lockedWall == null || !lockedWall.IsAlive)
+            HandleCombatState();
+
+        if (attackTimer > 0) attackTimer -= Time.deltaTime;
+
+        detectionTimer -= Time.deltaTime;
+        if (detectionTimer <= 0)
+        {
+            detectionTimer = DETECTION_INTERVAL;
+
+            if (data.TargetingPriority != TargetPriority.None && !isBreakingWall)
+            {
+                Building inRange = FindPreferredTargetInRange();
+                if (inRange != null && inRange != targetBuilding)
+                {
+                    targetBuilding = inRange;
+                    UpdatePathing();
+                    return;
+                }
+            }
+
+            UpdatePathing();
+        }
     }
-}
 
     private void InitializeStats()
     {
@@ -287,7 +293,19 @@ private void UpdatePathing()
 
         if (target.TryGetComponent<Building>(out Building b))
         {
-            b.TakeDamage(scaledDamage > 0 ? scaledDamage : data.AttackDamage);
+            float damage = scaledDamage > 0 ? scaledDamage : data.AttackDamage;
+
+            // Check if any ability wants to modify the first attack
+            foreach (var a in instantiatedAbilities)
+            {
+                if (a is FirstAttackMultiplierAbility firstHit)
+                {
+                    damage *= firstHit.GetAndConsumeMultiplier();
+                    break;
+                }
+            }
+
+            b.TakeDamage(damage);
             data.TriggerAttackAbilities(this, b);
 
             if (!b.IsAlive)

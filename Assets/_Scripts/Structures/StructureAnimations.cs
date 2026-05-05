@@ -17,8 +17,8 @@ public class StructureAnimations : MonoBehaviour
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponentInChildren<Animator>(); 
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         if (spriteRenderer != null)
             originalColor = spriteRenderer.color;
     }

@@ -22,14 +22,11 @@ public class DefenseData : BuildingData
     
     [Header("Visuals (4-Directional)")]
     public bool useFourDirectionalFacing = false;
-    public Sprite spriteUp;
-    public Sprite spriteDown;
-    public Sprite spriteLeft;
-    public Sprite spriteRight;
 
     [Header("Projectile")]
     public ProjectileData projectileData;
     public float projectileSpeed = 10f;
+    public bool useLineRendererAttack = false;
     
     [Header("Multi-Target / Splash")]
     public int maxTargets = 3;

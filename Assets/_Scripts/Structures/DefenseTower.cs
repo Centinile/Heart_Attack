@@ -8,7 +8,6 @@ public class DefenseTower : Building
     [SerializeField] private RangeIndicator rangeIndicator;
     [SerializeField] private SpriteRenderer towerRenderer;
     [SerializeField] private BeamRenderer _beamRenderer;
-    private StructureAnimations structureAnimations;
 
     [Header("Live State")]
     [SerializeField] private TargetMode currentTargetMode = TargetMode.ClosestToHeart;
@@ -84,7 +83,6 @@ public class DefenseTower : Building
 
     private void HandleContinuousAttack()
     {
-        // Find target if we don't have one
         if (currentTarget == null || !IsTargetValid(currentTarget))
             currentTarget = FindTarget();
 
@@ -104,7 +102,9 @@ public class DefenseTower : Building
         if (defenseData.useFourDirectionalFacing)
             UpdateFaceDirection(currentTarget.position);
 
-        _beamRenderer?.ShowBeam(transform.position, currentTarget.position);
+        // Persistent beams still show every frame — non-persistent show only on tick
+        if (_beamRenderer != null && _beamRenderer.IsPersistent)
+            _beamRenderer.ShowBeam(transform.position, currentTarget.position);
 
         _continuousRampTimer += Time.deltaTime;
         _continuousRampTimer = Mathf.Min(_continuousRampTimer, defenseData.continuousRampTime);
@@ -121,6 +121,10 @@ public class DefenseTower : Building
     {
         if (currentTarget == null) return;
 
+        // Non-persistent beam flashes only on damage tick
+        if (_beamRenderer != null && !_beamRenderer.IsPersistent)
+            _beamRenderer.ShowBeam(transform.position, currentTarget.position);
+
         float t = defenseData.continuousRampTime > 0
             ? _continuousRampTimer / defenseData.continuousRampTime
             : 1f;
@@ -128,7 +132,7 @@ public class DefenseTower : Building
         float damage = Mathf.Lerp(
             defenseData.continuousBaseDamage,
             defenseData.continuousMaxDamage,
-            t) * defenseData.continuousTickRate; // scale by tick rate so DPS is consistent
+            t) * defenseData.continuousTickRate;
 
         if (currentTarget.TryGetComponent(out Enemy enemy))
         {
@@ -156,10 +160,6 @@ public class DefenseTower : Building
         if (towerRenderer == null) return;
         Vector2 direction = (targetPos - transform.position).normalized;
 
-        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
-            towerRenderer.sprite = direction.x > 0 ? defenseData.spriteRight : defenseData.spriteLeft;
-        else
-            towerRenderer.sprite = direction.y > 0 ? defenseData.spriteUp : defenseData.spriteDown;
     }
 
     private Transform FindTarget()
@@ -261,11 +261,11 @@ public class DefenseTower : Building
         structureAnimations?.PlayAttackAnimation();
         switch (defenseData.attackType)
         {
-            case AttackType.SingleTarget: FireProjectile(currentTarget, AttackType.SingleTarget); break;
-            case AttackType.MultiTarget: AttackMultipleTargets(); break;
-            case AttackType.SplashDamage: FireProjectile(currentTarget, AttackType.SplashDamage); break;
-            case AttackType.AllInRange: AttackAllInRange(); break;
-            case AttackType.Healing: HealNearbyBuildings(); break;
+            case AttackType.SingleTarget: FireAtTarget(currentTarget); break;
+            case AttackType.MultiTarget:  AttackMultipleTargets();     break;
+            case AttackType.SplashDamage: FireAtTarget(currentTarget, AttackType.SplashDamage); break;
+            case AttackType.AllInRange:   AttackAllInRange();          break;
+            case AttackType.Healing:      HealNearbyBuildings();       break;
         }
     }
 
@@ -277,6 +277,45 @@ public class DefenseTower : Building
         {
             float radius = type == AttackType.SplashDamage ? defenseData.splashRadius : 0f;
             proj.Initialize(t, defenseData.damage, this, type, radius);
+        }
+    }
+
+    private void FireAtTarget(Transform t, AttackType type = AttackType.SingleTarget)
+    {   
+        if (t == null) return;
+
+        if (defenseData.useLineRendererAttack && _beamRenderer != null)
+        {
+            _beamRenderer.ShowBeam(transform.position, t.position);
+            ApplyDirectDamage(t, type);
+        }
+        else
+        {
+            FireProjectile(t, type);
+        }
+    }
+
+    private void ApplyDirectDamage(Transform t, AttackType type)
+    {
+        if (type == AttackType.SplashDamage)
+        {
+            Collider2D[] nearby = Physics2D.OverlapCircleAll(t.position, defenseData.splashRadius);
+            float splashDamage = defenseData.damage * 0.5f;
+            foreach (Collider2D col in nearby)
+            {
+                IEnemy enemy = col.GetComponent<IEnemy>();
+                if (enemy != null && enemy.CurrentHP > 0)
+                {
+                    float finalDamage = col.transform == t ? defenseData.damage : splashDamage;
+                    col.GetComponent<Enemy>()?.TakeDamage(finalDamage);
+                    col.GetComponent<FlyingEnemy>()?.TakeDamage(finalDamage);
+                }
+            }
+        }
+        else
+        {
+            t.GetComponent<Enemy>()?.TakeDamage(defenseData.damage);
+            t.GetComponent<FlyingEnemy>()?.TakeDamage(defenseData.damage);
         }
     }
 
@@ -296,7 +335,7 @@ public class DefenseTower : Building
             .CompareTo(Vector2.Distance(transform.position, b.position)));
 
         int limit = Mathf.Min(enemies.Count, defenseData.maxTargets);
-        for (int i = 0; i < limit; i++) FireProjectile(enemies[i], AttackType.SingleTarget);
+        for (int i = 0; i < limit; i++) FireAtTarget(enemies[i]);
     }
 
     private void AttackAllInRange()
@@ -306,7 +345,7 @@ public class DefenseTower : Building
         {
             if (!MatchesTargetFilter(hit)) continue;
             IEnemy e = hit.GetComponent<IEnemy>();
-            if (e != null && e.CurrentHP > 0) FireProjectile(hit.transform, AttackType.SingleTarget);
+            if (e != null && e.CurrentHP > 0) FireAtTarget(hit.transform);
         }
     }
 

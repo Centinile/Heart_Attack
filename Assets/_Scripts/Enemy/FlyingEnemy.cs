@@ -29,6 +29,11 @@ public class FlyingEnemy : MonoBehaviour, IEnemy
         InitializeAbilities();
         DetermineTarget();
     }
+    public void SetHP(float amount)
+    {
+        currentHP = Mathf.Clamp(amount, 0, scaledMaxHP);
+        healthBar?.UpdateBar(currentHP, scaledMaxHP);
+    }
 
     private void Update()
     {

@@ -16,8 +16,8 @@ MonoBehaviour:
   maxHP: 100
   tier: 1
   description: Structure Description
-  nutrientCost: 200
-  hydrationCost: 40
+  nutrientCost: 100
+  hydrationCost: 10
   nextLevelData: {fileID: 11400000}
   upgradeCost: 150
   icon: {fileID: 9141120647305755363, guid: 903642b33ece7a34cb0bfd4070beed78, type: 3}
@@ -28,12 +28,9 @@ MonoBehaviour:
   attackType: 0
   targetFilter: 0
   useFourDirectionalFacing: 0
-  spriteUp: {fileID: 0}
-  spriteDown: {fileID: 0}
-  spriteLeft: {fileID: 0}
-  spriteRight: {fileID: 0}
-  projectileData: {fileID: 11400000, guid: d500cbf7a8a33a04e920b02edf4c609b, type: 2}
+  projectileData: {fileID: 0}
   projectileSpeed: 10
+  useLineRendererAttack: 1
   maxTargets: 1
   splashRadius: 2
   continuousBaseDamage: 5

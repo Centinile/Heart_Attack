@@ -164,12 +164,13 @@ GameObject:
   - component: {fileID: 5757587013675632553}
   - component: {fileID: 128818442715224949}
   - component: {fileID: -3924674970481793475}
+  - component: {fileID: 1777896198352120044}
   - component: {fileID: 6396465466065567474}
   - component: {fileID: -6934563520980502620}
   - component: {fileID: 2523947682524650795}
   - component: {fileID: 6400134272375442884}
-  - component: {fileID: 7222747785929038193}
-  - component: {fileID: 2139877106831335786}
+  - component: {fileID: 2122075850506681690}
+  - component: {fileID: 7453879942493440546}
   m_Layer: 3
   m_Name: ArcherLv1
   m_TagString: Defense
@@ -286,7 +287,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.328125, y: 0.84375}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 1.3, y: 1.66}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -310,8 +311,30 @@ MonoBehaviour:
   defenseData: {fileID: 11400000, guid: 8fc27eea14ea0594f847f98612b8755e, type: 2}
   rangeIndicator: {fileID: 8949921203573974235}
   towerRenderer: {fileID: 0}
-  _beamRenderer: {fileID: 2139877106831335786}
+  _beamRenderer: {fileID: 7453879942493440546}
   currentTargetMode: 0
+--- !u!95 &1777896198352120044
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4611168650507600015}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 93fd89fb6c252944c98891ddbd3eb926, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &6396465466065567474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -369,7 +392,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79ced33d0347d4846a30625fcef1f85f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!120 &7222747785929038193
+--- !u!120 &2122075850506681690
 LineRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
@@ -476,7 +499,7 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &2139877106831335786
+--- !u!114 &7453879942493440546
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -488,4 +511,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49b740205d0fc4547bda463c1c74b167, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  impactEffectPrefab: {fileID: 8551101976076770613, guid: 66c2cc0a50a2dba4683df3adc58df47e, type: 3}
+  impactEffectPrefab: {fileID: 0}
+  persistentBeam: 0

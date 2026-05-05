@@ -15,6 +15,7 @@ MonoBehaviour:
   structureName: Inferno Tower
   maxHP: 100
   tier: 1
+  description: Structure Description
   nutrientCost: 100
   hydrationCost: 5
   nextLevelData: {fileID: 0}
@@ -24,14 +25,12 @@ MonoBehaviour:
   damage: 10
   attackCooldown: 1
   range: 5
-  attackType: 4
+  attackType: 0
+  targetFilter: 0
   useFourDirectionalFacing: 0
-  spriteUp: {fileID: 0}
-  spriteDown: {fileID: 0}
-  spriteLeft: {fileID: 0}
-  spriteRight: {fileID: 0}
   projectileData: {fileID: 0}
   projectileSpeed: 10
+  useLineRendererAttack: 0
   maxTargets: 3
   splashRadius: 2
   continuousBaseDamage: 10

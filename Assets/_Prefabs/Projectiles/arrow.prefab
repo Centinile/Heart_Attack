@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7842249940059728337}
   - component: {fileID: 5908453786443920154}
   - component: {fileID: -3390621675668613890}
+  - component: {fileID: 6853647980580933249}
   m_Layer: 0
   m_Name: arrow
   m_TagString: Untagged
@@ -27,13 +28,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1045415496188527212}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!212 &7842249940059728337
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -102,6 +103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: d500cbf7a8a33a04e920b02edf4c609b, type: 2}
+  projectileVisual: {fileID: 6853647980580933249}
 --- !u!58 &-3390621675668613890
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -138,3 +140,15 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.175
+--- !u!114 &6853647980580933249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1045415496188527212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92da22ea1b17cf7488d4e49c4645274e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
