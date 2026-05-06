@@ -10,12 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d395c662e6fae9448ab91e3c846104bf, type: 3}
-  m_Name: test wave 2
+  m_Name: test wave 45
   m_EditorClassIdentifier: 
   spawnEntries:
-  - prefab: {fileID: 6344384041587836070, guid: 2c5759beee75cae4788596fa0f8c26b6, type: 3}
-    count: 7
-  - prefab: {fileID: 6344384041587836070, guid: 8a6c650e7d98aea4595327c95710d18e, type: 3}
-    count: 6
-  WaveWeight: 20
-  NutrientReward: 110
+  - prefab: {fileID: 6344384041587836070, guid: 15988e63095ea344d92ccd764de51605, type: 3}
+    count: 16
+  WaveWeight: 5
+  NutrientReward: 1000

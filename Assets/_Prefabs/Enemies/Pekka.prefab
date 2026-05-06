@@ -180,7 +180,7 @@ GameObject:
   - component: {fileID: -2768466221722193300}
   - component: {fileID: 376957749032299062}
   m_Layer: 0
-  m_Name: UFO Elite
+  m_Name: Pekka
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
