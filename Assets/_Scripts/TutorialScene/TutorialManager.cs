@@ -43,6 +43,11 @@ public class TutorialManager : MonoBehaviour
     private bool _actionCompleted = false;
     private Coroutine _typeCoroutine;
 
+    // ── Tracks whether AdvanceToNextPart has already been called for the
+    //    current part, so duplicate calls (click + auto-advance coroutine)
+    //    don't skip an extra step.
+    private bool _hasAdvancedFromCurrentPart = false;
+
     // ── Public accessors for TutorialTowerPlacer ──────────────────
     public int CurrentPart => _currentPart;
     public bool IsTyping   => _isTyping;
@@ -72,12 +77,16 @@ public class TutorialManager : MonoBehaviour
         {
             if (_isTyping)
             {
+                // Skip the typewriter animation; do NOT advance the part
                 _skipRequested = true;
             }
-            else if (!IsActionGatedPart(_currentPart) || _actionCompleted)
+            else if (!IsActionGatedPart(_currentPart))
             {
+                // Free part — click advances normally
                 AdvanceToNextPart();
             }
+            // Action-gated parts: clicks are intentionally ignored here.
+            // Only CompleteAction() → AutoAdvanceAfterAction() will advance them.
         }
     }
 
@@ -85,10 +94,10 @@ public class TutorialManager : MonoBehaviour
 
     private bool IsActionGatedPart(int index)
     {
-        return index == 2  // part 3: place defense tower
-            || index == 4  // part 5: switch to resource tab
-            || index == 5  // part 6: place nutrient mine
-            || index == 7  // part 8: place water pump
+        return index == 2   // part 3:  place defense tower
+            || index == 4   // part 5:  switch to resource tab
+            || index == 5   // part 6:  place nutrient mine
+            || index == 7   // part 8:  place water pump
             || index == 10; // part 11: press GO
     }
 
@@ -128,7 +137,10 @@ public class TutorialManager : MonoBehaviour
 
     private void CompleteAction()
     {
+        // Guard: only fire once per gated part
+        if (_actionCompleted) return;
         _actionCompleted = true;
+
         // Auto-advance after a short delay so the player sees what happened
         StartCoroutine(AutoAdvanceAfterAction());
     }
@@ -136,13 +148,10 @@ public class TutorialManager : MonoBehaviour
     private IEnumerator AutoAdvanceAfterAction()
     {
         yield return new WaitForSecondsRealtime(0.5f);
-        if (!_isTyping) AdvanceToNextPart();
-        else StartCoroutine(WaitForTypingThenAdvance());
-    }
 
-    private IEnumerator WaitForTypingThenAdvance()
-    {
+        // If the typewriter is still running, wait for it to finish first
         while (_isTyping) yield return null;
+
         AdvanceToNextPart();
     }
 
@@ -152,7 +161,9 @@ public class TutorialManager : MonoBehaviour
     {
         if (index >= parts.Length) { OnAllPartsShown(); return; }
 
-        _actionCompleted = false;
+        // Reset per-part state
+        _actionCompleted          = false;
+        _hasAdvancedFromCurrentPart = false;
 
         foreach (var p in parts) if (p != null) p.gameObject.SetActive(false);
 
@@ -193,8 +204,16 @@ public class TutorialManager : MonoBehaviour
         _skipRequested = false;
     }
 
+    /// <summary>
+    /// Advances to the next part. Idempotent per-part: only the first call
+    /// for a given part index takes effect. Subsequent calls (e.g. a stale
+    /// coroutine waking up late) are silently ignored.
+    /// </summary>
     private void AdvanceToNextPart()
     {
+        if (_hasAdvancedFromCurrentPart) return;
+        _hasAdvancedFromCurrentPart = true;
+
         _currentPart++;
         ShowPart(_currentPart);
     }

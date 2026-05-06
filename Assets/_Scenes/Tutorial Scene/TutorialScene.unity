@@ -711,7 +711,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 127880290}
-  - component: {fileID: 127880292}
   - component: {fileID: 127880291}
   m_Layer: 0
   m_Name: GameStarter
@@ -747,22 +746,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1837265560159c743a5652d88a8c3582, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerPrefab: {fileID: 0}
   placementType: 0
-  tutorialManager: {fileID: 352419896}
   activeDuringPartIndex: 2
---- !u!114 &127880292
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 127880289}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 193dd59e02430c84abd2eea5ec8c829e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &220362204
 GameObject:
   m_ObjectHideFlags: 0
@@ -1503,7 +1488,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2540e94036e983b448a95bf3b9381ff4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tutorialBubble: {fileID: 0}
+  tutorialBubble: {fileID: 2035461649}
   parts:
   - {fileID: 1637073540}
   - {fileID: 91468332}
@@ -3852,6 +3837,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 352419896}
+        m_TargetAssemblyTypeName: TutorialManager, Assembly-CSharp
+        m_MethodName: OnDefenseTowerPlaced
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 352419896}
+        m_TargetAssemblyTypeName: TutorialManager, Assembly-CSharp
+        m_MethodName: OnDefenseTowerPlaced
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &773171140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4962,6 +4971,8 @@ MonoBehaviour:
   heartSpawnMap: {fileID: 1844501598}
   heartData: {fileID: 11400000, guid: 21c82e9bd457b424d99be4d45167ada3, type: 2}
   ghostPrefab: {fileID: 2851838251493562636, guid: 21dcfef6839351846a48a8cd67770d82, type: 3}
+  placementFeedbackText: {fileID: 0}
+  feedbackDuration: 2
 --- !u!4 &884119673
 Transform:
   m_ObjectHideFlags: 0
@@ -44746,6 +44757,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 352419896}
+        m_TargetAssemblyTypeName: TutorialManager, Assembly-CSharp
+        m_MethodName: OnDefenseTowerPlaced
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1401662644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44963,6 +44986,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 11400000, guid: fb976aeb45235134ca3eda3d5372c19a, type: 2}
           m_ObjectArgumentAssemblyTypeName: BuildingData, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 352419896}
+        m_TargetAssemblyTypeName: TutorialManager, Assembly-CSharp
+        m_MethodName: OnDefenseTowerPlaced
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -46181,6 +46216,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 11400000, guid: 566af7a99f87fef418b4c85f6cee26d7, type: 2}
           m_ObjectArgumentAssemblyTypeName: BuildingData, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 352419896}
+        m_TargetAssemblyTypeName: TutorialManager, Assembly-CSharp
+        m_MethodName: OnDefenseTowerPlaced
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -70077,6 +70124,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 11400000, guid: 8fc27eea14ea0594f847f98612b8755e, type: 2}
           m_ObjectArgumentAssemblyTypeName: BuildingData, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 352419896}
+        m_TargetAssemblyTypeName: TutorialManager, Assembly-CSharp
+        m_MethodName: OnDefenseTowerPlaced
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
