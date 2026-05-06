@@ -291,11 +291,17 @@ private void UpdatePathing()
     {
         enemyAnimations?.PlayAttackAnimation();
 
+        if (data.IsRanged && data.ProjectileData != null)
+        {
+            FireProjectile(target);
+            return;
+        }
+
+        // Melee — direct damage
         if (target.TryGetComponent<Building>(out Building b))
         {
             float damage = scaledDamage > 0 ? scaledDamage : data.AttackDamage;
 
-            // Check if any ability wants to modify the first attack
             foreach (var a in instantiatedAbilities)
             {
                 if (a is FirstAttackMultiplierAbility firstHit)
@@ -313,6 +319,32 @@ private void UpdatePathing()
                 UnlockWall();
                 DetermineTarget();
             }
+        }
+    }
+
+    private void FireProjectile(GameObject target)
+    {
+        if (data.ProjectileData.Prefab == null) return;
+
+        GameObject projObj = Instantiate(
+            data.ProjectileData.Prefab,
+            transform.position,
+            Quaternion.identity);
+
+        if (projObj.TryGetComponent(out Projectile proj))
+        {
+            float damage = scaledDamage > 0 ? scaledDamage : data.AttackDamage;
+
+            foreach (var a in instantiatedAbilities)
+            {
+                if (a is FirstAttackMultiplierAbility firstHit)
+                {
+                    damage *= firstHit.GetAndConsumeMultiplier();
+                    break;
+                }
+            }
+
+            proj.InitializeFromEnemy(target.transform, damage);
         }
     }
 
@@ -399,6 +431,7 @@ private void UpdatePathing()
         scaledDamage = data.AttackDamage * multiplier;
         currentHP = scaledMaxHP;
     }
+    
 
     // --- Gizmos ---
 
@@ -406,7 +439,7 @@ private void UpdatePathing()
     {
         if (data == null) return;
 
-        Gizmos.color = new Color(1, 0, 0, 0.3f);
+        Gizmos.color = new Color(0, 1, 0, 0.5f);
         Gizmos.DrawWireSphere(transform.position, data.AttackRadius);
 
         Gizmos.color = new Color(1, 1, 0, 0.2f);

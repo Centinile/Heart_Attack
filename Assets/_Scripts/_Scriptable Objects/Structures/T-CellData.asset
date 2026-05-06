@@ -15,25 +15,27 @@ MonoBehaviour:
   structureName: T-Cell Launcher
   maxHP: 100
   tier: 1
-  nutrientCost: 100
+  description: Structure Description
+  nutrientCost: 50
   hydrationCost: 5
   nextLevelData: {fileID: 0}
   upgradeCost: 150
   icon: {fileID: 204987173645444385, guid: d7a0acedb1db35345af197289f4da90c, type: 3}
   prefab: {fileID: 4611168650507600015, guid: becceb0a1e98d274cbfe1d8184e9506f, type: 3}
-  damage: 50
-  attackCooldown: 5
+  damage: 1
+  attackCooldown: 1
   range: 9
   attackType: 2
+  targetFilter: 0
   useFourDirectionalFacing: 0
-  spriteUp: {fileID: 0}
-  spriteDown: {fileID: 0}
-  spriteLeft: {fileID: 0}
-  spriteRight: {fileID: 0}
   projectileData: {fileID: 11400000, guid: d500cbf7a8a33a04e920b02edf4c609b, type: 2}
   projectileSpeed: 60
+  useLineRendererAttack: 0
   maxTargets: 3
   splashRadius: 5
+  useBurst: 1
+  burstCount: 3
+  burstInterval: 0.1
   continuousBaseDamage: 5
   continuousMaxDamage: 50
   continuousRampTime: 4

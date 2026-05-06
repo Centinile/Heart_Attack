@@ -17,8 +17,8 @@ MonoBehaviour:
   tier: 1
   description: Structure Description
   nutrientCost: 100
-  hydrationCost: 10
-  nextLevelData: {fileID: 11400000}
+  hydrationCost: 40
+  nextLevelData: {fileID: 11400000, guid: 02e5146ecb708b84e9dc77c074cdc081, type: 2}
   upgradeCost: 150
   icon: {fileID: 9141120647305755363, guid: 903642b33ece7a34cb0bfd4070beed78, type: 3}
   prefab: {fileID: 4611168650507600015, guid: 7d6f58dcba57b4741a030ea78d07caa8, type: 3}
@@ -33,6 +33,9 @@ MonoBehaviour:
   useLineRendererAttack: 1
   maxTargets: 1
   splashRadius: 2
+  useBurst: 0
+  burstCount: 3
+  burstInterval: 0.1
   continuousBaseDamage: 5
   continuousMaxDamage: 50
   continuousRampTime: 4

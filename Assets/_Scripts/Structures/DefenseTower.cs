@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class DefenseTower : Building
@@ -18,6 +19,7 @@ public class DefenseTower : Building
     // Continuous attack state
     private float _continuousRampTimer = 0f;
     private float _continuousTickTimer = 0f;
+    private Coroutine _burstCoroutine;
     private Transform _lastContinuousTarget;
 
     protected override void Awake()
@@ -54,12 +56,11 @@ public class DefenseTower : Building
 
         if (attackTimer > 0) attackTimer -= Time.deltaTime;
 
-        // Healing doesn't need a target
         if (defenseData.attackType == AttackType.Healing)
         {
             if (attackTimer <= 0f)
             {
-                PerformAttack();
+                TriggerAttack();
                 attackTimer = defenseData.attackCooldown;
             }
             return;
@@ -75,7 +76,7 @@ public class DefenseTower : Building
 
             if (attackTimer <= 0f)
             {
-                PerformAttack();
+                TriggerAttack();
                 attackTimer = defenseData.attackCooldown;
             }
         }
@@ -361,6 +362,39 @@ public class DefenseTower : Building
             TargetFilter.FlyingOnly => isFlying,
             _ => isGround || isFlying
         };
+    }
+
+    private void TriggerAttack()
+    {
+        if (defenseData.useBurst && defenseData.burstCount > 1)
+        {
+            if (_burstCoroutine != null) StopCoroutine(_burstCoroutine);
+            _burstCoroutine = StartCoroutine(BurstCoroutine());
+        }
+        else
+        {
+            PerformAttack();
+        }
+    }
+
+    private IEnumerator BurstCoroutine()
+    {
+        for (int i = 0; i < defenseData.burstCount; i++)
+        {
+            // Re-validate target each hit — it may die mid-burst
+            if (defenseData.attackType != AttackType.Healing)
+            {
+                if (currentTarget == null || !IsTargetValid(currentTarget))
+                    currentTarget = FindTarget();
+
+                if (currentTarget == null) yield break;
+            }
+
+            PerformAttack();
+
+            if (i < defenseData.burstCount - 1)
+                yield return new WaitForSeconds(defenseData.burstInterval);
+        }
     }
 
     private void HealNearbyBuildings()

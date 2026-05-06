@@ -32,6 +32,13 @@ public class DefenseData : BuildingData
     public int maxTargets = 3;
     public float splashRadius = 2f;
 
+    [Header("Burst")]
+    public bool useBurst = false;
+    [Tooltip("Number of hits fired per attack")]
+    public int burstCount = 3;
+    [Tooltip("Seconds between each hit in the burst")]
+    public float burstInterval = 0.1f;
+
     [Header("Continuous Attack")]
     public float continuousBaseDamage = 5f;
     public float continuousMaxDamage = 50f;

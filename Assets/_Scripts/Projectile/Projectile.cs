@@ -199,10 +199,23 @@ public class Projectile : MonoBehaviour
     private void ApplyDamage(Transform targetTransform)
     {
         if (targetTransform == null) return;
+
+        // Try building first (enemy projectiles hit buildings)
+        Building building = targetTransform.GetComponent<Building>();
+        if (building != null)
+        {
+            building.TakeDamage(damage);
+            TryApplyDOT(transform.position);
+            return;
+        }
+
+        // Fall back to enemy (tower projectiles hit enemies)
         Enemy enemy = targetTransform.GetComponent<Enemy>();
-        if (enemy == null) return;
-        enemy.TakeDamage(damage);
-        TryApplyDOT(transform.position);
+        if (enemy != null)
+        {
+            enemy.TakeDamage(damage);
+            TryApplyDOT(transform.position);
+        }
     }
 
     private void ApplySplashDamage()
@@ -239,8 +252,54 @@ public class Projectile : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (hasHit) return;
+
+        // Tower projectile hitting an enemy
         Enemy enemy = other.GetComponent<Enemy>();
         if (enemy != null && (other.transform == target || !data.Homing))
+        {
             Hit();
+            return;
+        }
+
+        // Enemy projectile hitting a building
+        Building building = other.GetComponent<Building>();
+        if (building != null && other.transform == target)
+            Hit();
+    }
+
+    // Called when fired by an enemy — parallel to Initialize() for towers
+    public void InitializeFromEnemy(Transform target, float damage)
+    {
+        this.target      = target;
+        this.damage      = damage;
+        this.sourceTower = null;
+        this.attackType  = AttackType.SingleTarget;
+        this.splashRadius = 0f;
+
+        if (target != null)
+            lastTargetPosition = target.position;
+
+        if (data.UseArcTrajectory)
+        {
+            trajectoryStartPoint = transform.position;
+            maxMoveSpeed = data.Speed;
+            moveSpeed    = maxMoveSpeed;
+
+            float xDist = target != null
+                ? target.position.x - transform.position.x
+                : 1f;
+            trajectoryMaxRelativeHeight = Mathf.Abs(xDist) * data.TrajectoryMaxHeight;
+        }
+
+        Destroy(gameObject, data.Lifetime);
+
+        if (data.TrailEffect != null)
+            Instantiate(data.TrailEffect, transform.position, Quaternion.identity, transform);
+
+        var sr = GetComponent<SpriteRenderer>();
+        if (sr != null && data.Sprite != null)
+            sr.sprite = data.Sprite;
+
+        projectileVisual?.SetTarget(target);
     }
 }

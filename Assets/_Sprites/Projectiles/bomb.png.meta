@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 01c2b43088a12b04fb500423c478ac26
+guid: 80ca41141f39f66459e1119bdfdb9296
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7430558899833497709
-    second: Bolt_0
+      213: -2613247888821195678
+    second: bomb_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,12 +37,12 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
-    wrapU: 0
-    wrapV: 0
-    wrapW: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Bolt_0
+      name: bomb_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 512
-        height: 256
+        x: 1
+        y: 2
+        width: 13
+        height: 12
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3979ec4ac0a51e890800000000000000
-      internalID: -7430558899833497709
+      spriteID: 26ce5c404e0ebbbd0800000000000000
+      internalID: -2613247888821195678
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Bolt_0: -7430558899833497709
+      bomb_0: -2613247888821195678
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

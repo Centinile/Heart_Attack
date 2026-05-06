@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51ee95539e800654b9b75b07a2ff498b, type: 3}
-  m_Name: ArcherLv2Data_
+  m_Name: ArcherLv3Data_
   m_EditorClassIdentifier: 
   structureName: ArcherTower
   maxHP: 100
   tier: 1
   description: Structure Description
   nutrientCost: 20
-  hydrationCost: 60
+  hydrationCost: 40
   nextLevelData: {fileID: 11400000}
-  upgradeCost: 150
+  upgradeCost: 400
   icon: {fileID: 5136992363456170433, guid: 903642b33ece7a34cb0bfd4070beed78, type: 3}
-  prefab: {fileID: 4611168650507600015, guid: a18bdfb7588404a43ba22228ac9912fe, type: 3}
-  damage: 6
+  prefab: {fileID: 4611168650507600015, guid: da9667e0895eed04986935c4f845e169, type: 3}
+  damage: 23
   attackCooldown: 0.5
   range: 7
   attackType: 1

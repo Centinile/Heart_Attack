@@ -32,6 +32,9 @@ public class EnemyData : ScriptableObject
     [Header("Combat Configuration")]
     [Tooltip("If true, enemy is ranged and can attack from distance.")]
     [SerializeField] private bool isRanged = false;
+
+    [Header("Ranged Settings")]
+    [SerializeField] private ProjectileData projectileData;
     
     [Tooltip("Time between attacks in seconds.")]
     [SerializeField] private float attackCooldown = 1f;
@@ -61,6 +64,7 @@ public class EnemyData : ScriptableObject
     public float AttackRadius => attackRadius;
     public float MoveSpeed => moveSpeed;
     public bool IsRanged => isRanged;
+    public ProjectileData ProjectileData => projectileData;
     public float AttackCooldown => attackCooldown;
     public TargetPriority TargetingPriority => targetingPriority;
     public float DetectionRadius => detectionRadius;

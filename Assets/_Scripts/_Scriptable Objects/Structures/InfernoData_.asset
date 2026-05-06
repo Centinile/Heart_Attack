@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   structureName: Inferno Tower
   maxHP: 100
-  tier: 1
+  tier: 2
   description: Structure Description
   nutrientCost: 100
   hydrationCost: 5
@@ -33,6 +33,9 @@ MonoBehaviour:
   useLineRendererAttack: 0
   maxTargets: 3
   splashRadius: 2
+  useBurst: 0
+  burstCount: 3
+  burstInterval: 0.1
   continuousBaseDamage: 10
   continuousMaxDamage: 100
   continuousRampTime: 1.5
