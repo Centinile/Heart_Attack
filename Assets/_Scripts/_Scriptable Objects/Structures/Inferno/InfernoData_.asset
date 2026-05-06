@@ -20,7 +20,7 @@ MonoBehaviour:
   hydrationCost: 5
   nextLevelData: {fileID: 0}
   upgradeCost: 150
-  icon: {fileID: -6324466176413781807, guid: f56aee4e617ce8d48a2659e77a722ff4, type: 3}
+  icon: {fileID: 6196678965904796728, guid: cc55682bb38ed394888ee2cb5ee87ee5, type: 3}
   prefab: {fileID: 4611168650507600015, guid: ae53c4d789105f14a957fd44088e289e, type: 3}
   damage: 10
   attackCooldown: 1
@@ -35,6 +35,7 @@ MonoBehaviour:
   projectileData: {fileID: 0}
   projectileSpeed: 10
   useLineRendererAttack: 1
+  flickerBeamPrefab: {fileID: 0}
   maxTargets: 3
   splashRadius: 2
   useBurst: 0

@@ -15,10 +15,11 @@ MonoBehaviour:
   structureName: Wall
   maxHP: 100
   tier: 1
+  description: Structure Description
   nutrientCost: 5
   hydrationCost: 0
   nextLevelData: {fileID: 0}
   upgradeCost: 150
-  icon: {fileID: 5520866459139679725, guid: f56aee4e617ce8d48a2659e77a722ff4, type: 3}
+  icon: {fileID: 1206767222682907769, guid: ec145644ce7d3a64c882e7b42d375dbf, type: 3}
   prefab: {fileID: 4611168650507600015, guid: 30474534713806b44b7f4900164ec842, type: 3}
   prioritizedByEnemies: 0

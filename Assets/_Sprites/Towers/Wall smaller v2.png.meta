@@ -1,16 +1,10 @@
 fileFormatVersion: 2
-guid: 5372365288bb9d644931149f1ca31b32
+guid: ec145644ce7d3a64c882e7b42d375dbf
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2889936551284733229
-    second: builderhut-Sheet_0
-  - first:
-      213: -8880913664853787926
-    second: builderhut-Sheet_1
-  - first:
-      213: -1393901754148368072
-    second: builderhut-Sheet_2
+      213: 1206767222682907769
+    second: Wall smaller v2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -43,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -57,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 64
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -81,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -106,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: builderhut-Sheet_0
+      name: Wall smaller v2_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 79
         y: 0
-        width: 64
-        height: 64
+        width: 98
+        height: 117
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -121,52 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d257eba5bfd1b1820800000000000000
-      internalID: 2889936551284733229
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: builderhut-Sheet_1
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: aea3a7d2318a0c480800000000000000
-      internalID: -8880913664853787926
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: builderhut-Sheet_2
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 83151346dbdd7ace0800000000000000
-      internalID: -1393901754148368072
+      spriteID: 9747992356c4fb010800000000000000
+      internalID: 1206767222682907769
       vertices: []
       indices: 
       edges: []
@@ -175,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: e53cbdefe1d45174db256346e589272b
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -183,13 +133,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":3.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
-      builderhut-Sheet_0: 2889936551284733229
-      builderhut-Sheet_1: -8880913664853787926
-      builderhut-Sheet_2: -1393901754148368072
+      Wall smaller v2_0: 1206767222682907769
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

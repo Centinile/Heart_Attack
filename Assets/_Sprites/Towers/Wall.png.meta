@@ -1,16 +1,10 @@
 fileFormatVersion: 2
-guid: cc55682bb38ed394888ee2cb5ee87ee5
+guid: b43e94bdcdf60394689e80496f5a7482
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6196678965904796728
-    second: inferno-Sheet 1_0
-  - first:
-      213: 8141385818716634450
-    second: inferno-Sheet 1_1
-  - first:
-      213: -5546365585663817345
-    second: inferno-Sheet 1_2
+      213: 3095473448771742493
+    second: Wall smaller_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -43,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -57,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 64
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -81,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -106,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: inferno-Sheet 1_0
+      name: Wall smaller_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 79
         y: 0
-        width: 64
-        height: 64
+        width: 98
+        height: 133
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -121,52 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 83ce3e520b60ff550800000000000000
-      internalID: 6196678965904796728
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: inferno-Sheet 1_1
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 25df10864430cf070800000000000000
-      internalID: 8141385818716634450
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: inferno-Sheet 1_2
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 0
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f798e00c2e95703b0800000000000000
-      internalID: -5546365585663817345
+      spriteID: d1b61bd73b455fa20800000000000000
+      internalID: 3095473448771742493
       vertices: []
       indices: 
       edges: []
@@ -175,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 989d8e094ddee4841bb05ddc50947f13
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -183,13 +133,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
-      inferno-Sheet 1_0: 6196678965904796728
-      inferno-Sheet 1_1: 8141385818716634450
-      inferno-Sheet 1_2: -5546365585663817345
+      Wall smaller_0: 3095473448771742493
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
