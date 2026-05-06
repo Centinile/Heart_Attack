@@ -1,16 +1,16 @@
 fileFormatVersion: 2
-guid: d7a0acedb1db35345af197289f4da90c
+guid: d4fdee2c0f2c277488dc36dea9dca13d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 204987173645444385
-    second: tcell-artillery-Sheet_0
+      213: 2712614334172209555
+    second: tcell-artillery_0
   - first:
-      213: -311119406716474116
-    second: tcell-artillery-Sheet_1
+      213: 4069177925305501163
+    second: tcell-artillery_1
   - first:
-      213: 1834015629554116222
-    second: tcell-artillery-Sheet_2
+      213: -692437678006396675
+    second: tcell-artillery_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -106,7 +106,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: tcell-artillery-Sheet_0
+      name: tcell-artillery_0
       rect:
         serializedVersion: 2
         x: 0
@@ -121,14 +121,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 125e5a49fb248d200800000000000000
-      internalID: 204987173645444385
+      spriteID: 391a7f86d5425a520800000000000000
+      internalID: 2712614334172209555
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tcell-artillery-Sheet_1
+      name: tcell-artillery_1
       rect:
         serializedVersion: 2
         x: 64
@@ -143,14 +143,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: cfc2fe74c8eaeabf0800000000000000
-      internalID: -311119406716474116
+      spriteID: be502bd73cf987830800000000000000
+      internalID: 4069177925305501163
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: tcell-artillery-Sheet_2
+      name: tcell-artillery_2
       rect:
         serializedVersion: 2
         x: 128
@@ -165,8 +165,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e7666108f7bb37910800000000000000
-      internalID: 1834015629554116222
+      spriteID: df8155db997f366f0800000000000000
+      internalID: -692437678006396675
       vertices: []
       indices: 
       edges: []
@@ -175,7 +175,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 8f3dc0dc8223d5840baec3a7cdd6bdde
+    spriteID: 63bab991d458ec243b194fa2f7edb036
     internalID: 0
     vertices: []
     indices: 
@@ -183,11 +183,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      tcell-artillery-Sheet_0: 204987173645444385
-      tcell-artillery-Sheet_1: -311119406716474116
-      tcell-artillery-Sheet_2: 1834015629554116222
+      tcell-artillery_0: 2712614334172209555
+      tcell-artillery_1: 4069177925305501163
+      tcell-artillery_2: -692437678006396675
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
