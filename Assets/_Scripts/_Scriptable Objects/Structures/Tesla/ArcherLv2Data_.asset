@@ -20,7 +20,7 @@ MonoBehaviour:
   hydrationCost: 10
   nextLevelData: {fileID: 11400000, guid: 6a27fc439241fb84988cc3477471a197, type: 2}
   upgradeCost: 150
-  icon: {fileID: 5136992363456170433, guid: 903642b33ece7a34cb0bfd4070beed78, type: 3}
+  icon: {fileID: 4230166539057105616, guid: 29527c488b1f3f34b97951d1b6f1558d, type: 3}
   prefab: {fileID: 4611168650507600015, guid: a18bdfb7588404a43ba22228ac9912fe, type: 3}
   damage: 6
   attackCooldown: 0.5
