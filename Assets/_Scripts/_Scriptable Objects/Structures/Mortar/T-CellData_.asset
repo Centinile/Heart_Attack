@@ -18,9 +18,12 @@ MonoBehaviour:
   description: Structure Description
   nutrientCost: 50
   hydrationCost: 5
+  HealVFXPrefab: {fileID: 0}
+  PlaceSFX: {fileID: 0}
+  DestroySFX: {fileID: 0}
   nextLevelData: {fileID: 0}
   upgradeCost: 150
-  icon: {fileID: 204987173645444385, guid: d7a0acedb1db35345af197289f4da90c, type: 3}
+  icon: {fileID: 2712614334172209555, guid: d4fdee2c0f2c277488dc36dea9dca13d, type: 3}
   prefab: {fileID: 4611168650507600015, guid: becceb0a1e98d274cbfe1d8184e9506f, type: 3}
   damage: 1
   attackCooldown: 1
@@ -28,9 +31,14 @@ MonoBehaviour:
   attackType: 2
   targetFilter: 1
   useFourDirectionalFacing: 0
+  attackSound: {fileID: 0}
+  beamLoopSound: {fileID: 0}
+  attackSoundVolume: 1
+  beamLoopVolume: 0.8
   projectileData: {fileID: 11400000, guid: e6b8978179209e546b8c0a2faec8405c, type: 2}
   projectileSpeed: 10
   useLineRendererAttack: 0
+  flickerBeamPrefab: {fileID: 0}
   maxTargets: 3
   splashRadius: 5
   useBurst: 0
