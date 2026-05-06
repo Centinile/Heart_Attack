@@ -78,7 +78,6 @@ public class Projectile : MonoBehaviour
     {
         if (hasHit) return;
 
-        // Update tracked position only if arc is off OR lockTargetOnFire is off
         if (target != null && (!data.UseArcTrajectory || !data.LockTargetOnFire))
             lastTargetPosition = target.position;
 
@@ -87,13 +86,14 @@ public class Projectile : MonoBehaviour
         else
             UpdateStraightPosition();
 
-        // Facing
         projectileVisual?.UpdateFacing(projectileMoveDir);
 
-        // Hit check
         float hitDist = data.UseArcTrajectory ? ARC_HIT_DISTANCE : HIT_DISTANCE;
         if (Vector3.Distance(transform.position, lastTargetPosition) < hitDist)
+        {
             Hit();
+            return; // stop all further processing this frame
+        }
     }
 
     // ── Straight movement ──────────────────────────────────────────────
@@ -103,7 +103,7 @@ public class Projectile : MonoBehaviour
         Vector3 direction = (lastTargetPosition - transform.position).normalized;
         if (direction == Vector3.zero) return;
 
-        if (data.Homing) transform.up = direction;
+        // Removed: transform.up = direction — ProjectileVisual handles rotation
         transform.position += direction * data.Speed * Time.deltaTime;
         projectileMoveDir = direction;
     }
@@ -193,16 +193,34 @@ public class Projectile : MonoBehaviour
         if (data.ImpactEffect != null)
             Instantiate(data.ImpactEffect, transform.position, Quaternion.identity);
 
+        // Play impact sound at hit position
+        if (data.impactSound != null)
+            AudioManager.Instance?.PlayOneShot(data.impactSound, transform.position, data.impactSoundVolume);
+
+        CancelInvoke();
         Destroy(gameObject);
     }
 
     private void ApplyDamage(Transform targetTransform)
     {
         if (targetTransform == null) return;
+
+        // Try building first (enemy projectiles hit buildings)
+        Building building = targetTransform.GetComponent<Building>();
+        if (building != null)
+        {
+            building.TakeDamage(damage);
+            TryApplyDOT(transform.position);
+            return;
+        }
+
+        // Fall back to enemy (tower projectiles hit enemies)
         Enemy enemy = targetTransform.GetComponent<Enemy>();
-        if (enemy == null) return;
-        enemy.TakeDamage(damage);
-        TryApplyDOT(transform.position);
+        if (enemy != null)
+        {
+            enemy.TakeDamage(damage);
+            TryApplyDOT(transform.position);
+        }
     }
 
     private void ApplySplashDamage()
@@ -239,8 +257,54 @@ public class Projectile : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (hasHit) return;
+
+        // Tower projectile hitting an enemy
         Enemy enemy = other.GetComponent<Enemy>();
         if (enemy != null && (other.transform == target || !data.Homing))
+        {
             Hit();
+            return;
+        }
+
+        // Enemy projectile hitting a building
+        Building building = other.GetComponent<Building>();
+        if (building != null && other.transform == target)
+            Hit();
+    }
+
+    // Called when fired by an enemy — parallel to Initialize() for towers
+    public void InitializeFromEnemy(Transform target, float damage)
+    {
+        this.target      = target;
+        this.damage      = damage;
+        this.sourceTower = null;
+        this.attackType  = AttackType.SingleTarget;
+        this.splashRadius = 0f;
+
+        if (target != null)
+            lastTargetPosition = target.position;
+
+        if (data.UseArcTrajectory)
+        {
+            trajectoryStartPoint = transform.position;
+            maxMoveSpeed = data.Speed;
+            moveSpeed    = maxMoveSpeed;
+
+            float xDist = target != null
+                ? target.position.x - transform.position.x
+                : 1f;
+            trajectoryMaxRelativeHeight = Mathf.Abs(xDist) * data.TrajectoryMaxHeight;
+        }
+
+        Destroy(gameObject, data.Lifetime);
+
+        if (data.TrailEffect != null)
+            Instantiate(data.TrailEffect, transform.position, Quaternion.identity, transform);
+
+        var sr = GetComponent<SpriteRenderer>();
+        if (sr != null && data.Sprite != null)
+            sr.sprite = data.Sprite;
+
+        projectileVisual?.SetTarget(target);
     }
 }

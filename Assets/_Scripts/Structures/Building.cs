@@ -106,6 +106,12 @@ public class Building : MonoBehaviour
 
         float cost = RepairCost;
         Debug.Log($"[Repair] {gameObject.name} | HP: {CurrentHP:0}/{MaxHP:0} ({HPPercent:P0} full) | Missing HP: {MaxHP - CurrentHP:0} | Repair Cost: {cost} Nutrients");
+
+        if (!GameManager.Instance.CanAfford(cost))
+        {
+            TowerPlacer.ShowFeedbackStatic($"Not enough Nutrients. Need {cost:0} to repair.");
+            return;
+        }
         
         if (!GameManager.Instance.SpendNutrients(cost)) 
         {
@@ -200,40 +206,60 @@ public class Building : MonoBehaviour
     public virtual void OnSelected() { if (outline != null) outline.enabled = true; }
     public virtual void OnDeselected() { if (outline != null) outline.enabled = false; }
 
-    public virtual void Upgrade()
+public virtual void Upgrade()
+{
+    if (Data.NextLevelData == null)
     {
-        if (Data.NextLevelData == null || !GameManager.Instance.SpendNutrients(Data.UpgradeCost))
-            return;
-
-        BuildingData nextData = Data.NextLevelData;
-
-        // Capture transform before destruction
-        Vector3 pos = transform.position;
-        Quaternion rot = transform.rotation;
-
-        bool wasPowered = IsPowered;
-        // We call OnDestroyed to handle the cleanup of old hydration/tiles
-        OnDestroyed();
-
-        GameObject newObj = Instantiate(nextData.Prefab, pos, rot);
-        Building newBuilding = newObj.GetComponent<Building>();
-        
-        // Let initialize handle everything
-        newBuilding.InitializeWithoutActivation(nextData);
-        if (wasPowered && GameManager.Instance.TryUseHydration(nextData.HydrationCost))
-        {
-            newBuilding.SetPowered(true);
-        }
-        else
-        {
-            newBuilding.SetPowered(false);
-            GameManager.Instance.RegisterUnpoweredBuilding(newBuilding);
-        }
-
-
-        BuildingSelector.SelectedBuilding = newBuilding;
-        newBuilding.OnSelected();
+        TowerPlacer.ShowFeedbackStatic("This building is already at max level.");
+        return;
     }
+
+    if (!TierUnlockManager.Instance.IsTierUnlocked(Data.NextLevelData.Tier))
+    {
+        TowerPlacer.ShowFeedbackStatic($"Requires a Lab that unlocks {Data.NextLevelData.Tier} to upgrade.");
+        return;
+    }
+
+    if (!GameManager.Instance.CanAfford(Data.UpgradeCost))
+    {
+        TowerPlacer.ShowFeedbackStatic($"Not enough Nutrients. Need {Data.UpgradeCost:0} to upgrade.");
+        return;
+    }
+
+    if (Data.NextLevelData == null || !GameManager.Instance.SpendNutrients(Data.UpgradeCost))
+        return;
+
+    BuildingData nextData = Data.NextLevelData;
+    Vector3 pos = transform.position;
+    Quaternion rot = transform.rotation;
+    bool wasPowered = IsPowered;
+
+    // Manually unregister and release hydration without going through OnDestroyed,
+    // so we control exactly what gets released before the new building claims it
+    TierUnlockManager.OnTierUnlocksChanged -= OnTierUnlocksChanged;
+    TowerPlacer.Instance?.FreeTile(transform.position);
+
+    if (IsPowered)
+    {
+        GameManager.Instance.UnregisterPoweredBuilding(this);
+        GameManager.Instance.ReleaseHydration(Data.HydrationCost);
+    }
+    else
+    {
+        GameManager.Instance.UnregisterUnpoweredBuilding(this);
+    }
+
+    // Spawn and fully initialize the new building — Initialize calls TryActivate
+    // which claims hydration correctly and updates the UI
+    GameObject newObj = Instantiate(nextData.Prefab, pos, rot);
+    Building newBuilding = newObj.GetComponent<Building>();
+    newBuilding.Initialize(nextData); // full init, not InitializeWithoutActivation
+
+    BuildingSelector.SelectedBuilding = newBuilding;
+    newBuilding.OnSelected();
+
+    Destroy(gameObject);
+}
 
     public virtual void Sell()
     {

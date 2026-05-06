@@ -23,14 +23,28 @@ public class DefenseData : BuildingData
     [Header("Visuals (4-Directional)")]
     public bool useFourDirectionalFacing = false;
 
+    [Header("Audio")]
+    public AudioClip attackSound;       // plays once when tower fires
+    public AudioClip beamLoopSound;     // loops while continuous beam is active
+    [Range(0f, 1f)] public float attackSoundVolume = 1f;
+    [Range(0f, 1f)] public float beamLoopVolume = 0.8f;
+
     [Header("Projectile")]
     public ProjectileData projectileData;
     public float projectileSpeed = 10f;
     public bool useLineRendererAttack = false;
+    public FlickerBeam flickerBeamPrefab; // assign a prefab with FlickerBeam + LineRenderer
     
     [Header("Multi-Target / Splash")]
     public int maxTargets = 3;
     public float splashRadius = 2f;
+
+    [Header("Burst")]
+    public bool useBurst = false;
+    [Tooltip("Number of hits fired per attack")]
+    public int burstCount = 3;
+    [Tooltip("Seconds between each hit in the burst")]
+    public float burstInterval = 0.1f;
 
     [Header("Continuous Attack")]
     public float continuousBaseDamage = 5f;

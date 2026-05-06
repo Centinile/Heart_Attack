@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51ee95539e800654b9b75b07a2ff498b, type: 3}
+  m_Name: T-CellLv2Data_
+  m_EditorClassIdentifier: 
+  structureName: T-Cell Launcher
+  maxHP: 100
+  tier: 1
+  description: Structure Description
+  nutrientCost: 50
+  hydrationCost: 5
+  nextLevelData: {fileID: 0}
+  upgradeCost: 150
+  icon: {fileID: 204987173645444385, guid: d7a0acedb1db35345af197289f4da90c, type: 3}
+  prefab: {fileID: 4611168650507600015, guid: becceb0a1e98d274cbfe1d8184e9506f, type: 3}
+  damage: 1
+  attackCooldown: 1
+  range: 9
+  attackType: 2
+  targetFilter: 1
+  useFourDirectionalFacing: 0
+  projectileData: {fileID: 11400000, guid: e6b8978179209e546b8c0a2faec8405c, type: 2}
+  projectileSpeed: 10
+  useLineRendererAttack: 0
+  maxTargets: 3
+  splashRadius: 5
+  useBurst: 0
+  burstCount: 3
+  burstInterval: 0.1
+  continuousBaseDamage: 5
+  continuousMaxDamage: 50
+  continuousRampTime: 4
+  continuousTickRate: 0.1
+  applyDOT: 1
+  dotDamagePerTick: 5
+  dotTickInterval: 0.5
+  dotDuration: 4
+  dotRadius: 0.31
+  dotZonePrefab: {fileID: 3598478439607017487, guid: 02195da1e35762c459580cfe5e785594, type: 3}

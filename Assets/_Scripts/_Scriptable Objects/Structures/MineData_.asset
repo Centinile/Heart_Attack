@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   structureName: Mine
   maxHP: 100
+  tier: 1
+  description: Structure Description
   nutrientCost: 50
   hydrationCost: 5
   nextLevelData: {fileID: 0}
   upgradeCost: 150
-  icon: {fileID: 21300000, guid: 450b80e2cd189b044bbfdd22c558bb48, type: 3}
+  icon: {fileID: -8206198869673284931, guid: 8c297e5df3806b9409fa59988f1ae485, type: 3}
   prefab: {fileID: 4611168650507600015, guid: 7cae0236dc9126a4cb14c5e895a975b5, type: 3}
   type: 0
   nutrientsPerWave: 1000

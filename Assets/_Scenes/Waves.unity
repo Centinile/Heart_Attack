@@ -31289,6 +31289,8 @@ MonoBehaviour:
   heartSpawnMap: {fileID: 936562935}
   heartData: {fileID: 11400000, guid: 21c82e9bd457b424d99be4d45167ada3, type: 2}
   ghostPrefab: {fileID: 2851838251493562636, guid: 21dcfef6839351846a48a8cd67770d82, type: 3}
+  placementFeedbackText: {fileID: 0}
+  feedbackDuration: 2
 --- !u!4 &350128789
 Transform:
   m_ObjectHideFlags: 0

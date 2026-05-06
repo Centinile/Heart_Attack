@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7297932f0ad0a040a95ae2de5e552d6, type: 3}
+  m_Name: Bomb
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 1045415496188527212, guid: b15b02c310972ae42bc71391dfbd2ef4, type: 3}
+  sprite: {fileID: -2613247888821195678, guid: 80ca41141f39f66459e1119bdfdb9296, type: 3}
+  speed: 8
+  lifetime: 5
+  homing: 0
+  useArcTrajectory: 0
+  lockTargetOnFire: 1
+  trajectoryMaxHeight: 2.47
+  trajectoryAnimationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1.0372168
+      value: -0.012309553
+      inSlope: -1.1691713
+      outSlope: -1.1691713
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.2303309
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  axisCorrectionAnimationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  projectileSpeedAnimationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -0.07262993
+      value: 0.539299
+      inSlope: -0.35438815
+      outSlope: -0.35438815
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.19022144
+    - serializedVersion: 3
+      time: 1.0390775
+      value: 0.5195365
+      inSlope: 1.0900011
+      outSlope: 1.0900011
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.05137841
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  impactEffect: {fileID: 7487566357091267646, guid: 7c134b42b05cefb4eaac1487742417d5, type: 3}
+  trailEffect: {fileID: 0}
+  impactSound: {fileID: 8300000, guid: f31b46d95570338428784cab169f1ec0, type: 3}
+  impactSoundVolume: 1
+  applyDOT: 1
+  dotDamagePerTick: 5
+  dotTickInterval: 0.5
+  dotDuration: 3
+  dotRadius: 3
+  dotZonePrefab: {fileID: 3598478439607017487, guid: 02195da1e35762c459580cfe5e785594, type: 3}

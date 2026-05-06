@@ -21,6 +21,10 @@ public class ProjectileData : ScriptableObject
     [Header("Visual Effects")]
     [SerializeField] private GameObject impactEffect;
     [SerializeField] private GameObject trailEffect;
+    
+    [Header("Audio")]
+    public AudioClip impactSound;
+    [Range(0f, 1f)] public float impactSoundVolume = 1f;
 
     [Header("DOT Settings")]
     [SerializeField] private bool applyDOT = false;

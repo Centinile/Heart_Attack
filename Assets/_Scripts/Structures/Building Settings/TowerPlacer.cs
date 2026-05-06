@@ -1,7 +1,9 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+using TMPro;
 
 public class TowerPlacer : MonoBehaviour
 {
@@ -10,7 +12,7 @@ public class TowerPlacer : MonoBehaviour
     [Header("Tilemaps")]
     public Tilemap placementMap;
     public Tilemap nonPlaceableTiles;
-    public Tilemap heartSpawnMap; 
+    public Tilemap heartSpawnMap;
 
     [Header("Heart Setup")]
     public BuildingData heartData;
@@ -18,9 +20,20 @@ public class TowerPlacer : MonoBehaviour
     [Header("Prefabs")]
     public GameObject ghostPrefab;
 
+    [Header("Placement Feedback")]
+    [SerializeField] private TMP_Text placementFeedbackText;
+    [SerializeField] private float feedbackDuration = 2f;
+
     private HashSet<Vector3Int> occupiedTiles = new HashSet<Vector3Int>();
     private GameObject ghostInstance;
     private BuildingSelector _buildingSelector;
+    private Coroutine _feedbackCoroutine;
+
+    public static void ShowFeedbackStatic(string message)
+    {
+        if (Instance != null)
+            Instance.ShowFeedback(message);
+    }
 
     void Awake() => Instance = this;
 
@@ -28,11 +41,13 @@ public class TowerPlacer : MonoBehaviour
     {
         _buildingSelector = Object.FindFirstObjectByType<BuildingSelector>();
         SpawnHeartAtTargetLocation();
+
+        if (placementFeedbackText != null)
+            placementFeedbackText.gameObject.SetActive(false);
     }
 
     void Update()
     {
-        // 1. Right Click to Cancel Placement
         if (Input.GetMouseButtonDown(1) && TowerSelectionUI.SelectedStructureData != null)
         {
             CancelPlacement();
@@ -48,6 +63,7 @@ public class TowerPlacer : MonoBehaviour
         TowerSelectionUI.SelectedStructureData = null;
         if (ghostInstance != null) Destroy(ghostInstance);
         _buildingSelector?.Deselect();
+        HideFeedback();
     }
 
     private void HandlePlacementHover()
@@ -84,13 +100,27 @@ public class TowerPlacer : MonoBehaviour
         Vector3Int cellPos = placementMap.WorldToCell(mouseWorldPos);
 
         if (!IsTileValid(cellPos)) return;
-        if (!TierUnlockManager.Instance.IsTierUnlocked(data.Tier)) return;
+
+        if (!TierUnlockManager.Instance.IsTierUnlocked(data.Tier))
+        {
+            ShowFeedback($"Requires a Lab that unlocks {data.Tier} to be placed first.");
+            return;
+        }
 
         if (data is ResearchData labData)
         {
             BuildingTier labTier = labData.GetUnlockedTier();
             if (labTier != BuildingTier.Tier1 && TierUnlockManager.Instance.IsLabTierOccupied(labTier))
+            {
+                ShowFeedback($"A Lab that unlocks {labTier} is already placed.");
                 return;
+            }
+        }
+
+        if (!GameManager.Instance.CanAfford(data.NutrientCost))
+        {
+            ShowFeedback($"Not enough Nutrients. Need {data.NutrientCost:0}.");
+            return;
         }
 
         if (!GameManager.Instance.SpendNutrients(data.NutrientCost)) return;
@@ -101,22 +131,54 @@ public class TowerPlacer : MonoBehaviour
         building.Initialize(data);
         occupiedTiles.Add(cellPos);
 
-        // Select the placed building — this triggers the slide-in via BuildingSelector
-        BuildingSelector selector = Object.FindFirstObjectByType<BuildingSelector>();
-        if (selector != null) selector.SelectBuildingExternal(building);
+        HideFeedback();
+        _buildingSelector?.SelectBuildingExternal(building);
     }
+
+    // ── Feedback ───────────────────────────────────────────────────────
+
+    public void ShowFeedback(string message)
+    {
+        if (placementFeedbackText == null) return;
+
+        placementFeedbackText.text = message;
+        placementFeedbackText.gameObject.SetActive(true);
+
+        if (_feedbackCoroutine != null) StopCoroutine(_feedbackCoroutine);
+        _feedbackCoroutine = StartCoroutine(FeedbackTimer());
+    }
+
+    private void HideFeedback()
+    {
+        if (_feedbackCoroutine != null)
+        {
+            StopCoroutine(_feedbackCoroutine);
+            _feedbackCoroutine = null;
+        }
+        if (placementFeedbackText != null)
+            placementFeedbackText.gameObject.SetActive(false);
+    }
+
+    private IEnumerator FeedbackTimer()
+    {
+        yield return new WaitForSeconds(feedbackDuration);
+        if (placementFeedbackText != null)
+            placementFeedbackText.gameObject.SetActive(false);
+        _feedbackCoroutine = null;
+    }
+
+    // ── Tile helpers ───────────────────────────────────────────────────
 
     private bool IsTileValid(Vector3Int cellPos)
     {
-        return placementMap.HasTile(cellPos) && 
-               !occupiedTiles.Contains(cellPos) && 
+        return placementMap.HasTile(cellPos) &&
+               !occupiedTiles.Contains(cellPos) &&
                (nonPlaceableTiles == null || !nonPlaceableTiles.HasTile(cellPos));
     }
 
     public bool IsPlacementValid(Vector3Int cellPos, BuildingData data)
     {
         if (!IsTileValid(cellPos)) return false;
-
         if (!TierUnlockManager.Instance.IsTierUnlocked(data.Tier)) return false;
 
         if (data is ResearchData labData)
@@ -167,7 +229,6 @@ public class TowerPlacer : MonoBehaviour
 
     public void FreeTile(Vector3 worldPosition)
     {
-        // Undo the y-offset before converting — mirrors how cellPos was captured at placement
         Vector3 corrected = new Vector3(
             worldPosition.x,
             worldPosition.y - heartSpawnMap.cellSize.y,

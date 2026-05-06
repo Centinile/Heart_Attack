@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51ee95539e800654b9b75b07a2ff498b, type: 3}
+  m_Name: ArcherLv3Data_
+  m_EditorClassIdentifier: 
+  structureName: ArcherTower
+  maxHP: 100
+  tier: 1
+  description: Tesla of Death
+  nutrientCost: 20
+  hydrationCost: 40
+  nextLevelData: {fileID: 0}
+  upgradeCost: 400
+  icon: {fileID: 5136992363456170433, guid: 903642b33ece7a34cb0bfd4070beed78, type: 3}
+  prefab: {fileID: 4611168650507600015, guid: ab7818fd53408444c99bd8a765f919cf, type: 3}
+  damage: 23
+  attackCooldown: 0.5
+  range: 7
+  attackType: 1
+  targetFilter: 0
+  useFourDirectionalFacing: 0
+  attackSound: {fileID: 0}
+  beamLoopSound: {fileID: 0}
+  attackSoundVolume: 1
+  beamLoopVolume: 0.8
+  projectileData: {fileID: 11400000, guid: d500cbf7a8a33a04e920b02edf4c609b, type: 2}
+  projectileSpeed: 10
+  useLineRendererAttack: 1
+  flickerBeamPrefab: {fileID: 2208617239417924706, guid: 1a342da5987e40f4c9841e5af3fa361e, type: 3}
+  maxTargets: 8
+  splashRadius: 2
+  useBurst: 0
+  burstCount: 3
+  burstInterval: 0.1
+  continuousBaseDamage: 5
+  continuousMaxDamage: 50
+  continuousRampTime: 4
+  continuousTickRate: 0.1
+  applyDOT: 0
+  dotDamagePerTick: 5
+  dotTickInterval: 0.5
+  dotDuration: 3
+  dotRadius: 1.5
+  dotZonePrefab: {fileID: 0}
