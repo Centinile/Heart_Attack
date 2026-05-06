@@ -14,11 +14,11 @@ GameObject:
   - component: {fileID: 2503278441928525463}
   - component: {fileID: 5218100405874627616}
   - component: {fileID: -6974122924984088197}
-  - component: {fileID: 3050348443475716267}
-  - component: {fileID: -5027914741527649430}
-  - component: {fileID: 2966505858959382660}
+  - component: {fileID: 3825239013920936961}
+  - component: {fileID: -2171735484894772550}
+  - component: {fileID: -5131856701518098276}
   m_Layer: 6
-  m_Name: Salty
+  m_Name: Goblin
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,7 +34,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.93341, y: 2.0275, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -84,7 +84,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: f2728ae8e64279c448dd84d9d4d74a2a, type: 3}
-  m_Color: {r: 1, g: 0, b: 0.8427868, a: 1}
+  m_Color: {r: 0.078704715, g: 1, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -106,12 +106,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8a9277573f3c744383a2e57ed7f0b96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: e436f6c9ae0d41c46b96a39e7576b8e8, type: 2}
-  enemyAnimations: {fileID: 2966505858959382660}
+  data: {fileID: 11400000, guid: 1a59fe455152f0f43b40d9097edcd23b, type: 2}
+  enemyAnimations: {fileID: -5131856701518098276}
   currentHP: 0
   targetBuilding: {fileID: 0}
   currentMoveTarget: {fileID: 0}
-  healthBar: {fileID: 0}
+  healthBar: {fileID: 3825239013920936961}
 --- !u!195 &2503278441928525463
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -197,7 +197,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &3050348443475716267
+--- !u!114 &3825239013920936961
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -209,7 +209,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b97208319265344c89c0d2a5b89447e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!95 &-5027914741527649430
+--- !u!95 &-2171735484894772550
 Animator:
   serializedVersion: 7
   m_ObjectHideFlags: 0
@@ -231,7 +231,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2966505858959382660
+--- !u!114 &-5131856701518098276
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
