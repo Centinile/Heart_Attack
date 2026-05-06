@@ -1,49 +1,46 @@
 fileFormatVersion: 2
-guid: ae41e2ee58c97bd42b3ddc5218b532f7
+guid: 29527c488b1f3f34b97951d1b6f1558d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1610871605626233535
-    second: archertower-l1-Sheet_0
+      213: 4230166539057105616
+    second: archertower-l2_0
   - first:
-      213: 4447660622016959577
-    second: archertower-l1-Sheet_1
+      213: -7381344462124460434
+    second: archertower-l2_1
   - first:
-      213: -5353037889025342600
-    second: archertower-l1-Sheet_2
+      213: -8103751835266612972
+    second: archertower-l2_2
   - first:
-      213: -8256948815138431969
-    second: archertower-l1-Sheet_3
+      213: -7480774398359701099
+    second: archertower-l2_3
   - first:
-      213: -5523145956825133569
-    second: archertower-l1-Sheet_4
+      213: 4352091256435728818
+    second: archertower-l2_4
   - first:
-      213: -8147717818615887023
-    second: archertower-l1-Sheet_5
+      213: -4327510071294823549
+    second: archertower-l2_5
   - first:
-      213: -3998081758980909020
-    second: archertower-l1-Sheet_6
+      213: 1493387746020078546
+    second: archertower-l2_6
   - first:
-      213: 3990594364180562307
-    second: archertower-l1-Sheet_7
+      213: 5656238113641110169
+    second: archertower-l2_7
   - first:
-      213: 656281444854662804
-    second: archertower-l1-Sheet_8
+      213: -1737507660887758944
+    second: archertower-l2_8
   - first:
-      213: -8711389267633616122
-    second: archertower-l1-Sheet_9
+      213: 8535822439141117157
+    second: archertower-l2_9
   - first:
-      213: -5286794705953958913
-    second: archertower-l1-Sheet_10
+      213: 7059232799517348387
+    second: archertower-l2_10
   - first:
-      213: -8803835276631444187
-    second: archertower-l1-Sheet_11
+      213: -7606465166806573032
+    second: archertower-l2_11
   - first:
-      213: -616072646794854159
-    second: archertower-l1-Sheet_12
-  - first:
-      213: -8095322872489549139
-    second: archertower-l1-Sheet_13
+      213: 4605022593781235660
+    second: archertower-l2_12
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -139,309 +136,287 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: archertower-l1-Sheet_0
+      name: archertower-l2_0
       rect:
         serializedVersion: 2
-        x: 22
+        x: 0
         y: 0
-        width: 21
-        height: 53
+        width: 64
+        height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 14d92e73fc805a9e0800000000000000
-      internalID: -1610871605626233535
+      spriteID: 0da0e3d0e0294ba30800000000000000
+      internalID: 4230166539057105616
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: archertower-l1-Sheet_1
+      name: archertower-l2_1
       rect:
         serializedVersion: 2
-        x: 86
+        x: 64
         y: 0
-        width: 21
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.78}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 95450d065c349bd30800000000000000
-      internalID: 4447660622016959577
+      spriteID: e66564ad152309990800000000000000
+      internalID: -7381344462124460434
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: archertower-l1-Sheet_2
+      name: archertower-l2_2
       rect:
         serializedVersion: 2
-        x: 150
+        x: 128
         y: 0
-        width: 21
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.78}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 873007bc66036b5b0800000000000000
-      internalID: -5353037889025342600
+      spriteID: 411830f24a0b98f80800000000000000
+      internalID: -8103751835266612972
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: archertower-l1-Sheet_3
+      name: archertower-l2_3
       rect:
         serializedVersion: 2
-        x: 214
+        x: 192
         y: 0
-        width: 21
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.78}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f1c5711cccc696d80800000000000000
-      internalID: -8256948815138431969
+      spriteID: 599feecc153fe2890800000000000000
+      internalID: -7480774398359701099
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: archertower-l1-Sheet_4
+      name: archertower-l2_4
       rect:
         serializedVersion: 2
-        x: 278
+        x: 256
         y: 0
-        width: 21
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.78}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ffd8dc0e308d953b0800000000000000
-      internalID: -5523145956825133569
+      spriteID: 2b16fe970fbb56c30800000000000000
+      internalID: 4352091256435728818
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: archertower-l1-Sheet_5
+      name: archertower-l2_5
       rect:
         serializedVersion: 2
-        x: 342
+        x: 320
         y: 0
-        width: 21
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.78}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 15b874bffcd7dee80800000000000000
-      internalID: -8147717818615887023
+      spriteID: 383fb8ea48891f3c0800000000000000
+      internalID: -4327510071294823549
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: archertower-l1-Sheet_6
+      name: archertower-l2_6
       rect:
         serializedVersion: 2
-        x: 406
+        x: 384
         y: 0
-        width: 21
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.78}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 42859fca2d5f388c0800000000000000
-      internalID: -3998081758980909020
+      spriteID: 2d3b2712e3499b410800000000000000
+      internalID: 1493387746020078546
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: archertower-l1-Sheet_7
+      name: archertower-l2_7
       rect:
         serializedVersion: 2
-        x: 470
+        x: 448
         y: 0
-        width: 21
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.78}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 38188af5e60716730800000000000000
-      internalID: 3990594364180562307
+      spriteID: 99a9a98a89efe7e40800000000000000
+      internalID: 5656238113641110169
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: archertower-l1-Sheet_8
+      name: archertower-l2_8
       rect:
         serializedVersion: 2
-        x: 534
+        x: 512
         y: 0
-        width: 21
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.78}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4960e393f749b1900800000000000000
-      internalID: 656281444854662804
+      spriteID: 0a7e346fcf123e7e0800000000000000
+      internalID: -1737507660887758944
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: archertower-l1-Sheet_9
+      name: archertower-l2_9
       rect:
         serializedVersion: 2
-        x: 598
+        x: 576
         y: 0
-        width: 21
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.78}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 60b4c82bd9dea1780800000000000000
-      internalID: -8711389267633616122
+      spriteID: 5ec80de9845557670800000000000000
+      internalID: 8535822439141117157
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: archertower-l1-Sheet_10
+      name: archertower-l2_10
       rect:
         serializedVersion: 2
-        x: 662
+        x: 640
         y: 0
-        width: 21
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.78}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ff3d23fb93881a6b0800000000000000
-      internalID: -5286794705953958913
+      spriteID: 322940a64de67f160800000000000000
+      internalID: 7059232799517348387
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: archertower-l1-Sheet_11
+      name: archertower-l2_11
       rect:
         serializedVersion: 2
-        x: 726
+        x: 704
         y: 0
-        width: 21
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.78}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 525745be57e72d580800000000000000
-      internalID: -8803835276631444187
+      spriteID: 810ac184b38607690800000000000000
+      internalID: -7606465166806573032
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: archertower-l1-Sheet_12
+      name: archertower-l2_12
       rect:
         serializedVersion: 2
-        x: 790
+        x: 768
         y: 0
-        width: 21
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        width: 64
+        height: 64
+      alignment: 9
+      pivot: {x: 0.5, y: 0.78}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1f045fb11354377f0800000000000000
-      internalID: -616072646794854159
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: archertower-l1-Sheet_13
-      rect:
-        serializedVersion: 2
-        x: 854
-        y: 0
-        width: 21
-        height: 53
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: da26a230db2a7af80800000000000000
-      internalID: -8095322872489549139
+      spriteID: ccf7afc86a358ef30800000000000000
+      internalID: 4605022593781235660
       vertices: []
       indices: 
       edges: []
@@ -450,7 +425,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: f89ce5c76d348a248b6d3467b50639ab
     internalID: 0
     vertices: []
     indices: 
@@ -458,22 +433,23 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      archertower-l1-Sheet_0: -1610871605626233535
-      archertower-l1-Sheet_1: 4447660622016959577
-      archertower-l1-Sheet_10: -5286794705953958913
-      archertower-l1-Sheet_11: -8803835276631444187
-      archertower-l1-Sheet_12: -616072646794854159
-      archertower-l1-Sheet_13: -8095322872489549139
-      archertower-l1-Sheet_2: -5353037889025342600
-      archertower-l1-Sheet_3: -8256948815138431969
-      archertower-l1-Sheet_4: -5523145956825133569
-      archertower-l1-Sheet_5: -8147717818615887023
-      archertower-l1-Sheet_6: -3998081758980909020
-      archertower-l1-Sheet_7: 3990594364180562307
-      archertower-l1-Sheet_8: 656281444854662804
-      archertower-l1-Sheet_9: -8711389267633616122
+      archertower-l2_0: 4230166539057105616
+      archertower-l2_1: -7381344462124460434
+      archertower-l2_10: 7059232799517348387
+      archertower-l2_11: -7606465166806573032
+      archertower-l2_12: 4605022593781235660
+      archertower-l2_2: -8103751835266612972
+      archertower-l2_3: -7480774398359701099
+      archertower-l2_4: 4352091256435728818
+      archertower-l2_5: -4327510071294823549
+      archertower-l2_6: 1493387746020078546
+      archertower-l2_7: 5656238113641110169
+      archertower-l2_8: -1737507660887758944
+      archertower-l2_9: 8535822439141117157
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

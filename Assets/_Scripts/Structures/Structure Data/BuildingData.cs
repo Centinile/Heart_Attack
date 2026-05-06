@@ -13,6 +13,11 @@ public abstract class BuildingData : ScriptableObject
     [SerializeField] private float nutrientCost = 100f;
     [SerializeField] private float hydrationCost = 5f;
 
+    [Header("Effects & Audio")]
+    public GameObject HealVFXPrefab;
+    public AudioClip PlaceSFX;
+    public AudioClip DestroySFX;
+
     [Header("Upgrade")]
     [SerializeField] private BuildingData nextLevelData;
     [SerializeField] private float upgradeCost = 150f;
