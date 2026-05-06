@@ -15,7 +15,7 @@ MonoBehaviour:
   structureName: ArcherTower
   maxHP: 100
   tier: 1
-  description: Structure Description
+  description: Single Target Tower
   nutrientCost: 100
   hydrationCost: 40
   nextLevelData: {fileID: 11400000, guid: 02e5146ecb708b84e9dc77c074cdc081, type: 2}
@@ -28,9 +28,14 @@ MonoBehaviour:
   attackType: 0
   targetFilter: 0
   useFourDirectionalFacing: 0
+  attackSound: {fileID: 8300000, guid: 42066375c82c64046a608ceed34748c9, type: 3}
+  beamLoopSound: {fileID: 8300000, guid: 42066375c82c64046a608ceed34748c9, type: 3}
+  attackSoundVolume: 1
+  beamLoopVolume: 0.8
   projectileData: {fileID: 0}
   projectileSpeed: 10
   useLineRendererAttack: 1
+  flickerBeamPrefab: {fileID: 2208617239417924706, guid: 1a342da5987e40f4c9841e5af3fa361e, type: 3}
   maxTargets: 1
   splashRadius: 2
   useBurst: 0

@@ -5,25 +5,36 @@ public class DOTZone : MonoBehaviour
 {
     private float _damagePerTick;
     private float _tickInterval;
-    private float _duration;
     private float _radius;
+
+    private ParticleSystem _particleEffect;
 
     public void Initialize(float damagePerTick, float tickInterval, float duration, float radius)
     {
         _damagePerTick = damagePerTick;
-        _tickInterval = tickInterval;
-        _duration = duration;
-        _radius = radius;
+        _tickInterval  = tickInterval;
+        _radius        = radius;
 
-        StartCoroutine(TickRoutine());
+        _particleEffect = GetComponentInChildren<ParticleSystem>();
+        if (_particleEffect != null)
+        {
+            _particleEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            var main = _particleEffect.main;
+            main.loop = true;
+            _particleEffect.Play();
+        }
+
+        StartCoroutine(TickRoutine(duration));
         Destroy(gameObject, duration);
     }
 
-    private IEnumerator TickRoutine()
+    private IEnumerator TickRoutine(float duration)
     {
-        while (true)
+        float elapsed = 0f;
+        while (elapsed < duration)
         {
             yield return new WaitForSeconds(_tickInterval);
+            elapsed += _tickInterval;
             ApplyDamage();
         }
     }

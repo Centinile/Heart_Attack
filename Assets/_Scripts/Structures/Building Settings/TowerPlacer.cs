@@ -29,6 +29,12 @@ public class TowerPlacer : MonoBehaviour
     private BuildingSelector _buildingSelector;
     private Coroutine _feedbackCoroutine;
 
+    public static void ShowFeedbackStatic(string message)
+    {
+        if (Instance != null)
+            Instance.ShowFeedback(message);
+    }
+
     void Awake() => Instance = this;
 
     void Start()
@@ -131,7 +137,7 @@ public class TowerPlacer : MonoBehaviour
 
     // ── Feedback ───────────────────────────────────────────────────────
 
-    private void ShowFeedback(string message)
+    public void ShowFeedback(string message)
     {
         if (placementFeedbackText == null) return;
 

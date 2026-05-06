@@ -106,6 +106,12 @@ public class Building : MonoBehaviour
 
         float cost = RepairCost;
         Debug.Log($"[Repair] {gameObject.name} | HP: {CurrentHP:0}/{MaxHP:0} ({HPPercent:P0} full) | Missing HP: {MaxHP - CurrentHP:0} | Repair Cost: {cost} Nutrients");
+
+        if (!GameManager.Instance.CanAfford(cost))
+        {
+            TowerPlacer.ShowFeedbackStatic($"Not enough Nutrients. Need {cost:0} to repair.");
+            return;
+        }
         
         if (!GameManager.Instance.SpendNutrients(cost)) 
         {
@@ -202,6 +208,24 @@ public class Building : MonoBehaviour
 
 public virtual void Upgrade()
 {
+    if (Data.NextLevelData == null)
+    {
+        TowerPlacer.ShowFeedbackStatic("This building is already at max level.");
+        return;
+    }
+
+    if (!TierUnlockManager.Instance.IsTierUnlocked(Data.NextLevelData.Tier))
+    {
+        TowerPlacer.ShowFeedbackStatic($"Requires a Lab that unlocks {Data.NextLevelData.Tier} to upgrade.");
+        return;
+    }
+
+    if (!GameManager.Instance.CanAfford(Data.UpgradeCost))
+    {
+        TowerPlacer.ShowFeedbackStatic($"Not enough Nutrients. Need {Data.UpgradeCost:0} to upgrade.");
+        return;
+    }
+
     if (Data.NextLevelData == null || !GameManager.Instance.SpendNutrients(Data.UpgradeCost))
         return;
 

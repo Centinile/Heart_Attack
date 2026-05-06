@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 283b3799aa6c3234ba9b2c130d13851c, type: 3}
   m_Name: Barbarian
   m_EditorClassIdentifier: 
-  maxHP: 50
-  attackDamage: 10
+  maxHP: 5000
+  attackDamage: 0
   attackRadius: 1.5
-  moveSpeed: 2
+  moveSpeed: 0.1
   isRanged: 0
+  projectileData: {fileID: 0}
   attackCooldown: 1
   targetingPriority: 1
   detectionRadius: 5

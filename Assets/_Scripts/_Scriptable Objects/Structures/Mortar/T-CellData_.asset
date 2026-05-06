@@ -10,29 +10,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51ee95539e800654b9b75b07a2ff498b, type: 3}
-  m_Name: ArcherLv3Data_
+  m_Name: T-CellData_
   m_EditorClassIdentifier: 
-  structureName: ArcherTower
+  structureName: T-Cell Launcher
   maxHP: 100
   tier: 1
   description: Structure Description
-  nutrientCost: 20
-  hydrationCost: 40
-  nextLevelData: {fileID: 11400000}
-  upgradeCost: 400
-  icon: {fileID: 5136992363456170433, guid: 903642b33ece7a34cb0bfd4070beed78, type: 3}
-  prefab: {fileID: 4611168650507600015, guid: da9667e0895eed04986935c4f845e169, type: 3}
-  damage: 23
-  attackCooldown: 0.5
-  range: 7
-  attackType: 1
-  targetFilter: 0
+  nutrientCost: 50
+  hydrationCost: 5
+  nextLevelData: {fileID: 0}
+  upgradeCost: 150
+  icon: {fileID: 204987173645444385, guid: d7a0acedb1db35345af197289f4da90c, type: 3}
+  prefab: {fileID: 4611168650507600015, guid: becceb0a1e98d274cbfe1d8184e9506f, type: 3}
+  damage: 1
+  attackCooldown: 1
+  range: 9
+  attackType: 2
+  targetFilter: 1
   useFourDirectionalFacing: 0
-  projectileData: {fileID: 11400000, guid: d500cbf7a8a33a04e920b02edf4c609b, type: 2}
+  projectileData: {fileID: 11400000, guid: e6b8978179209e546b8c0a2faec8405c, type: 2}
   projectileSpeed: 10
   useLineRendererAttack: 0
-  maxTargets: 8
-  splashRadius: 2
+  maxTargets: 3
+  splashRadius: 5
   useBurst: 0
   burstCount: 3
   burstInterval: 0.1
@@ -40,9 +40,9 @@ MonoBehaviour:
   continuousMaxDamage: 50
   continuousRampTime: 4
   continuousTickRate: 0.1
-  applyDOT: 0
+  applyDOT: 1
   dotDamagePerTick: 5
   dotTickInterval: 0.5
-  dotDuration: 3
-  dotRadius: 1.5
-  dotZonePrefab: {fileID: 0}
+  dotDuration: 4
+  dotRadius: 0.31
+  dotZonePrefab: {fileID: 3598478439607017487, guid: 02195da1e35762c459580cfe5e785594, type: 3}
