@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   structureName: Water Pump
   maxHP: 100
+  tier: 1
+  description: Structure Description
   nutrientCost: 0
   hydrationCost: 0
   nextLevelData: {fileID: 0}
   upgradeCost: 150
-  icon: {fileID: 21300000, guid: 0528d4dc9102ed149af7e44771f55305, type: 3}
+  icon: {fileID: 5827085863969058485, guid: 6682f6cd86b0d8f4a8fe945c05d75d1e, type: 3}
   prefab: {fileID: 4611168650507600015, guid: 20727da3cbb6d6646b9147b0c833547d, type: 3}
   type: 1
   nutrientsPerWave: 60
