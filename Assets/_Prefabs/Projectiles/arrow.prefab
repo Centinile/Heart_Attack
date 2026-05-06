@@ -104,6 +104,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: d500cbf7a8a33a04e920b02edf4c609b, type: 2}
   projectileVisual: {fileID: 6853647980580933249}
+  ProjectileHit: {fileID: 8300000, guid: 38e09c87dc4a9934587a1e571b8aa3aa, type: 3}
 --- !u!58 &-3390621675668613890
 CircleCollider2D:
   m_ObjectHideFlags: 0
