@@ -1,16 +1,16 @@
 fileFormatVersion: 2
-guid: 5372365288bb9d644931149f1ca31b32
+guid: d76d5b1f75b3d43408383660584911bf
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2889936551284733229
-    second: builderhut-Sheet_0
+      213: 8048772291348302879
+    second: builderhut-Sheet 1_0
   - first:
-      213: -8880913664853787926
-    second: builderhut-Sheet_1
+      213: 133034252903423027
+    second: builderhut-Sheet 1_1
   - first:
-      213: -1393901754148368072
-    second: builderhut-Sheet_2
+      213: 3553609290742520674
+    second: builderhut-Sheet 1_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -106,7 +106,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: builderhut-Sheet_0
+      name: builderhut-Sheet 1_0
       rect:
         serializedVersion: 2
         x: 0
@@ -121,14 +121,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d257eba5bfd1b1820800000000000000
-      internalID: 2889936551284733229
+      spriteID: f1c82d731cbf2bf60800000000000000
+      internalID: 8048772291348302879
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: builderhut-Sheet_1
+      name: builderhut-Sheet 1_1
       rect:
         serializedVersion: 2
         x: 64
@@ -143,14 +143,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: aea3a7d2318a0c480800000000000000
-      internalID: -8880913664853787926
+      spriteID: 33c944bb2f1a8d100800000000000000
+      internalID: 133034252903423027
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: builderhut-Sheet_2
+      name: builderhut-Sheet 1_2
       rect:
         serializedVersion: 2
         x: 128
@@ -165,8 +165,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 83151346dbdd7ace0800000000000000
-      internalID: -1393901754148368072
+      spriteID: 26b5c3572d4f05130800000000000000
+      internalID: 3553609290742520674
       vertices: []
       indices: 
       edges: []
@@ -175,7 +175,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: e53cbdefe1d45174db256346e589272b
+    spriteID: f004e5af2360c5242af78d0ed3a83365
     internalID: 0
     vertices: []
     indices: 
@@ -185,11 +185,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":3.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      builderhut-Sheet_0: 2889936551284733229
-      builderhut-Sheet_1: -8880913664853787926
-      builderhut-Sheet_2: -1393901754148368072
+      builderhut-Sheet 1_0: 8048772291348302879
+      builderhut-Sheet 1_1: 133034252903423027
+      builderhut-Sheet 1_2: 3553609290742520674
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

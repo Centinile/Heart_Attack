@@ -15,25 +15,32 @@ MonoBehaviour:
   structureName: BuilderHut
   maxHP: 100
   tier: 1
+  description: Structure Description
   nutrientCost: 50
   hydrationCost: 5
   nextLevelData: {fileID: 0}
   upgradeCost: 150
-  icon: {fileID: -1393901754148368072, guid: 5372365288bb9d644931149f1ca31b32, type: 3}
+  icon: {fileID: 8048772291348302879, guid: d76d5b1f75b3d43408383660584911bf, type: 3}
   prefab: {fileID: 4611168650507600015, guid: 8e3095beea78c4248b78dc9c5f39a890, type: 3}
   damage: 20
   attackCooldown: 2
   range: 7
   attackType: 5
+  targetFilter: 0
   useFourDirectionalFacing: 0
-  spriteUp: {fileID: 0}
-  spriteDown: {fileID: 0}
-  spriteLeft: {fileID: 0}
-  spriteRight: {fileID: 0}
+  attackSound: {fileID: 0}
+  beamLoopSound: {fileID: 0}
+  attackSoundVolume: 1
+  beamLoopVolume: 0.8
   projectileData: {fileID: 0}
   projectileSpeed: 10
+  useLineRendererAttack: 0
+  flickerBeamPrefab: {fileID: 0}
   maxTargets: 3
   splashRadius: 2
+  useBurst: 0
+  burstCount: 3
+  burstInterval: 0.1
   continuousBaseDamage: 5
   continuousMaxDamage: 50
   continuousRampTime: 4
