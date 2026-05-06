@@ -23374,7 +23374,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0000038146973, y: 5}
+  m_AnchoredPosition: {x: 0.0000038146973, y: 10}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &112623508
@@ -23397,7 +23397,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 5520866459139679725, guid: f56aee4e617ce8d48a2659e77a722ff4, type: 3}
+  m_Sprite: {fileID: 6196678965904796728, guid: cc55682bb38ed394888ee2cb5ee87ee5, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -23450,6 +23450,7 @@ Transform:
   - {fileID: 595006396}
   - {fileID: 611159194}
   - {fileID: 1555516332}
+  - {fileID: 1087806125}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &119130827
@@ -24099,7 +24100,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &159835047
 RectTransform:
   m_ObjectHideFlags: 0
@@ -71845,6 +71846,126 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1080462611}
   m_CullTransparentMesh: 1
+--- !u!1 &1087806124
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1087806125}
+  - component: {fileID: 1087806127}
+  - component: {fileID: 1087806126}
+  m_Layer: 0
+  m_Name: Achievement
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1087806125
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1087806124}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 113621359}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1087806126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1087806124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c4affd95ab07934fa2eff0957c4ad9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  popupPanel: {fileID: 159835046}
+  achievementNameText: {fileID: 402278991}
+  achievementDescriptionText: {fileID: 137174539}
+  displayDuration: 3
+  slideDuration: 0.4
+  slideCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &1087806127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1087806124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b42878ca7d982ff458f28cc5bd18aaa2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  achievements:
+  - ID: 0
+    Name: First Steps
+    Description: Complete the tutorial.
+  - ID: 1
+    Name: Steady Pulse
+    Description: Complete a game on Easy difficulty.
+  - ID: 2
+    Name: Irregular Rhythm
+    Description: Complete a game on Medium difficulty.
+  - ID: 3
+    Name: Flatline Survivor
+    Description: Complete a game on Hard difficulty.
+  - ID: 4
+    Name: Arrhythmia
+    Description: Win a game with Random Waves active.
+  - ID: 5
+    Name: Atherosclerosis
+    Description: Win a game with Stat Ramping active.
+  - ID: 6
+    Name: Cardiomyopathy
+    Description: Win a game with No Breaks active.
+  - ID: 7
+    Name: Lung Failure
+    Description: Win a game with Fog of War active.
+  - ID: 8
+    Name: GERD
+    Description: Win a game with Acid Rain active.
+  - ID: 9
+    Name: Into the Abyss
+    Description: Reach wave 80 in Freeplay mode.
+  - ID: 10
+    Name: Total Organ Failure
+    Description: Win on Hard with all modifiers active.
 --- !u!1 &1124662982
 GameObject:
   m_ObjectHideFlags: 0
@@ -74971,7 +75092,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.0137777785}
   m_AnchorMax: {x: 0.56312495, y: 0.2582778}
-  m_AnchoredPosition: {x: -24.116577, y: -19.045135}
+  m_AnchoredPosition: {x: -24.116577, y: -19.045105}
   m_SizeDelta: {x: -48.233154, y: -49.109455}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1717288257

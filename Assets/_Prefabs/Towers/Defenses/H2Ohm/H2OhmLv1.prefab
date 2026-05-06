@@ -238,12 +238,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -6324466176413781807, guid: f56aee4e617ce8d48a2659e77a722ff4, type: 3}
+  m_Sprite: {fileID: 6196678965904796728, guid: cc55682bb38ed394888ee2cb5ee87ee5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.3, y: 1.66}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -288,7 +288,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 1, y: 1}
-    newSize: {x: 1.3, y: 1.66}
+    newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -491,6 +491,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   impactEffectPrefab: {fileID: 8551101976076770613, guid: 66c2cc0a50a2dba4683df3adc58df47e, type: 3}
   persistentBeam: 1
+  flashDuration: 0.15
 --- !u!114 &-4286214963235624202
 MonoBehaviour:
   m_ObjectHideFlags: 0

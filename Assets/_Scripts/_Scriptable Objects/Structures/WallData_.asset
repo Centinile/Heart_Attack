@@ -20,6 +20,6 @@ MonoBehaviour:
   hydrationCost: 0
   nextLevelData: {fileID: 0}
   upgradeCost: 150
-  icon: {fileID: 3095473448771742493, guid: b43e94bdcdf60394689e80496f5a7482, type: 3}
+  icon: {fileID: 1206767222682907769, guid: ec145644ce7d3a64c882e7b42d375dbf, type: 3}
   prefab: {fileID: 4611168650507600015, guid: 30474534713806b44b7f4900164ec842, type: 3}
   prioritizedByEnemies: 0
