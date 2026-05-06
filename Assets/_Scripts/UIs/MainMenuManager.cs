@@ -1,6 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -21,6 +23,15 @@ public class MainMenuManager : MonoBehaviour
     private CanvasGroup _levelSelectGroup;
     private Coroutine _panelCoroutine;
 
+    [Header("Achievements Panel")]
+    [SerializeField] private GameObject achievementsPanel;
+    [SerializeField] private float achievementsFadeDuration = 0.25f;
+    [SerializeField] private Transform achievementsContent; // parent to spawn achievement rows into
+    [SerializeField] private GameObject achievementRowPrefab; // prefab with two TMP_Text children: Name + Description
+    private CanvasGroup _achievementsGroup;
+    private Coroutine _achievementsPanelCoroutine;
+    private bool _achievementsPopulated = false;
+
     [Header("Scene Transition")]
     [SerializeField] private Image fadeOverlay;         // Full-screen black Image on a top-level Canvas
     [SerializeField] private float sceneFadeDuration = 0.4f;
@@ -33,6 +44,19 @@ public class MainMenuManager : MonoBehaviour
 
     private void Awake()
     {
+        // ── Achievements Panel setup ───────────────────────────────────
+        if (achievementsPanel != null)
+        {
+            _achievementsGroup = achievementsPanel.GetComponent<CanvasGroup>();
+            if (_achievementsGroup == null)
+                _achievementsGroup = achievementsPanel.AddComponent<CanvasGroup>();
+
+            _achievementsGroup.alpha          = 0f;
+            _achievementsGroup.interactable   = false;
+            _achievementsGroup.blocksRaycasts = false;
+            achievementsPanel.SetActive(false);
+        }
+
         // ── Level Select Panel setup ───────────────────────────────────
         if (levelSelectPanel != null)
         {
@@ -92,6 +116,84 @@ public class MainMenuManager : MonoBehaviour
     {
         PlayerPrefs.Save();
         StartCoroutine(FadeAndLoad(gameSceneName));
+    }
+
+    /// <summary>Called by the Achievements button.</summary>
+    public void OpenAchievementsPanel()
+    {
+        if (achievementsPanel == null) return;
+
+        // Populate once
+        if (!_achievementsPopulated)
+        {
+            PopulateAchievements();
+            _achievementsPopulated = true;
+        }
+
+        achievementsPanel.SetActive(true);
+        SetAchievementsPanelVisible(true);
+    }
+
+    /// <summary>Called by the X / close button inside the Achievements Panel.</summary>
+    public void CloseAchievementsPanel()
+    {
+        SetAchievementsPanelVisible(false, () => achievementsPanel.SetActive(false));
+    }
+
+    private void SetAchievementsPanelVisible(bool visible, System.Action onComplete = null)
+    {
+        if (_achievementsPanelCoroutine != null) StopCoroutine(_achievementsPanelCoroutine);
+        _achievementsPanelCoroutine = StartCoroutine(FadeCanvasGroup(_achievementsGroup, visible ? 1f : 0f, achievementsFadeDuration, onComplete));
+        _achievementsGroup.interactable   = visible;
+        _achievementsGroup.blocksRaycasts = visible;
+    }
+
+    private IEnumerator FadeCanvasGroup(CanvasGroup group, float target, float duration, System.Action onComplete = null)
+    {
+        float start   = group.alpha;
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed     += Time.unscaledDeltaTime;
+            group.alpha  = Mathf.Lerp(start, target, elapsed / duration);
+            yield return null;
+        }
+        group.alpha = target;
+        onComplete?.Invoke();
+    }
+
+    private void PopulateAchievements()
+    {
+        if (achievementsContent == null || achievementRowPrefab == null) return;
+
+        // Clear old rows
+        foreach (Transform child in achievementsContent)
+            Destroy(child.gameObject);
+
+        // Get all achievement IDs
+        System.Array ids = System.Enum.GetValues(typeof(AchievementID));
+        foreach (AchievementID id in ids)
+        {
+            bool unlocked = AchievementManager.Instance != null && AchievementManager.Instance.IsUnlocked(id);
+
+            GameObject row = Instantiate(achievementRowPrefab, achievementsContent);
+            TMP_Text[] texts = row.GetComponentsInChildren<TMP_Text>();
+
+            // texts[0] = Name, texts[1] = Description (order matches hierarchy)
+            string displayName = id.ToString();
+            string description = "";
+
+            // Try to get friendly name/description from AchievementManager if available
+            if (texts.Length >= 1)
+                texts[0].text = (unlocked ? "✓ " : "✗ ") + displayName;
+            if (texts.Length >= 2)
+                texts[1].text = unlocked ? description : "???";
+
+            // Grey out locked achievements
+            CanvasGroup rowGroup = row.GetComponent<CanvasGroup>();
+            if (rowGroup == null) rowGroup = row.AddComponent<CanvasGroup>();
+            rowGroup.alpha = unlocked ? 1f : 0.45f;
+        }
     }
 
     /// <summary>Called by the Quit button.</summary>

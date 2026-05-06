@@ -2,13 +2,17 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class TutorialManager : MonoBehaviour
 {
-    [Header("UI Panels")]
-    public GameObject step1Panel;
-    public GameObject step2Panel;
-    public GameObject step3Panel;
+    public static TutorialManager Instance;
+
+    [Header("Tutorial Bubble")]
+    public GameObject tutorialBubble;
+
+    [Tooltip("Parts 0-12 (part 1 through part 13). Drag in order.")]
+    public TMP_Text[] parts;
 
     [Header("Buttons")]
     public Button step1NextButton;
@@ -22,91 +26,214 @@ public class TutorialManager : MonoBehaviour
     [Header("Scene Settings")]
     [SerializeField] private string mainMenuName = "Main Menu";
 
-    private int currentStep = 1;
-    private bool isFinishing = false;
+    [Header("Typewriter Settings")]
+    [SerializeField] private float charDelay = 0.03f;
+
+    // Parts that require a specific action before the player can advance
+    // Index 2  = part 3  → place a defense tower
+    // Index 4  = part 5  → switch to resource tab
+    // Index 5  = part 6  → place a nutrient mine
+    // Index 7  = part 8  → place a water pump
+    // Index 10 = part 11 → press GO button
+    private int _currentPart = 0;
+    private bool _isTyping = false;
+    private bool _skipRequested = false;
+    private bool _tutorialDone = false;
+    private bool _isFinishing = false;
+    private bool _actionCompleted = false;
+    private Coroutine _typeCoroutine;
+
+    // ── Public accessors for TutorialTowerPlacer ──────────────────
+    public int CurrentPart => _currentPart;
+    public bool IsTyping   => _isTyping;
+
+    // ── Lifecycle ──────────────────────────────────────────────────────
+
+    void Awake() => Instance = this;
 
     void Start()
     {
-        // Ensure all buttons start hidden
         if (step1NextButton != null) step1NextButton.gameObject.SetActive(false);
         if (step2NextButton != null) step2NextButton.gameObject.SetActive(false);
-        if (doneButton != null) doneButton.gameObject.SetActive(false);
-        
-        ShowCurrentStep();
+        if (doneButton      != null) doneButton.gameObject.SetActive(false);
+
+        foreach (var p in parts) if (p != null) p.gameObject.SetActive(false);
+
+        if (tutorialBubble != null) tutorialBubble.SetActive(true);
+
+        ShowPart(0);
     }
 
-    public void AdvanceTutorial()
+    void Update()
     {
-        currentStep++;
-        ShowCurrentStep();
-    }
+        if (_tutorialDone) return;
 
-    private void ShowCurrentStep()
-    {
-        if (step1Panel != null) step1Panel.SetActive(currentStep == 1);
-        if (step2Panel != null) step2Panel.SetActive(currentStep == 2);
-        if (step3Panel != null) step3Panel.SetActive(currentStep == 3);
-    }
-
-    public void TowerPlaced()
-    {
-        if (currentStep == 1 && step1NextButton != null)
+        if (Input.GetMouseButtonDown(0))
         {
-            step1NextButton.gameObject.SetActive(true);
-        }
-    }
-
-    public void GoButtonClicked()
-    {
-        if (currentStep == 2)
-        {
-            if (step2NextButton != null) step2NextButton.gameObject.SetActive(true);
-            
-            if (waveManager != null)
+            if (_isTyping)
             {
-                waveManager.StartWave();
+                _skipRequested = true;
+            }
+            else if (!IsActionGatedPart(_currentPart) || _actionCompleted)
+            {
+                AdvanceToNextPart();
             }
         }
     }
 
-    public void WaveFinished()
+    // ── Action gates ───────────────────────────────────────────────────
+
+    private bool IsActionGatedPart(int index)
     {
-        // Immediately jump to the final step UI
-        currentStep = 3;
-        ShowCurrentStep();
-        
-        if (doneButton != null)
+        return index == 2  // part 3: place defense tower
+            || index == 4  // part 5: switch to resource tab
+            || index == 5  // part 6: place nutrient mine
+            || index == 7  // part 8: place water pump
+            || index == 10; // part 11: press GO
+    }
+
+    /// <summary>Called by TutorialTowerPlacer when a defense tower is placed.</summary>
+    public void OnDefenseTowerPlaced()
+    {
+        if (_currentPart == 2) CompleteAction();
+    }
+
+    /// <summary>Called by KeybindManager or tab toggle when resource tab is opened.</summary>
+    public void OnResourceTabOpened()
+    {
+        if (_currentPart == 4) CompleteAction();
+    }
+
+    /// <summary>Called by TutorialTowerPlacer when a mine is placed.</summary>
+    public void OnMinePlaced()
+    {
+        if (_currentPart == 5) CompleteAction();
+    }
+
+    /// <summary>Called by TutorialTowerPlacer when a water pump is placed.</summary>
+    public void OnWaterPumpPlaced()
+    {
+        if (_currentPart == 7) CompleteAction();
+    }
+
+    /// <summary>Called by GO button onClick.</summary>
+    public void OnGoButtonPressed()
+    {
+        if (_currentPart == 10)
         {
-            doneButton.gameObject.SetActive(true);
+            CompleteAction();
+            waveManager?.StartWave();
+        }
+    }
+
+    private void CompleteAction()
+    {
+        _actionCompleted = true;
+        // Auto-advance after a short delay so the player sees what happened
+        StartCoroutine(AutoAdvanceAfterAction());
+    }
+
+    private IEnumerator AutoAdvanceAfterAction()
+    {
+        yield return new WaitForSecondsRealtime(0.5f);
+        if (!_isTyping) AdvanceToNextPart();
+        else StartCoroutine(WaitForTypingThenAdvance());
+    }
+
+    private IEnumerator WaitForTypingThenAdvance()
+    {
+        while (_isTyping) yield return null;
+        AdvanceToNextPart();
+    }
+
+    // ── Core logic ─────────────────────────────────────────────────────
+
+    private void ShowPart(int index)
+    {
+        if (index >= parts.Length) { OnAllPartsShown(); return; }
+
+        _actionCompleted = false;
+
+        foreach (var p in parts) if (p != null) p.gameObject.SetActive(false);
+
+        TMP_Text current = parts[index];
+        if (current == null) { AdvanceToNextPart(); return; }
+
+        current.gameObject.SetActive(true);
+
+        if (_typeCoroutine != null) StopCoroutine(_typeCoroutine);
+        _typeCoroutine = StartCoroutine(TypeText(current));
+    }
+
+    private IEnumerator TypeText(TMP_Text text)
+    {
+        _isTyping      = true;
+        _skipRequested = false;
+
+        string fullText = text.text;
+        text.text = fullText;
+        text.maxVisibleCharacters = 0;
+        text.ForceMeshUpdate();
+
+        int total = text.textInfo.characterCount;
+
+        for (int i = 0; i <= total; i++)
+        {
+            if (_skipRequested)
+            {
+                text.maxVisibleCharacters = total;
+                break;
+            }
+            text.maxVisibleCharacters = i;
+            yield return new WaitForSecondsRealtime(charDelay);
         }
 
-        // Start the automatic 3-second redirect
+        text.maxVisibleCharacters = total;
+        _isTyping      = false;
+        _skipRequested = false;
+    }
+
+    private void AdvanceToNextPart()
+    {
+        _currentPart++;
+        ShowPart(_currentPart);
+    }
+
+    private void OnAllPartsShown()
+    {
+        _tutorialDone = true;
+        if (tutorialBubble != null) tutorialBubble.SetActive(false);
+        if (doneButton != null) doneButton.gameObject.SetActive(true);
+
+        // Unlock tutorial achievement
+        if (AchievementManager.Instance != null)
+            AchievementManager.Instance.Unlock(AchievementID.CompleteTutorial);
+
         StartCoroutine(ForcedRedirectTimer());
     }
 
+    // ── Scene transition ───────────────────────────────────────────────
+
     private IEnumerator ForcedRedirectTimer()
     {
-        // WaitForSecondsRealtime works even if the game engine is paused
         yield return new WaitForSecondsRealtime(3f);
         FinishTutorial();
     }
 
     public void FinishTutorial()
     {
-        if (isFinishing) return;
-        isFinishing = true;
+        if (_isFinishing) return;
+        _isFinishing = true;
 
-        // Try using your SceneController first
         if (sceneController != null)
-        {
-            Debug.Log($"TutorialManager: SceneController found. Loading '{mainMenuName}' via Loading Screen.");
             sceneController.SceneChange(mainMenuName);
-        }
         else
-        {
-            // Emergency fallback if the SceneController slot is empty
-            Debug.LogWarning("TutorialManager: SceneController missing. Loading Scene directly.");
             SceneManager.LoadScene(mainMenuName);
-        }
     }
+
+    // ── Legacy ─────────────────────────────────────────────────────────
+    public void AdvanceTutorial() => AdvanceToNextPart();
+    public void TowerPlaced()     => OnDefenseTowerPlaced();
+    public void GoButtonClicked() => OnGoButtonPressed();
+    public void WaveFinished()    { _currentPart = parts.Length; OnAllPartsShown(); }
 }
