@@ -133,6 +133,12 @@ public class TowerPlacer : MonoBehaviour
 
         HideFeedback();
         _buildingSelector?.SelectBuildingExternal(building);
+
+        building.OnPlaced(); 
+
+        occupiedTiles.Add(cellPos);
+        HideFeedback();
+        _buildingSelector?.SelectBuildingExternal(building);
     }
 
     // ── Feedback ───────────────────────────────────────────────────────
