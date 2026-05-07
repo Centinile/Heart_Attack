@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnEntries:
   - prefab: {fileID: 6344384041587836070, guid: 2c5759beee75cae4788596fa0f8c26b6, type: 3}
-    count: 14
+    count: 69
   - prefab: {fileID: 6344384041587836070, guid: 8a6c650e7d98aea4595327c95710d18e, type: 3}
-    count: 12
+    count: 46
   - prefab: {fileID: 6344384041587836070, guid: 226de1eed3fe2374aa58fcaa630be58e, type: 3}
-    count: 11
+    count: 55
   - prefab: {fileID: 6344384041587836070, guid: 6566b014f46abea4aa0a897846eba3b9, type: 3}
-    count: 12
+    count: 29
   - prefab: {fileID: 6344384041587836070, guid: 1355e66e6e89d944aa32be1356532c4b, type: 3}
-    count: 7
+    count: 28
   WaveWeight: 5
   NutrientReward: 960
