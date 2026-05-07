@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 283b3799aa6c3234ba9b2c130d13851c, type: 3}
-  m_Name: flyer
+  m_Name: Witch
   m_EditorClassIdentifier: 
-  maxHP: 100
+  maxHP: 40
   attackDamage: 15
-  attackRadius: 1.5
-  moveSpeed: 2
-  isRanged: 0
-  attackCooldown: 1
-  targetingPriority: 2
+  attackRadius: 2.5
+  moveSpeed: 1
+  isRanged: 1
+  projectileData: {fileID: 11400000, guid: d500cbf7a8a33a04e920b02edf4c609b, type: 2}
+  attackCooldown: 1.5
+  targetingPriority: 1
   detectionRadius: 5
   stoppingDistance: 1.2
   abilities:
-  - {fileID: 11400000, guid: d7e25f1984e04ee4a8e6db2f339d7b4f, type: 2}
+  - {fileID: 11400000, guid: 8212ba8d6badca2478f273977ab2a694, type: 2}
   enemyIcon: {fileID: 0}

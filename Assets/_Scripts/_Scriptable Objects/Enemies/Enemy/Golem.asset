@@ -10,17 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 283b3799aa6c3234ba9b2c130d13851c, type: 3}
-  m_Name: Barbarian
+  m_Name: Golem
   m_EditorClassIdentifier: 
-  maxHP: 30
-  attackDamage: 3
+  maxHP: 300
+  attackDamage: 30
   attackRadius: 1.2
-  moveSpeed: 1.5
+  moveSpeed: 0.8
   isRanged: 0
   projectileData: {fileID: 0}
-  attackCooldown: 1
-  targetingPriority: 1
+  attackCooldown: 5
+  targetingPriority: 2
   detectionRadius: 5
   stoppingDistance: 0.5
-  abilities: []
+  abilities:
+  - {fileID: 11400000, guid: d7e25f1984e04ee4a8e6db2f339d7b4f, type: 2}
+  - {fileID: 11400000, guid: 56f506ad178d7874c80e6093f8757c7b, type: 2}
   enemyIcon: {fileID: 0}

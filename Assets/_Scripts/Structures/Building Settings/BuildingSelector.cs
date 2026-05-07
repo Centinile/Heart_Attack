@@ -14,6 +14,8 @@ public class BuildingSelector : MonoBehaviour
     [Header("Repair UI")]
     [SerializeField] private GameObject repairButton;
     [SerializeField] private TMP_Text repairCostText;
+    [SerializeField] private TMP_Text repairCostDisplay;
+[SerializeField] private TMP_Text upgradeCostDisplay;
 
     [Header("Stats Display")]
     [SerializeField] private GameObject statsPanel;
@@ -100,7 +102,10 @@ public class BuildingSelector : MonoBehaviour
         }
 
         if (SelectedBuilding != null)
+        {
             RefreshRepairUI();
+            RefreshUpgradeUI();
+        }
     }
 
     void SelectBuilding(Building building)
@@ -257,8 +262,49 @@ public class BuildingSelector : MonoBehaviour
         if (repairButton == null) return;
         bool canRepair = SelectedBuilding != null && SelectedBuilding.CanRepair;
         repairButton.SetActive(canRepair);
+
         if (canRepair && repairCostText != null)
             repairCostText.text = $"Repair ({SelectedBuilding.RepairCost} Nutrients)";
+
+        if (repairCostDisplay != null)
+        {
+            if (SelectedBuilding == null || !SelectedBuilding.IsAlive)
+            {
+                repairCostDisplay.gameObject.SetActive(false);
+            }
+            else if (SelectedBuilding.HPPercent >= 1f)
+            {
+                repairCostDisplay.text = "Full HP";
+                repairCostDisplay.gameObject.SetActive(true);
+            }
+            else
+            {
+                repairCostDisplay.text = $"Repair Cost: {SelectedBuilding.RepairCost} Nutrients";
+                repairCostDisplay.gameObject.SetActive(true);
+            }
+        }
+    }
+
+    private void RefreshUpgradeUI()
+    {
+        if (upgradeCostDisplay == null) return;
+
+        if (SelectedBuilding == null)
+        {
+            upgradeCostDisplay.gameObject.SetActive(false);
+            return;
+        }
+
+        if (SelectedBuilding.Data.NextLevelData == null)
+        {
+            upgradeCostDisplay.text = "Max Level";
+            upgradeCostDisplay.gameObject.SetActive(true);
+        }
+        else
+        {
+            upgradeCostDisplay.text = $"Upgrade Cost: {SelectedBuilding.Data.UpgradeCost} Nutrients";
+            upgradeCostDisplay.gameObject.SetActive(true);
+        }
     }
 
     // ── Public button callbacks ────────────────────────────────────────

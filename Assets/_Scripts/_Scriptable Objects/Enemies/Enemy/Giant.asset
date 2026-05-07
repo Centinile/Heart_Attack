@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 283b3799aa6c3234ba9b2c130d13851c, type: 3}
-  m_Name: Fanatic
+  m_Name: Giant
   m_EditorClassIdentifier: 
-  maxHP: 30
+  maxHP: 100
   attackDamage: 20
-  attackRadius: 1.5
-  moveSpeed: 3.8
+  attackRadius: 1.3
+  moveSpeed: 1.2
   isRanged: 0
-  attackCooldown: 1
-  targetingPriority: 0
+  projectileData: {fileID: 0}
+  attackCooldown: 3
+  targetingPriority: 2
   detectionRadius: 5
-  stoppingDistance: 1.2
+  stoppingDistance: 0.5
   abilities:
-  - {fileID: 11400000, guid: 0f942f017c905464f887f8fa72f80aa8, type: 2}
+  - {fileID: 11400000, guid: c5cdf4bb5997b4a418e3c933edb6f576, type: 2}
   enemyIcon: {fileID: 0}

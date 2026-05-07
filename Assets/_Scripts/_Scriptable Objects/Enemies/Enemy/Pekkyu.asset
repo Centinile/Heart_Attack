@@ -10,16 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 283b3799aa6c3234ba9b2c130d13851c, type: 3}
-  m_Name: Pakyu
+  m_Name: Pekkyu
   m_EditorClassIdentifier: 
   maxHP: 200
   attackDamage: 15
   attackRadius: 1.5
   moveSpeed: 2
   isRanged: 0
+  projectileData: {fileID: 0}
   attackCooldown: 1
   targetingPriority: 2
   detectionRadius: 5
-  stoppingDistance: 1.2
+  stoppingDistance: 0.5
   abilities: []
   enemyIcon: {fileID: 0}

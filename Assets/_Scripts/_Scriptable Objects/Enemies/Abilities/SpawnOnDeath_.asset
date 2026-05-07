@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae9cc3b35c629fd47b9e2fb269d71ea3, type: 3}
+  m_Name: SpawnOnDeath_
+  m_EditorClassIdentifier: 
+  abilityName: Spawn On Death
+  cooldown: 0
+  triggerOnSpawn: 0
+  triggerOnAttack: 0
+  triggerOnDeath: 1
+  preventDeath: 0
+  isPassive: 0
+  usableWhileStunned: 1
+  enemyPrefab: {fileID: 6344384041587836070, guid: 2c5759beee75cae4788596fa0f8c26b6, type: 3}
+  spawnCount: 2
+  spawnRadius: 0.5
