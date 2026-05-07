@@ -10,6 +10,9 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private SceneController sceneController;
     [SerializeField] private string gameSceneName = "GameScene";
 
+    [Header("Difficulty Setting")]
+    [SerializeField] private TMP_Dropdown difficultyDropdown;
+
     [Header("Level Setting Toggles")]
     [SerializeField] private Toggle acidRainToggle;
     [SerializeField] private Toggle fogOfWarToggle;
@@ -36,6 +39,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private Image fadeOverlay;         // Full-screen black Image on a top-level Canvas
     [SerializeField] private float sceneFadeDuration = 0.4f;
 
+    private const string KEY_DIFFICULTY   = "Difficulty";
     private const string KEY_ACID_RAIN   = "EnableAcidRain";
     private const string KEY_FOG_OF_WAR  = "EnableFogOfWar";
     private const string KEY_RANDOM_WAVES = "EnableRandomWaves";
@@ -73,6 +77,18 @@ public class MainMenuManager : MonoBehaviour
 
     private void Start()
     {
+        if (difficultyDropdown != null)
+            {
+                // Load the saved index (default to 0 / Easy)
+                difficultyDropdown.value = PlayerPrefs.GetInt(KEY_DIFFICULTY, 0);
+
+                // Add listener to save whenever the user changes the option
+                difficultyDropdown.onValueChanged.AddListener(index => {
+                    PlayerPrefs.SetInt(KEY_DIFFICULTY, index);
+                    PlayerPrefs.Save(); // Force save to be safe
+                });
+            }
+
         // ── Toggles ────────────────────────────────────────────────────
         acidRainToggle.isOn    = PlayerPrefs.GetInt(KEY_ACID_RAIN,    0) == 1;
         fogOfWarToggle.isOn    = PlayerPrefs.GetInt(KEY_FOG_OF_WAR,   0) == 1;

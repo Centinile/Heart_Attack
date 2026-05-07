@@ -31064,7 +31064,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3076048480381741274, guid: b402cf5fcd7b32c42b8da863021acf94, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7127450174235422206, guid: b402cf5fcd7b32c42b8da863021acf94, type: 3}
       propertyPath: m_Name
@@ -31072,7 +31072,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7127450174235422206, guid: b402cf5fcd7b32c42b8da863021acf94, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -71984,36 +71984,58 @@ MonoBehaviour:
   - ID: 0
     Name: First Steps
     Description: Complete the tutorial.
+    Classification: 0
+    TrophySprite: {fileID: 0}
   - ID: 1
     Name: Steady Pulse
     Description: Complete a game on Easy difficulty.
+    Classification: 0
+    TrophySprite: {fileID: 0}
   - ID: 2
     Name: Irregular Rhythm
     Description: Complete a game on Medium difficulty.
+    Classification: 1
+    TrophySprite: {fileID: 0}
   - ID: 3
     Name: Flatline Survivor
     Description: Complete a game on Hard difficulty.
+    Classification: 2
+    TrophySprite: {fileID: 0}
   - ID: 4
     Name: Arrhythmia
     Description: Win a game with Random Waves active.
+    Classification: 1
+    TrophySprite: {fileID: 0}
   - ID: 5
     Name: Atherosclerosis
     Description: Win a game with Stat Ramping active.
+    Classification: 1
+    TrophySprite: {fileID: 0}
   - ID: 6
     Name: Cardiomyopathy
     Description: Win a game with No Breaks active.
+    Classification: 1
+    TrophySprite: {fileID: 0}
   - ID: 7
     Name: Lung Failure
     Description: Win a game with Fog of War active.
+    Classification: 1
+    TrophySprite: {fileID: 0}
   - ID: 8
     Name: GERD
     Description: Win a game with Acid Rain active.
+    Classification: 1
+    TrophySprite: {fileID: 0}
   - ID: 9
     Name: Into the Abyss
     Description: Reach wave 80 in Freeplay mode.
+    Classification: 2
+    TrophySprite: {fileID: 0}
   - ID: 10
     Name: Total Organ Failure
     Description: Win on Hard with all modifiers active.
+    Classification: 2
+    TrophySprite: {fileID: 0}
 --- !u!1 &1101983622
 GameObject:
   m_ObjectHideFlags: 0
@@ -79223,7 +79245,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7547074293205994005, guid: 46fbfd510e184cf418909cf43c25e20d, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
