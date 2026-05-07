@@ -166,34 +166,115 @@ public class MainMenuManager : MonoBehaviour
     {
         if (achievementsContent == null || achievementRowPrefab == null) return;
 
+        AchievementManager achievementManager = AchievementManager.Instance;
+        if (achievementManager == null) return;
+
         // Clear old rows
         foreach (Transform child in achievementsContent)
             Destroy(child.gameObject);
 
-        // Get all achievement IDs
-        System.Array ids = System.Enum.GetValues(typeof(AchievementID));
-        foreach (AchievementID id in ids)
+        IReadOnlyList<AchievementDefinition> definitions = achievementManager.GetDefinitions();
+        foreach (AchievementDefinition definition in definitions)
         {
-            bool unlocked = AchievementManager.Instance != null && AchievementManager.Instance.IsUnlocked(id);
+            bool unlocked = achievementManager.IsUnlocked(definition.ID);
 
             GameObject row = Instantiate(achievementRowPrefab, achievementsContent);
-            TMP_Text[] texts = row.GetComponentsInChildren<TMP_Text>();
 
-            // texts[0] = Name, texts[1] = Description (order matches hierarchy)
-            string displayName = id.ToString();
-            string description = "";
+            // Prefer named children so prefab child ordering doesn't matter
+            Image trophyImage = FindChildComponentByNames<Image>(row.transform,
+                "TROPHY IMAGE", "Trophy Image", "Trophy", "TrophyIcon", "Trophy Icon");
 
-            // Try to get friendly name/description from AchievementManager if available
-            if (texts.Length >= 1)
-                texts[0].text = (unlocked ? "✓ " : "✗ ") + displayName;
-            if (texts.Length >= 2)
-                texts[1].text = unlocked ? description : "???";
+            TMP_Text nameText = FindChildComponentByNames<TMP_Text>(row.transform,
+                "NAME TEXT", "Name Text", "NameText", "Name");
+            TMP_Text descriptionText = FindChildComponentByNames<TMP_Text>(row.transform,
+                "DESCRIPTION TEXT", "Description Text", "DescriptionText", "Description");
+            TMP_Text statusText = FindChildComponentByNames<TMP_Text>(row.transform,
+                "STATUS", "Status", "Status Text", "StatusText");
+
+            // Fallback: prefer the exact child-order you described (BG, TROPHY IMAGE, NAME TEXT, DESCRIPTION TEXT, STATUS)
+            TMP_Text[] allTexts = row.GetComponentsInChildren<TMP_Text>(true);
+            if ((nameText == null || descriptionText == null || statusText == null || trophyImage == null) && row.transform.childCount >= 5)
+            {
+                Transform trophyChild = row.transform.GetChild(1);
+                Transform nameChild   = row.transform.GetChild(2);
+                Transform descChild   = row.transform.GetChild(3);
+                Transform statusChild = row.transform.GetChild(4);
+
+                if (trophyImage == null)
+                    trophyImage = trophyChild.GetComponent<Image>() ?? trophyChild.GetComponentInChildren<Image>(true);
+
+                if (nameText == null)
+                    nameText = nameChild.GetComponent<TMP_Text>() ?? nameChild.GetComponentInChildren<TMP_Text>(true);
+
+                if (descriptionText == null)
+                    descriptionText = descChild.GetComponent<TMP_Text>() ?? descChild.GetComponentInChildren<TMP_Text>(true);
+
+                if (statusText == null)
+                    statusText = statusChild.GetComponent<TMP_Text>() ?? statusChild.GetComponentInChildren<TMP_Text>(true);
+            }
+
+            // Final fallback: take the first available TMP_Texts in the prefab
+            if (nameText == null && allTexts.Length >= 1) nameText = allTexts[0];
+            if (descriptionText == null && allTexts.Length >= 2) descriptionText = allTexts.Length >= 2 ? allTexts[1] : allTexts[0];
+            if (statusText == null && allTexts.Length >= 3) statusText = allTexts.Length >= 3 ? allTexts[2] : (allTexts.Length >= 2 ? allTexts[1] : allTexts[0]);
+
+            if (nameText != null)
+                nameText.text = definition.Name;
+            if (descriptionText != null)
+                descriptionText.text = definition.Description;
+            if (statusText != null)
+                statusText.text = unlocked ? "Unlocked" : "Locked";
+
+            if (trophyImage != null)
+            {
+                if (definition.TrophySprite != null)
+                {
+                    trophyImage.enabled = true;
+                    trophyImage.sprite = definition.TrophySprite;
+                    trophyImage.color = unlocked ? Color.white : new Color(1f, 1f, 1f, 0.35f);
+                }
+                else
+                {
+                    trophyImage.enabled = false;
+                }
+            }
 
             // Grey out locked achievements
             CanvasGroup rowGroup = row.GetComponent<CanvasGroup>();
             if (rowGroup == null) rowGroup = row.AddComponent<CanvasGroup>();
-            rowGroup.alpha = unlocked ? 1f : 0.45f;
+            rowGroup.alpha = unlocked ? 1f : 0.55f;
         }
+    }
+
+    private T FindChildComponentByNames<T>(Transform parent, params string[] names) where T : Component
+    {
+        if (parent == null) return null;
+
+        // direct child lookup first
+        foreach (string n in names)
+        {
+            Transform t = parent.Find(n);
+            if (t != null)
+            {
+                T comp = t.GetComponent<T>();
+                if (comp != null) return comp;
+            }
+        }
+
+        // fallback: scan all children and compare normalized names
+        T[] comps = parent.GetComponentsInChildren<T>(true);
+        foreach (T c in comps)
+        {
+            string childName = c.gameObject.name.Replace(" ", "").ToLower();
+            foreach (string n in names)
+            {
+                if (childName == n.Replace(" ", "").ToLower())
+                    return c;
+            }
+        }
+
+        // final fallback: return first match
+        return comps.Length > 0 ? comps[0] : null;
     }
 
     /// <summary>Called by the Quit button.</summary>

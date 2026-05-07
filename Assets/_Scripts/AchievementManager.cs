@@ -12,17 +12,17 @@ public class AchievementManager : MonoBehaviour
     [Header("Achievement Definitions")]
     [SerializeField] private List<AchievementDefinition> achievements = new List<AchievementDefinition>
     {
-        new AchievementDefinition { ID = AchievementID.CompleteTutorial,       Name = "First Steps",          Description = "Complete the tutorial." },
-        new AchievementDefinition { ID = AchievementID.WinEasy,                Name = "Steady Pulse",         Description = "Complete a game on Easy difficulty." },
-        new AchievementDefinition { ID = AchievementID.WinMedium,              Name = "Irregular Rhythm",     Description = "Complete a game on Medium difficulty." },
-        new AchievementDefinition { ID = AchievementID.WinHard,                Name = "Flatline Survivor",    Description = "Complete a game on Hard difficulty." },
-        new AchievementDefinition { ID = AchievementID.WinWithArrhythmia,      Name = "Arrhythmia",           Description = "Win a game with Random Waves active." },
-        new AchievementDefinition { ID = AchievementID.WinWithAtherosclerosis, Name = "Atherosclerosis",      Description = "Win a game with Stat Ramping active." },
-        new AchievementDefinition { ID = AchievementID.WinWithCardiomyopathy,  Name = "Cardiomyopathy",       Description = "Win a game with No Breaks active." },
-        new AchievementDefinition { ID = AchievementID.WinWithLungFailure,     Name = "Lung Failure",         Description = "Win a game with Fog of War active." },
-        new AchievementDefinition { ID = AchievementID.WinWithGERD,            Name = "GERD",                 Description = "Win a game with Acid Rain active." },
-        new AchievementDefinition { ID = AchievementID.ReachWave80Freeplay,    Name = "Into the Abyss",       Description = "Reach wave 80 in Freeplay mode." },
-        new AchievementDefinition { ID = AchievementID.WinAllModifiersHard,    Name = "Total Organ Failure",  Description = "Win on Hard with all modifiers active." },
+        new AchievementDefinition { ID = AchievementID.CompleteTutorial,       Name = "First Steps",          Description = "Complete the tutorial.",                                  Classification = AchievementClassification.Bronze },
+        new AchievementDefinition { ID = AchievementID.WinEasy,                Name = "Steady Pulse",         Description = "Complete a game on Easy difficulty.",                    Classification = AchievementClassification.Bronze },
+        new AchievementDefinition { ID = AchievementID.WinMedium,              Name = "Irregular Rhythm",     Description = "Complete a game on Medium difficulty.",                  Classification = AchievementClassification.Silver },
+        new AchievementDefinition { ID = AchievementID.WinHard,                Name = "Flatline Survivor",    Description = "Complete a game on Hard difficulty.",                    Classification = AchievementClassification.Gold },
+        new AchievementDefinition { ID = AchievementID.WinWithArrhythmia,      Name = "Arrhythmia",           Description = "Win a game with Random Waves active.",                   Classification = AchievementClassification.Silver },
+        new AchievementDefinition { ID = AchievementID.WinWithAtherosclerosis, Name = "Atherosclerosis",      Description = "Win a game with Stat Ramping active.",                   Classification = AchievementClassification.Silver },
+        new AchievementDefinition { ID = AchievementID.WinWithCardiomyopathy,  Name = "Cardiomyopathy",       Description = "Win a game with No Breaks active.",                     Classification = AchievementClassification.Silver },
+        new AchievementDefinition { ID = AchievementID.WinWithLungFailure,     Name = "Lung Failure",         Description = "Win a game with Fog of War active.",                     Classification = AchievementClassification.Silver },
+        new AchievementDefinition { ID = AchievementID.WinWithGERD,            Name = "GERD",                 Description = "Win a game with Acid Rain active.",                     Classification = AchievementClassification.Silver },
+        new AchievementDefinition { ID = AchievementID.ReachWave80Freeplay,    Name = "Into the Abyss",       Description = "Reach wave 80 in Freeplay mode.",                       Classification = AchievementClassification.Gold },
+        new AchievementDefinition { ID = AchievementID.WinAllModifiersHard,    Name = "Total Organ Failure",  Description = "Win on Hard with all modifiers active.",                Classification = AchievementClassification.Gold },
     };
 
     private void Awake()
@@ -61,14 +61,24 @@ public class AchievementManager : MonoBehaviour
         PlayerPrefs.SetInt(key, 1);
         PlayerPrefs.Save();
 
-        AchievementDefinition def = achievements.Find(a => a.ID == id);
-        if (def != null)
+        if (TryGetDefinition(id, out AchievementDefinition def))
             OnAchievementUnlocked?.Invoke(def);
     }
 
     public bool IsUnlocked(AchievementID id)
     {
         return PlayerPrefs.GetInt($"Achievement_{id}", 0) == 1;
+    }
+
+    public IReadOnlyList<AchievementDefinition> GetDefinitions()
+    {
+        return achievements;
+    }
+
+    public bool TryGetDefinition(AchievementID id, out AchievementDefinition definition)
+    {
+        definition = achievements.Find(a => a.ID == id);
+        return definition != null;
     }
 
     // ── Event handlers ─────────────────────────────────────────────────
@@ -131,10 +141,19 @@ public enum AchievementID
     WinAllModifiersHard
 }
 
+public enum AchievementClassification
+{
+    Bronze,
+    Silver,
+    Gold
+}
+
 [System.Serializable]
 public class AchievementDefinition
 {
     public AchievementID ID;
     public string Name;
     public string Description;
+    public AchievementClassification Classification;
+    public Sprite TrophySprite;
 }
