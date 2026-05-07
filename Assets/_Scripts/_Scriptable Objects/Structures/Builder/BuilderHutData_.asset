@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51ee95539e800654b9b75b07a2ff498b, type: 3}
   m_Name: BuilderHutData_
   m_EditorClassIdentifier: 
-  structureName: BuilderHut
+  structureName: Builder Hut
   maxHP: 100
   tier: 1
   description: Structure Description

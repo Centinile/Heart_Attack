@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   structureName: Inferno Tower
   maxHP: 100
-  tier: 1
+  tier: 3
   description: Structure Description
   nutrientCost: 100
   hydrationCost: 5

@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51ee95539e800654b9b75b07a2ff498b, type: 3}
   m_Name: ArcherLv2Data_
   m_EditorClassIdentifier: 
-  structureName: ArcherTower
+  structureName: Tesla
   maxHP: 100
-  tier: 1
+  tier: 2
   description: Multi-Targeting Tower
   nutrientCost: 150
   hydrationCost: 10

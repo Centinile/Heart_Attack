@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   structureName: T-Cell Launcher
   maxHP: 100
-  tier: 1
+  tier: 2
   description: Structure Description
   nutrientCost: 300
   hydrationCost: 5
