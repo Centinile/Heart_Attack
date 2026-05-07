@@ -137,11 +137,13 @@ public class TutorialManager : MonoBehaviour
 
     private void CompleteAction()
     {
-        // Guard: only fire once per gated part
         if (_actionCompleted) return;
         _actionCompleted = true;
 
-        // Auto-advance after a short delay so the player sees what happened
+        // We stop the typewriter immediately so the auto-advance 
+        // doesn't have to wait for the animation to finish.
+        _skipRequested = true; 
+        
         StartCoroutine(AutoAdvanceAfterAction());
     }
 

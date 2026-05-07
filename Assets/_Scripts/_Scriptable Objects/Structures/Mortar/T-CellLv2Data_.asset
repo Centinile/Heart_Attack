@@ -16,22 +16,22 @@ MonoBehaviour:
   maxHP: 100
   tier: 1
   description: Structure Description
-  nutrientCost: 50
+  nutrientCost: 300
   hydrationCost: 5
   HealVFXPrefab: {fileID: 0}
-  PlaceSFX: {fileID: 0}
-  DestroySFX: {fileID: 0}
+  PlaceSFX: {fileID: 8300000, guid: 024146ca7383e9c47adc408eb4778d12, type: 3}
+  DestroySFX: {fileID: 8300000, guid: 0c13ba1bdc2a81749813e304d58e5cf5, type: 3}
   nextLevelData: {fileID: 0}
   upgradeCost: 150
   icon: {fileID: 4069177925305501163, guid: d4fdee2c0f2c277488dc36dea9dca13d, type: 3}
   prefab: {fileID: 4611168650507600015, guid: becceb0a1e98d274cbfe1d8184e9506f, type: 3}
-  damage: 1
-  attackCooldown: 1
-  range: 9
+  damage: 36
+  attackCooldown: 4
+  range: 7
   attackType: 2
   targetFilter: 1
   useFourDirectionalFacing: 0
-  attackSound: {fileID: 0}
+  attackSound: {fileID: 8300000, guid: 50e0312d7e4318e4f8e07188a2cf0e08, type: 3}
   beamLoopSound: {fileID: 0}
   attackSoundVolume: 1
   beamLoopVolume: 0.8
@@ -41,14 +41,14 @@ MonoBehaviour:
   flickerBeamPrefab: {fileID: 0}
   maxTargets: 3
   splashRadius: 5
-  useBurst: 0
+  useBurst: 1
   burstCount: 3
   burstInterval: 0.1
   continuousBaseDamage: 5
   continuousMaxDamage: 50
   continuousRampTime: 4
   continuousTickRate: 0.1
-  applyDOT: 1
+  applyDOT: 0
   dotDamagePerTick: 5
   dotTickInterval: 0.5
   dotDuration: 4

@@ -106,7 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8a9277573f3c744383a2e57ed7f0b96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: bf9e559087deb6a419732d4b5989382b, type: 2}
+  data: {fileID: 11400000, guid: 4c3b43e93692ac34f94bfc297f34652b, type: 2}
   enemyAnimations: {fileID: 6598982373036157396}
   currentHP: 0
   targetBuilding: {fileID: 0}

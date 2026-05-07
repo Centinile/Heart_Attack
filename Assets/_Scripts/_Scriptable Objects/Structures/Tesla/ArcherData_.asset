@@ -17,7 +17,10 @@ MonoBehaviour:
   tier: 1
   description: Single Target Tower
   nutrientCost: 100
-  hydrationCost: 40
+  hydrationCost: 10
+  HealVFXPrefab: {fileID: 0}
+  PlaceSFX: {fileID: 8300000, guid: 024146ca7383e9c47adc408eb4778d12, type: 3}
+  DestroySFX: {fileID: 8300000, guid: 0c13ba1bdc2a81749813e304d58e5cf5, type: 3}
   nextLevelData: {fileID: 11400000, guid: 02e5146ecb708b84e9dc77c074cdc081, type: 2}
   upgradeCost: 150
   icon: {fileID: 4202309401883286237, guid: cb64036849e88ae43b87982bf5d17ae7, type: 3}

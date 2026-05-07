@@ -17,7 +17,10 @@ MonoBehaviour:
   tier: 1
   description: Tesla of Death
   nutrientCost: 20
-  hydrationCost: 40
+  hydrationCost: 30
+  HealVFXPrefab: {fileID: 0}
+  PlaceSFX: {fileID: 8300000, guid: 024146ca7383e9c47adc408eb4778d12, type: 3}
+  DestroySFX: {fileID: 8300000, guid: 0c13ba1bdc2a81749813e304d58e5cf5, type: 3}
   nextLevelData: {fileID: 0}
   upgradeCost: 400
   icon: {fileID: 453820989657493261, guid: 4c998b7a87ccbdd4c83c32b4b11218f2, type: 3}
@@ -28,8 +31,8 @@ MonoBehaviour:
   attackType: 1
   targetFilter: 0
   useFourDirectionalFacing: 0
-  attackSound: {fileID: 0}
-  beamLoopSound: {fileID: 0}
+  attackSound: {fileID: 8300000, guid: 42066375c82c64046a608ceed34748c9, type: 3}
+  beamLoopSound: {fileID: 8300000, guid: 42066375c82c64046a608ceed34748c9, type: 3}
   attackSoundVolume: 1
   beamLoopVolume: 0.8
   projectileData: {fileID: 11400000, guid: d500cbf7a8a33a04e920b02edf4c609b, type: 2}

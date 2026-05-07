@@ -18,6 +18,9 @@ MonoBehaviour:
   description: Structure Description
   nutrientCost: 50
   hydrationCost: 5
+  HealVFXPrefab: {fileID: 0}
+  PlaceSFX: {fileID: 8300000, guid: 024146ca7383e9c47adc408eb4778d12, type: 3}
+  DestroySFX: {fileID: 8300000, guid: 0c13ba1bdc2a81749813e304d58e5cf5, type: 3}
   nextLevelData: {fileID: 0}
   upgradeCost: 150
   icon: {fileID: -8206198869673284931, guid: 8c297e5df3806b9409fa59988f1ae485, type: 3}

@@ -181,6 +181,12 @@ public class Building : MonoBehaviour
         {
             AudioManager.Instance.PlayOneShot(Data.PlaceSFX, transform.position);
         }
+
+        TutorialTowerPlacer tutorialTrigger = GetComponent<TutorialTowerPlacer>();
+        if (tutorialTrigger != null)
+        {
+            tutorialTrigger.PlaceTower();
+        }
     }
 
     protected void TryActivate()

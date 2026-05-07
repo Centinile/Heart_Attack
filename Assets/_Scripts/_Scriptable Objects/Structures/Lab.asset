@@ -15,11 +15,15 @@ MonoBehaviour:
   structureName: Lab
   maxHP: 100
   tier: 1
+  description: Structure Description
   nutrientCost: 100
   hydrationCost: 5
+  HealVFXPrefab: {fileID: 0}
+  PlaceSFX: {fileID: 8300000, guid: 024146ca7383e9c47adc408eb4778d12, type: 3}
+  DestroySFX: {fileID: 8300000, guid: 0c13ba1bdc2a81749813e304d58e5cf5, type: 3}
   nextLevelData: {fileID: 0}
   upgradeCost: 150
-  icon: {fileID: 21300000, guid: 73a1d7491fe2d2341b29c8e4f3ad1818, type: 3}
+  icon: {fileID: 8048772291348302879, guid: d76d5b1f75b3d43408383660584911bf, type: 3}
   prefab: {fileID: 4611168650507600015, guid: 3deca77649692f54594f0479495bd77c, type: 3}
   unlocksTier2: 1
   unlocksTier3: 0

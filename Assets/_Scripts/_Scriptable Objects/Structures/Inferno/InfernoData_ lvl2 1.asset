@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51ee95539e800654b9b75b07a2ff498b, type: 3}
-  m_Name: InfernoData_
+  m_Name: InfernoData_ lvl2 1
   m_EditorClassIdentifier: 
   structureName: Inferno Tower
   maxHP: 100
@@ -18,25 +18,28 @@ MonoBehaviour:
   description: Structure Description
   nutrientCost: 100
   hydrationCost: 5
+  HealVFXPrefab: {fileID: 0}
+  PlaceSFX: {fileID: 8300000, guid: 024146ca7383e9c47adc408eb4778d12, type: 3}
+  DestroySFX: {fileID: 8300000, guid: 0c13ba1bdc2a81749813e304d58e5cf5, type: 3}
   nextLevelData: {fileID: 0}
   upgradeCost: 150
-  icon: {fileID: 6196678965904796728, guid: cc55682bb38ed394888ee2cb5ee87ee5, type: 3}
+  icon: {fileID: 8141385818716634450, guid: cc55682bb38ed394888ee2cb5ee87ee5, type: 3}
   prefab: {fileID: 4611168650507600015, guid: ae53c4d789105f14a957fd44088e289e, type: 3}
-  damage: 10
+  damage: 20
   attackCooldown: 1
   range: 5
   attackType: 4
   targetFilter: 0
   useFourDirectionalFacing: 0
-  attackSound: {fileID: 0}
-  beamLoopSound: {fileID: 0}
+  attackSound: {fileID: 8300000, guid: 420bb7f70df68714693e8d0d1bf47450, type: 3}
+  beamLoopSound: {fileID: 8300000, guid: 420bb7f70df68714693e8d0d1bf47450, type: 3}
   attackSoundVolume: 1
   beamLoopVolume: 0.8
   projectileData: {fileID: 0}
   projectileSpeed: 10
   useLineRendererAttack: 1
   flickerBeamPrefab: {fileID: 0}
-  maxTargets: 3
+  maxTargets: 1
   splashRadius: 2
   useBurst: 0
   burstCount: 3
