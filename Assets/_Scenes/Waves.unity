@@ -30689,11 +30689,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c03457cf19e3a544bbedab9b45815ed8, type: 2}
   - {fileID: 11400000, guid: 1ad6c751f5edab644a1c8b49c26c6b1b, type: 2}
   - {fileID: 11400000, guid: 3e32262b2a2b71949a6e8543f669ee03, type: 2}
-  - {fileID: 11400000, guid: 9279319fef53db547921e712400d246c, type: 2}
-  - {fileID: 11400000, guid: ed98d81d61b00914b972b4f21fb9abdb, type: 2}
-  - {fileID: 11400000, guid: 31468f6803c717e4c9fe610c705a6d93, type: 2}
-  - {fileID: 11400000, guid: 1453bd99b96e0d347b3928a3c377f07a, type: 2}
-  - {fileID: 11400000, guid: 6fa481b43efaa5b43ad6b14fd7fecf7f, type: 2}
+  - {fileID: 11400000, guid: de45496badb647043ab27a0e544765b6, type: 2}
+  - {fileID: 11400000, guid: a664f3e13f2c4f14eb60b898292fb94f, type: 2}
+  - {fileID: 11400000, guid: 2f9c68816282eed4cbc4623909cb3668, type: 2}
+  - {fileID: 11400000, guid: be3a57390f46b44448772a8ef0d478fe, type: 2}
+  - {fileID: 11400000, guid: f2f42e350dfd84341ad1758d996dc701, type: 2}
   startWaveButton: {fileID: 62645606}
   currentWaveIndex: 0
   waveRunning: 0
@@ -30708,6 +30708,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1fdfae811fa585244b9446503ede3a97, type: 2}
   - {fileID: 11400000, guid: 529f4648813277f46bf7e366ac174ca5, type: 2}
   - {fileID: 11400000, guid: 406dc66b76625764c8061887088db79f, type: 2}
+  - {fileID: 11400000, guid: e030285efe604c84b851624ef9272842, type: 2}
+  - {fileID: 11400000, guid: c21b96d7d44718348a96bde4cdcab288, type: 2}
+  - {fileID: 11400000, guid: 22f07acd89a8a9347bc903fe7d35b68d, type: 2}
+  - {fileID: 11400000, guid: 46a529e2512fe984694d26c8cd282bde, type: 2}
+  - {fileID: 11400000, guid: 0596dd469e4e40a4fbe7a8dd2a0a0e88, type: 2}
+  - {fileID: 11400000, guid: 37ab29a416216bc46ae92ea8fa4f00fb, type: 2}
+  - {fileID: 11400000, guid: 251c62315d1f3e942bde257c2955543e, type: 2}
   baseFreeplayWeight: 5
   weightIncreasePerWave: 1
 --- !u!1 &250428425
@@ -31217,6 +31224,8 @@ MonoBehaviour:
     m_Bits: 8
   repairButton: {fileID: 0}
   repairCostText: {fileID: 0}
+  repairCostDisplay: {fileID: 0}
+  upgradeCostDisplay: {fileID: 0}
   statsPanel: {fileID: 1318924401}
   structureNameLabel: {fileID: 0}
   structureNameValue: {fileID: 408406228}

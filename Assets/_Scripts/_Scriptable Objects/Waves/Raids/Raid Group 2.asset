@@ -9,11 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d395c662e6fae9448ab91e3c846104bf, type: 3}
-  m_Name: test wave 14
+  m_Script: {fileID: 11500000, guid: ccd076b4981b11c4c9381feaaae25d5f, type: 3}
+  m_Name: Raid Group 2
   m_EditorClassIdentifier: 
   spawnEntries:
-  - prefab: {fileID: 6344384041587836070, guid: 226de1eed3fe2374aa58fcaa630be58e, type: 3}
-    count: 50
-  WaveWeight: 5
-  NutrientReward: 310
+  - prefab: {fileID: 6344384041587836070, guid: 7f98ca1ef66481b438f87c0b56a887b7, type: 3}
+    count: 8
+  weightCost: 20
+  NutrientReward: 0
+  selectionWeight: 10
+  raidName: 

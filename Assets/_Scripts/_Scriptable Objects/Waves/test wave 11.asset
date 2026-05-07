@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnEntries:
   - prefab: {fileID: 6344384041587836070, guid: 2c5759beee75cae4788596fa0f8c26b6, type: 3}
-    count: 16
+    count: 38
   - prefab: {fileID: 6344384041587836070, guid: 8a6c650e7d98aea4595327c95710d18e, type: 3}
-    count: 11
+    count: 24
   - prefab: {fileID: 6344384041587836070, guid: 226de1eed3fe2374aa58fcaa630be58e, type: 3}
-    count: 8
+    count: 24
   WaveWeight: 5
   NutrientReward: 240
