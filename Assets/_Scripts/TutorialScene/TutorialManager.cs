@@ -8,8 +8,9 @@ public class TutorialManager : MonoBehaviour
 {
     public static TutorialManager Instance;
 
-    [Header("Tutorial Bubble")]
-    public GameObject tutorialBubble;
+    [Header("Tutorial Canvas")]
+    [Tooltip("The Tutorial Canvas GameObject — hides during wave, shows after.")]
+    public GameObject tutorialCanvas;
 
     [Tooltip("Parts 0-12 (part 1 through part 13). Drag in order.")]
     public TMP_Text[] parts;
@@ -29,28 +30,20 @@ public class TutorialManager : MonoBehaviour
     [Header("Typewriter Settings")]
     [SerializeField] private float charDelay = 0.03f;
 
-    // Parts that require a specific action before the player can advance
-    // Index 2  = part 3  → place a defense tower
-    // Index 4  = part 5  → switch to resource tab
-    // Index 5  = part 6  → place a nutrient mine
-    // Index 7  = part 8  → place a water pump
-    // Index 10 = part 11 → press GO button
-    private int _currentPart = 0;
-    private bool _isTyping = false;
+    // ── Private state ──────────────────────────────────────────────────
+    private int  _currentPart = 0;
+    private bool _isTyping    = false;
     private bool _skipRequested = false;
-    private bool _tutorialDone = false;
-    private bool _isFinishing = false;
+    private bool _tutorialDone  = false;
+    private bool _isFinishing   = false;
     private bool _actionCompleted = false;
+    private bool _hasAdvancedFromCurrentPart = false;
+    private bool _waitingForWave = false;
     private Coroutine _typeCoroutine;
 
-    // ── Tracks whether AdvanceToNextPart has already been called for the
-    //    current part, so duplicate calls (click + auto-advance coroutine)
-    //    don't skip an extra step.
-    private bool _hasAdvancedFromCurrentPart = false;
-
-    // ── Public accessors for TutorialTowerPlacer ──────────────────
-    public int CurrentPart => _currentPart;
-    public bool IsTyping   => _isTyping;
+    // ── Public accessors ───────────────────────────────────────────────
+    public int  CurrentPart => _currentPart;
+    public bool IsTyping    => _isTyping;
 
     // ── Lifecycle ──────────────────────────────────────────────────────
 
@@ -64,29 +57,29 @@ public class TutorialManager : MonoBehaviour
 
         foreach (var p in parts) if (p != null) p.gameObject.SetActive(false);
 
-        if (tutorialBubble != null) tutorialBubble.SetActive(true);
+        if (tutorialCanvas != null) tutorialCanvas.SetActive(true);
+
+        // Subscribe to wave cleared so we know when the tutorial wave ends
+        WaveManager.OnWaveCleared += OnTutorialWaveCleared;
 
         ShowPart(0);
     }
 
+    void OnDestroy()
+    {
+        WaveManager.OnWaveCleared -= OnTutorialWaveCleared;
+    }
+
     void Update()
     {
-        if (_tutorialDone) return;
+        if (_tutorialDone || _waitingForWave) return;
 
         if (Input.GetMouseButtonDown(0))
         {
             if (_isTyping)
-            {
-                // Skip the typewriter animation; do NOT advance the part
                 _skipRequested = true;
-            }
             else if (!IsActionGatedPart(_currentPart))
-            {
-                // Free part — click advances normally
                 AdvanceToNextPart();
-            }
-            // Action-gated parts: clicks are intentionally ignored here.
-            // Only CompleteAction() → AutoAdvanceAfterAction() will advance them.
         }
     }
 
@@ -98,62 +91,70 @@ public class TutorialManager : MonoBehaviour
             || index == 4   // part 5:  switch to resource tab
             || index == 5   // part 6:  place nutrient mine
             || index == 7   // part 8:  place water pump
-            || index == 10; // part 11: press GO
+            || index == 10; // part 11: press GO (starts wave)
     }
 
-    /// <summary>Called by TutorialTowerPlacer when a defense tower is placed.</summary>
-    public void OnDefenseTowerPlaced()
-    {
-        if (_currentPart == 2) CompleteAction();
-    }
+    public void OnDefenseTowerPlaced() { if (_currentPart == 2)  CompleteAction(); }
+    public void OnResourceTabOpened()  { if (_currentPart == 4)  CompleteAction(); }
+    public void OnMinePlaced()         { if (_currentPart == 5)  CompleteAction(); }
+    public void OnWaterPumpPlaced()    { if (_currentPart == 7)  CompleteAction(); }
 
-    /// <summary>Called by KeybindManager or tab toggle when resource tab is opened.</summary>
-    public void OnResourceTabOpened()
-    {
-        if (_currentPart == 4) CompleteAction();
-    }
-
-    /// <summary>Called by TutorialTowerPlacer when a mine is placed.</summary>
-    public void OnMinePlaced()
-    {
-        if (_currentPart == 5) CompleteAction();
-    }
-
-    /// <summary>Called by TutorialTowerPlacer when a water pump is placed.</summary>
-    public void OnWaterPumpPlaced()
-    {
-        if (_currentPart == 7) CompleteAction();
-    }
-
-    /// <summary>Called by GO button onClick.</summary>
+    /// <summary>Wire GO button OnClick to this.</summary>
     public void OnGoButtonPressed()
     {
         if (_currentPart == 10)
         {
-            CompleteAction();
             waveManager?.StartWave();
+            CompleteAction();
         }
+    }
+
+    /// <summary>Called by WaveManager.OnWaveCleared after the tutorial wave ends.</summary>
+    private void OnTutorialWaveCleared()
+    {
+        if (!_waitingForWave) return;
+        _waitingForWave = false;
+
+        // Re-show the tutorial canvas
+        if (tutorialCanvas != null) tutorialCanvas.SetActive(true);
+
+        // Jump to part 12 (index 11)
+        _currentPart = 11;
+        ShowPart(_currentPart);
     }
 
     private void CompleteAction()
     {
         if (_actionCompleted) return;
         _actionCompleted = true;
+        _skipRequested   = true;
 
-        // We stop the typewriter immediately so the auto-advance 
-        // doesn't have to wait for the animation to finish.
-        _skipRequested = true; 
-        
+        // Part 11 (index 10) hides the tutorial canvas and waits for wave
+        if (_currentPart == 10)
+        {
+            StartCoroutine(HideCanvasAndWaitForWave());
+            return;
+        }
+
         StartCoroutine(AutoAdvanceAfterAction());
+    }
+
+    private IEnumerator HideCanvasAndWaitForWave()
+    {
+        yield return new WaitForSecondsRealtime(0.3f);
+        while (_isTyping) yield return null;
+
+        // Hide the tutorial canvas while wave plays
+        if (tutorialCanvas != null) tutorialCanvas.SetActive(false);
+
+        _waitingForWave = true;
+        // OnTutorialWaveCleared() will take over from here
     }
 
     private IEnumerator AutoAdvanceAfterAction()
     {
         yield return new WaitForSecondsRealtime(0.5f);
-
-        // If the typewriter is still running, wait for it to finish first
         while (_isTyping) yield return null;
-
         AdvanceToNextPart();
     }
 
@@ -163,8 +164,7 @@ public class TutorialManager : MonoBehaviour
     {
         if (index >= parts.Length) { OnAllPartsShown(); return; }
 
-        // Reset per-part state
-        _actionCompleted          = false;
+        _actionCompleted            = false;
         _hasAdvancedFromCurrentPart = false;
 
         foreach (var p in parts) if (p != null) p.gameObject.SetActive(false);
@@ -206,16 +206,10 @@ public class TutorialManager : MonoBehaviour
         _skipRequested = false;
     }
 
-    /// <summary>
-    /// Advances to the next part. Idempotent per-part: only the first call
-    /// for a given part index takes effect. Subsequent calls (e.g. a stale
-    /// coroutine waking up late) are silently ignored.
-    /// </summary>
     private void AdvanceToNextPart()
     {
         if (_hasAdvancedFromCurrentPart) return;
         _hasAdvancedFromCurrentPart = true;
-
         _currentPart++;
         ShowPart(_currentPart);
     }
@@ -223,10 +217,9 @@ public class TutorialManager : MonoBehaviour
     private void OnAllPartsShown()
     {
         _tutorialDone = true;
-        if (tutorialBubble != null) tutorialBubble.SetActive(false);
+        if (tutorialCanvas != null) tutorialCanvas.SetActive(false);
         if (doneButton != null) doneButton.gameObject.SetActive(true);
 
-        // Unlock tutorial achievement
         if (AchievementManager.Instance != null)
             AchievementManager.Instance.Unlock(AchievementID.CompleteTutorial);
 
@@ -256,5 +249,5 @@ public class TutorialManager : MonoBehaviour
     public void AdvanceTutorial() => AdvanceToNextPart();
     public void TowerPlaced()     => OnDefenseTowerPlaced();
     public void GoButtonClicked() => OnGoButtonPressed();
-    public void WaveFinished()    { _currentPart = parts.Length; OnAllPartsShown(); }
+    public void WaveFinished()    => OnTutorialWaveCleared();
 }
