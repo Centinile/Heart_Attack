@@ -1832,6 +1832,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneController: {fileID: 0}
   gameSceneName: GameScene
+  difficultyDropdown: {fileID: 1135310529}
   acidRainToggle: {fileID: 1701829865}
   fogOfWarToggle: {fileID: 795555204}
   randomWavesToggle: {fileID: 61460169}

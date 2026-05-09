@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -10,6 +11,7 @@ public class WaveManager : MonoBehaviour
     [Header("Wave Setup")]
     public WaveData[] waves;
     public Button startWaveButton;
+    public TMP_Text waveText; // ADD: assign in inspector
     public int currentWaveIndex;
     public bool waveRunning = false;
 
@@ -23,7 +25,6 @@ public class WaveManager : MonoBehaviour
 
     [Header("Spawn Area")]
     public PolygonCollider2D spawnBounds;
-    public float spawnOutsideOffset = 1f;
 
     [Header("Freeplay")]
     public bool freeplayMode = false;
@@ -39,6 +40,28 @@ public class WaveManager : MonoBehaviour
         freeplayMode      = GameManager.Instance.enableRandomWaves;
         autoStartNextWave = GameManager.Instance.enableNoBreaks;
         enableScaling     = GameManager.Instance.enableStatRamping;
+
+        UpdateWaveText();
+    }
+
+    private void UpdateWaveText()
+    {
+        if (waveText == null) return;
+
+        int displayWave = currentWaveIndex + 1;
+
+        if (waveRunning)
+        {
+            bool isFreeplay = freeplayMode || currentWaveIndex >= waves.Length;
+            waveText.text = isFreeplay
+                ? $"Wave {displayWave} (Freeplay)"
+                : $"Wave {displayWave}";
+        }
+        else
+        {
+            // Resting phase — show upcoming wave
+            waveText.text = $"Next: Wave {displayWave}";
+        }
     }
 
     public void ToggleAutoStart(bool value)
@@ -62,6 +85,8 @@ public class WaveManager : MonoBehaviour
 
         if (currentWaveIndex >= waves.Length)
             freeplayMode = true;
+
+        UpdateWaveText(); // Show current wave immediately
 
         string modeColor = freeplayMode ? "orange" : "cyan";
         Debug.Log($"<color={modeColor}><b>[WAVE {currentWaveIndex + 1}]</b> STARTED ({(freeplayMode ? "FREEPLAY" : "DESIGNED")})</color>");
@@ -99,7 +124,7 @@ public class WaveManager : MonoBehaviour
         // ── STEP 2: SURVIVAL ──────────────────────────────────────────
         yield return new WaitForSeconds(1f);
 
-        while (GameObject.FindObjectsByType<Enemy>(FindObjectsSortMode.None).Length > 0)
+        while (GameObject.FindObjectsByType<EnemyBrain>(FindObjectsSortMode.None).Length > 0)
             yield return new WaitForSeconds(0.5f);
 
         // ── STEP 3: WAVE CLEAR ────────────────────────────────────────
@@ -111,11 +136,9 @@ public class WaveManager : MonoBehaviour
         waveRunning = false;
         currentWaveIndex++;
 
-        // Check win condition — stops here if game is won
         GameManager.Instance.CheckVictory(currentWaveIndex);
         if (GameManager.Instance.currentState == GameManager.GameState.Victory) yield break;
 
-        // Lock into freeplay if past designed waves
         if (currentWaveIndex >= waves.Length)
             freeplayMode = true;
 
@@ -123,6 +146,8 @@ public class WaveManager : MonoBehaviour
         GameManager.Instance.EnterRestingPhase();
 
         if (startWaveButton != null) startWaveButton.interactable = true;
+
+        UpdateWaveText(); // Show next wave during rest
 
         if (autoStartNextWave)
         {
@@ -137,7 +162,7 @@ public class WaveManager : MonoBehaviour
     {
         Vector3 spawnPos = GenerateEdgePosition();
         GameObject e = Instantiate(prefab, spawnPos, Quaternion.identity);
-        Enemy enemy = e.GetComponent<Enemy>();
+        EnemyBrain enemy = e.GetComponent<EnemyBrain>();
         if (enableScaling && enemy != null)
         {
             float multiplier = 1f + (currentWaveIndex * scalingPerWave);
@@ -155,19 +180,46 @@ public class WaveManager : MonoBehaviour
         }
     }
 
+    // Spawns strictly ON the polygon edge, not inside or outside
     Vector3 GenerateEdgePosition()
     {
-        Bounds bounds = spawnBounds.bounds;
-        float x = Random.Range(bounds.min.x, bounds.max.x);
-        float y = Random.Range(bounds.min.y, bounds.max.y);
+        Vector2[] points = spawnBounds.points;
+        Vector2 offset = spawnBounds.transform.position;
 
-        switch (Random.Range(0, 4))
+        // Build a list of edge segments with their lengths
+        // so we can pick a random point weighted by segment length
+        float totalLength = 0f;
+        float[] segmentLengths = new float[points.Length];
+
+        for (int i = 0; i < points.Length; i++)
         {
-            case 0: return new Vector3(bounds.min.x - spawnOutsideOffset, y, 0);
-            case 1: return new Vector3(bounds.max.x + spawnOutsideOffset, y, 0);
-            case 2: return new Vector3(x, bounds.min.y - spawnOutsideOffset, 0);
-            default: return new Vector3(x, bounds.max.y + spawnOutsideOffset, 0);
+            Vector2 a = points[i] + offset;
+            Vector2 b = points[(i + 1) % points.Length] + offset;
+            segmentLengths[i] = Vector2.Distance(a, b);
+            totalLength += segmentLengths[i];
         }
+
+        // Pick a random distance along the total perimeter
+        float randomDist = Random.Range(0f, totalLength);
+        float cumulative = 0f;
+
+        for (int i = 0; i < points.Length; i++)
+        {
+            cumulative += segmentLengths[i];
+            if (randomDist <= cumulative)
+            {
+                // Interpolate along this segment
+                Vector2 a = points[i] + offset;
+                Vector2 b = points[(i + 1) % points.Length] + offset;
+                float t = 1f - (cumulative - randomDist) / segmentLengths[i];
+                Vector2 spawnPos = Vector2.Lerp(a, b, t);
+                return new Vector3(spawnPos.x, spawnPos.y, 0f);
+            }
+        }
+
+        // Fallback
+        Vector2 fallback = points[0] + offset;
+        return new Vector3(fallback.x, fallback.y, 0f);
     }
 
     // ── Freeplay ───────────────────────────────────────────────────────

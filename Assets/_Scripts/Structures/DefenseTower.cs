@@ -292,7 +292,7 @@ public class DefenseTower : Building
 
         structureAnimations?.PlayAttackAnimation();
 
-        if (t.TryGetComponent(out Enemy enemy))
+        if (t.TryGetComponent(out EnemyBrain enemy))
             enemy.TakeDamage(damage);
         else if (t.TryGetComponent(out FlyingEnemy flyingEnemy))
             flyingEnemy.TakeDamage(damage);
@@ -404,7 +404,7 @@ public class DefenseTower : Building
 
         foreach (Collider2D hit in hits)
         {
-            bool isGround = hit.TryGetComponent(out Enemy _);
+            bool isGround = hit.TryGetComponent(out EnemyBrain _);
             bool isFlying = hit.TryGetComponent(out FlyingEnemy _);
 
             bool valid = defenseData.targetFilter switch
@@ -474,7 +474,7 @@ public class DefenseTower : Building
     {
         if (t == null) return false;
 
-        bool isGround = t.TryGetComponent(out Enemy groundEnemy) && groundEnemy.CurrentHP > 0;
+        bool isGround = t.TryGetComponent(out EnemyBrain groundEnemy) && groundEnemy.CurrentHP > 0;
         bool isFlying = t.TryGetComponent(out FlyingEnemy flyingEnemy) && flyingEnemy.CurrentHP > 0;
 
         bool matchesFilter = defenseData.targetFilter switch
@@ -554,14 +554,14 @@ public class DefenseTower : Building
                 if (enemy != null && enemy.CurrentHP > 0)
                 {
                     float finalDamage = col.transform == t ? defenseData.damage : splashDamage;
-                    col.GetComponent<Enemy>()?.TakeDamage(finalDamage);
+                    col.GetComponent<EnemyBrain>()?.TakeDamage(finalDamage);
                     col.GetComponent<FlyingEnemy>()?.TakeDamage(finalDamage);
                 }
             }
         }
         else
         {
-            t.GetComponent<Enemy>()?.TakeDamage(defenseData.damage);
+            t.GetComponent<EnemyBrain>()?.TakeDamage(defenseData.damage);
             t.GetComponent<FlyingEnemy>()?.TakeDamage(defenseData.damage);
         }
     }
@@ -598,7 +598,7 @@ public class DefenseTower : Building
 
     private bool MatchesTargetFilter(Collider2D hit)
     {
-        bool isGround = hit.TryGetComponent(out Enemy _);
+        bool isGround = hit.TryGetComponent(out EnemyBrain _);
         bool isFlying = hit.TryGetComponent(out FlyingEnemy _);
 
         return defenseData.targetFilter switch

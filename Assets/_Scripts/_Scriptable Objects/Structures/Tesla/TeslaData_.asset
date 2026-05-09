@@ -10,36 +10,36 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51ee95539e800654b9b75b07a2ff498b, type: 3}
-  m_Name: ArcherLv3Data_
+  m_Name: TeslaData_
   m_EditorClassIdentifier: 
   structureName: Tesla
   maxHP: 100
-  tier: 3
-  description: Tesla of Death
-  nutrientCost: 20
-  hydrationCost: 30
+  tier: 1
+  description: Single Target Tower
+  nutrientCost: 50
+  hydrationCost: 10
   HealVFXPrefab: {fileID: 0}
   PlaceSFX: {fileID: 8300000, guid: 024146ca7383e9c47adc408eb4778d12, type: 3}
   DestroySFX: {fileID: 8300000, guid: 0c13ba1bdc2a81749813e304d58e5cf5, type: 3}
-  nextLevelData: {fileID: 0}
-  upgradeCost: 400
-  icon: {fileID: 453820989657493261, guid: 4c998b7a87ccbdd4c83c32b4b11218f2, type: 3}
-  prefab: {fileID: 4611168650507600015, guid: ab7818fd53408444c99bd8a765f919cf, type: 3}
-  damage: 23
+  nextLevelData: {fileID: 11400000, guid: 02e5146ecb708b84e9dc77c074cdc081, type: 2}
+  upgradeCost: 150
+  icon: {fileID: 4202309401883286237, guid: cb64036849e88ae43b87982bf5d17ae7, type: 3}
+  prefab: {fileID: 4611168650507600015, guid: 7d6f58dcba57b4741a030ea78d07caa8, type: 3}
+  damage: 4
   attackCooldown: 0.5
   range: 7
-  attackType: 1
+  attackType: 0
   targetFilter: 0
   useFourDirectionalFacing: 0
   attackSound: {fileID: 8300000, guid: 42066375c82c64046a608ceed34748c9, type: 3}
   beamLoopSound: {fileID: 8300000, guid: 42066375c82c64046a608ceed34748c9, type: 3}
   attackSoundVolume: 1
   beamLoopVolume: 0.8
-  projectileData: {fileID: 11400000, guid: d500cbf7a8a33a04e920b02edf4c609b, type: 2}
+  projectileData: {fileID: 0}
   projectileSpeed: 10
   useLineRendererAttack: 1
   flickerBeamPrefab: {fileID: 2208617239417924706, guid: 1a342da5987e40f4c9841e5af3fa361e, type: 3}
-  maxTargets: 8
+  maxTargets: 1
   splashRadius: 2
   useBurst: 0
   burstCount: 3

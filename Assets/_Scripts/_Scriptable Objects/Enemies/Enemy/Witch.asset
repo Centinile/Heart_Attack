@@ -21,7 +21,7 @@ MonoBehaviour:
   attackCooldown: 1.5
   targetingPriority: 1
   detectionRadius: 5
-  stoppingDistance: 1.2
+  stoppingDistance: 0.2
   abilities:
   - {fileID: 11400000, guid: 8212ba8d6badca2478f273977ab2a694, type: 2}
   enemyIcon: {fileID: 0}

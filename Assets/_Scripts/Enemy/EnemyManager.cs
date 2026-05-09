@@ -5,19 +5,19 @@ public class EnemyManager : MonoBehaviour
 {
     public static EnemyManager Instance;
 
-    public List<Enemy> ActiveEnemies = new List<Enemy>();
+    public List<EnemyBrain> ActiveEnemies = new List<EnemyBrain>();
 
     void Awake()
     {
         Instance = this;
     }
 
-    public void RegisterEnemy(Enemy e)
+    public void RegisterEnemy(EnemyBrain e)
     {
         ActiveEnemies.Add(e);
     }
 
-    public void UnregisterEnemy(Enemy e)
+    public void UnregisterEnemy(EnemyBrain e)
     {
         ActiveEnemies.Remove(e);
     }

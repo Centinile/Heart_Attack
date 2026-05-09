@@ -44,7 +44,7 @@ public class DOTZone : MonoBehaviour
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, _radius);
         foreach (var hit in hits)
         {
-            Enemy enemy = hit.GetComponent<Enemy>();
+            EnemyBrain enemy = hit.GetComponent<EnemyBrain>();
             if (enemy != null && enemy.CurrentHP > 0)
                 enemy.TakeDamage(_damagePerTick);
         }

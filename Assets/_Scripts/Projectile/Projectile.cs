@@ -215,7 +215,7 @@ public class Projectile : MonoBehaviour
         }
 
         // Fall back to enemy (tower projectiles hit enemies)
-        Enemy enemy = targetTransform.GetComponent<Enemy>();
+        EnemyBrain enemy = targetTransform.GetComponent<EnemyBrain>();
         if (enemy != null)
         {
             enemy.TakeDamage(damage);
@@ -230,7 +230,7 @@ public class Projectile : MonoBehaviour
 
         foreach (Collider2D col in nearby)
         {
-            Enemy enemy = col.GetComponent<Enemy>();
+            EnemyBrain enemy = col.GetComponent<EnemyBrain>();
             if (enemy == null) continue;
             float finalDamage = col.transform == target ? damage : splashDamage;
             enemy.TakeDamage(finalDamage);
@@ -259,7 +259,7 @@ public class Projectile : MonoBehaviour
         if (hasHit) return;
 
         // Tower projectile hitting an enemy
-        Enemy enemy = other.GetComponent<Enemy>();
+        EnemyBrain enemy = other.GetComponent<EnemyBrain>();
         if (enemy != null && (other.transform == target || !data.Homing))
         {
             Hit();

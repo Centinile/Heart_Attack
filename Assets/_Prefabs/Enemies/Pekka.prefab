@@ -14,7 +14,8 @@ GameObject:
   - component: {fileID: 4042287836452294586}
   - component: {fileID: 6797045837789945845}
   - component: {fileID: -7169618700048717458}
-  - component: {fileID: -1807471005195347085}
+  - component: {fileID: 4998913561541659758}
+  - component: {fileID: -9149081634158023665}
   m_Layer: 6
   m_Name: Pekka
   m_TagString: Enemy
@@ -174,7 +175,29 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-1807471005195347085
+--- !u!195 &4998913561541659758
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6344384041587836070}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.32
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 0.8
+  m_BaseOffset: 0.4
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &-9149081634158023665
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -183,10 +206,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6344384041587836070}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee303dfdf4f3e7843807370deed7352c, type: 3}
+  m_Script: {fileID: 11500000, guid: d8a9277573f3c744383a2e57ed7f0b96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 083fedbe649701e4b845389ada569075, type: 2}
-  enemyAnimations: {fileID: 6797045837789945845}
+  enemyAnimations: {fileID: 0}
   currentHP: 0
+  targetBuilding: {fileID: 0}
+  currentMoveTarget: {fileID: 0}
   healthBar: {fileID: 4042287836452294586}

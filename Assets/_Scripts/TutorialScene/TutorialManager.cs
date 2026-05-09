@@ -217,12 +217,16 @@ public class TutorialManager : MonoBehaviour
     private void OnAllPartsShown()
     {
         _tutorialDone = true;
+
         if (tutorialCanvas != null) tutorialCanvas.SetActive(false);
+
+        // Show done button as a manual escape hatch
         if (doneButton != null) doneButton.gameObject.SetActive(true);
 
         if (AchievementManager.Instance != null)
             AchievementManager.Instance.Unlock(AchievementID.CompleteTutorial);
 
+        // Auto-redirect after 3 seconds regardless of button press
         StartCoroutine(ForcedRedirectTimer());
     }
 

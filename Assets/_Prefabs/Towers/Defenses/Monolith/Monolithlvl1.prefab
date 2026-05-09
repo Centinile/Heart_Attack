@@ -305,7 +305,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthBar: {fileID: 2523947682524650795}
-  defenseData: {fileID: 11400000, guid: 9df5388ef3d9735429b14793c7587ca3, type: 2}
+  defenseData: {fileID: 11400000, guid: ec3dca7626832e240a44373fa3ea0d73, type: 2}
   rangeIndicator: {fileID: 8949921203573974235}
   towerRenderer: {fileID: 0}
   _beamRenderer: {fileID: 0}

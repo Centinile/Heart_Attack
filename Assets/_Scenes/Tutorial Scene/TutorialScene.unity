@@ -7338,6 +7338,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4868847a1c84879489dcfb256c6435ae, type: 2}
   - {fileID: 11400000, guid: 6861aedf032c99244989f11c8f4a1621, type: 2}
   startWaveButton: {fileID: 2134827484}
+  waveText: {fileID: 0}
   currentWaveIndex: 0
   waveRunning: 0
   autoStartNextWave: 1
@@ -7345,7 +7346,6 @@ MonoBehaviour:
   enableScaling: 1
   scalingPerWave: 0.02
   spawnBounds: {fileID: 785364186}
-  spawnOutsideOffset: 0
   freeplayMode: 0
   availableGroups:
   - {fileID: 11400000, guid: 1fdfae811fa585244b9446503ede3a97, type: 2}
@@ -43244,8 +43244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab5ddb2b0fb03d649bf8f4c367050a99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loadingSceneName: LoadingScreen
-  targetSceneName: GameScene
+  targetSceneName: Main Menu
 --- !u!1 &1211785285
 GameObject:
   m_ObjectHideFlags: 0

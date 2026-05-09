@@ -10,13 +10,14 @@ GameObject:
   m_Component:
   - component: {fileID: 3158473115065133395}
   - component: {fileID: 6783700207377584435}
-  - component: {fileID: 2386699354199599531}
   - component: {fileID: 2503278441928525463}
   - component: {fileID: 5218100405874627616}
   - component: {fileID: -6974122924984088197}
   - component: {fileID: 3050348443475716267}
   - component: {fileID: -5027914741527649430}
   - component: {fileID: 2966505858959382660}
+  - component: {fileID: 4850057994213528002}
+  - component: {fileID: -2970601112761392197}
   m_Layer: 6
   m_Name: Archer
   m_TagString: Enemy
@@ -94,24 +95,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2386699354199599531
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6344384041587836070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8a9277573f3c744383a2e57ed7f0b96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: e436f6c9ae0d41c46b96a39e7576b8e8, type: 2}
-  enemyAnimations: {fileID: 2966505858959382660}
-  currentHP: 0
-  targetBuilding: {fileID: 0}
-  currentMoveTarget: {fileID: 0}
-  healthBar: {fileID: 3050348443475716267}
 --- !u!195 &2503278441928525463
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -241,5 +224,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8d00ac968fbbb6f48a47a1ae652f907f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4850057994213528002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6344384041587836070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c7c8f748d1e73a4883fab6be3a706a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: e436f6c9ae0d41c46b96a39e7576b8e8, type: 2}
+  enemyAnimations: {fileID: 2966505858959382660}
+  healthBar: {fileID: 3050348443475716267}
+  currentHP: 0
+--- !u!114 &-2970601112761392197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6344384041587836070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36bca2ba6f971ce40b5fcc80015939f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
