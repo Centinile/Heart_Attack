@@ -14,7 +14,9 @@ GameObject:
   - component: {fileID: 4042287836452294586}
   - component: {fileID: 6797045837789945845}
   - component: {fileID: -7169618700048717458}
-  - component: {fileID: -1807471005195347085}
+  - component: {fileID: 1442292711214941769}
+  - component: {fileID: 410259931383734864}
+  - component: {fileID: 2182339177566790325}
   m_Layer: 6
   m_Name: Wall Breaker
   m_TagString: Enemy
@@ -32,7 +34,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -174,7 +176,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-1807471005195347085
+--- !u!114 &1442292711214941769
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -183,10 +185,44 @@ MonoBehaviour:
   m_GameObject: {fileID: 6344384041587836070}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee303dfdf4f3e7843807370deed7352c, type: 3}
+  m_Script: {fileID: 11500000, guid: 4c7c8f748d1e73a4883fab6be3a706a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: d8f9477d7a2d45d468319ad2693c98b7, type: 2}
   enemyAnimations: {fileID: 6797045837789945845}
-  currentHP: 0
   healthBar: {fileID: 4042287836452294586}
+  currentHP: 0
+--- !u!195 &410259931383734864
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6344384041587836070}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.32
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 0.8
+  m_BaseOffset: 0.4
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &2182339177566790325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6344384041587836070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36bca2ba6f971ce40b5fcc80015939f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -10,13 +10,14 @@ GameObject:
   m_Component:
   - component: {fileID: 3158473115065133395}
   - component: {fileID: 6783700207377584435}
-  - component: {fileID: 2386699354199599531}
   - component: {fileID: 2503278441928525463}
   - component: {fileID: 5218100405874627616}
   - component: {fileID: -6974122924984088197}
   - component: {fileID: -6732908411709560933}
   - component: {fileID: 7140211121655054214}
   - component: {fileID: 9078799215478322376}
+  - component: {fileID: 4367892828387783021}
+  - component: {fileID: 3817238481075133466}
   m_Layer: 6
   m_Name: Witch
   m_TagString: Enemy
@@ -34,7 +35,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.93341, y: 2.0275, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -94,24 +95,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2386699354199599531
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6344384041587836070}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8a9277573f3c744383a2e57ed7f0b96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: bf9e559087deb6a419732d4b5989382b, type: 2}
-  enemyAnimations: {fileID: 7140211121655054214}
-  currentHP: 0
-  targetBuilding: {fileID: 0}
-  currentMoveTarget: {fileID: 0}
-  healthBar: {fileID: -6732908411709560933}
 --- !u!195 &2503278441928525463
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -243,3 +226,31 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4367892828387783021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6344384041587836070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c7c8f748d1e73a4883fab6be3a706a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: bf9e559087deb6a419732d4b5989382b, type: 2}
+  enemyAnimations: {fileID: 7140211121655054214}
+  healthBar: {fileID: -6732908411709560933}
+  currentHP: 0
+--- !u!114 &3817238481075133466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6344384041587836070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36bca2ba6f971ce40b5fcc80015939f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
