@@ -340,6 +340,16 @@ MonoBehaviour:
     Description: Win on Hard with all modifiers active.
     Classification: 2
     TrophySprite: {fileID: -8411816328702029873, guid: de9d9124d48817b499f4ad80298b2000, type: 3}
+  - ID: 11
+    Name: Heartless
+    Description: ???
+    Classification: 0
+    TrophySprite: {fileID: 5072265826684818060, guid: de9d9124d48817b499f4ad80298b2000, type: 3}
+  - ID: 12
+    Name: Base Planner
+    Description: Placed down 100 buildings in a single game
+    Classification: 0
+    TrophySprite: {fileID: 5072265826684818060, guid: de9d9124d48817b499f4ad80298b2000, type: 3}
 --- !u!4 &9967482
 Transform:
   m_ObjectHideFlags: 0

@@ -72391,6 +72391,11 @@ MonoBehaviour:
     Description: Win on Hard with all modifiers active.
     Classification: 2
     TrophySprite: {fileID: 0}
+  - ID: 11
+    Name: Heartless
+    Description: ???
+    Classification: 0
+    TrophySprite: {fileID: -5181718117150156639, guid: 46e58fcb1d8a95e4b9e43bd620b5818e, type: 3}
 --- !u!1 &1101983622
 GameObject:
   m_ObjectHideFlags: 0
@@ -75910,7 +75915,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.8645962}
   m_AnchorMax: {x: 0.34756252, y: 1}
-  m_AnchoredPosition: {x: 31.6565, y: 0}
+  m_AnchoredPosition: {x: 31.656372, y: 0}
   m_SizeDelta: {x: 63.3131, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1629677948

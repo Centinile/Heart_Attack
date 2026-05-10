@@ -297,9 +297,6 @@ public class Building : MonoBehaviour
 
     public virtual void Sell()
     {
-        if (StructureType == StructureType.Heart)
-            OnHeartSold?.Invoke();
-            
         GameManager.Instance.AddNutrients(Data.NutrientCost * 0.5f);
         OnDestroyed();
     }

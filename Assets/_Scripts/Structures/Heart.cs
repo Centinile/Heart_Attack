@@ -12,6 +12,11 @@ public class Heart : Building
         heartData = data;
     }
 
+    public override void Sell()
+    {
+        OnHeartSold?.Invoke(); // Fire achievement event
+        base.Sell();           // Handles nutrients + OnDestroyed
+    }
 
     protected override void OnDestroyed()
     {
@@ -19,8 +24,6 @@ public class Heart : Building
         isGameOverTriggered = true;
 
         Debug.Log("<color=red><b>The Heart has been destroyed!</b></color>");
-        
-        // Trigger game over logic in GameManager
         GameManager.Instance.GameOver();
         
         base.OnDestroyed();

@@ -50,9 +50,12 @@ public class AchievementManager : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.OnVictory  += OnVictory;
+        GameManager.OnVictory     += OnVictory;
         WaveManager.OnWaveCleared += OnWaveCleared;
+        Building.OnBuildingPlaced += OnBuildingPlaced;
+        Building.OnHeartSold      += OnHeartSold;
     }
+
 
     private void OnDisable()
     {
