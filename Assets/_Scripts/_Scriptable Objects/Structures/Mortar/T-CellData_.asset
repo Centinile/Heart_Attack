@@ -12,21 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51ee95539e800654b9b75b07a2ff498b, type: 3}
   m_Name: T-CellData_
   m_EditorClassIdentifier: 
-  structureName: T-Cell Launcher
-  maxHP: 100
+  structureName: T-Cell Launcher Lv1
+  maxHP: 200
   tier: 1
-  description: Structure Description
+  description: 
   nutrientCost: 200
-  hydrationCost: 5
+  hydrationCost: 20
   HealVFXPrefab: {fileID: 0}
   PlaceSFX: {fileID: 8300000, guid: 024146ca7383e9c47adc408eb4778d12, type: 3}
   DestroySFX: {fileID: 8300000, guid: 0c13ba1bdc2a81749813e304d58e5cf5, type: 3}
-  nextLevelData: {fileID: 0}
-  upgradeCost: 150
+  nextLevelData: {fileID: 11400000, guid: e640e454c5e49504391904af429467c4, type: 2}
+  upgradeCost: 500
   icon: {fileID: 2712614334172209555, guid: d4fdee2c0f2c277488dc36dea9dca13d, type: 3}
   prefab: {fileID: 4611168650507600015, guid: becceb0a1e98d274cbfe1d8184e9506f, type: 3}
   damage: 24
-  attackCooldown: 4
+  attackCooldown: 5
   range: 7
   attackType: 2
   targetFilter: 1

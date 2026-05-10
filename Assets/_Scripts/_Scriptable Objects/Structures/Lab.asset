@@ -12,17 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ad119b00e8e0314a87b1d3939db62ae, type: 3}
   m_Name: Lab
   m_EditorClassIdentifier: 
-  structureName: Lab
-  maxHP: 100
+  structureName: Immunity Lab
+  maxHP: 150
   tier: 1
-  description: Structure Description
-  nutrientCost: 100
-  hydrationCost: 5
+  description: 
+  nutrientCost: 1000
+  hydrationCost: 90
   HealVFXPrefab: {fileID: 0}
   PlaceSFX: {fileID: 8300000, guid: 024146ca7383e9c47adc408eb4778d12, type: 3}
   DestroySFX: {fileID: 8300000, guid: 0c13ba1bdc2a81749813e304d58e5cf5, type: 3}
   nextLevelData: {fileID: 0}
-  upgradeCost: 150
+  upgradeCost: 0
   icon: {fileID: -6324880435504713953, guid: 93e14082c06212749a62d7afea060725, type: 3}
   prefab: {fileID: 4611168650507600015, guid: 3deca77649692f54594f0479495bd77c, type: 3}
   unlocksTier2: 1

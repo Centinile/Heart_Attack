@@ -10,24 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51ee95539e800654b9b75b07a2ff498b, type: 3}
-  m_Name: InfernoData_ lvl2 1
+  m_Name: H2OhmData_Lv1
   m_EditorClassIdentifier: 
-  structureName: Inferno Tower
-  maxHP: 100
-  tier: 2
-  description: Structure Description
-  nutrientCost: 100
-  hydrationCost: 5
+  structureName: H2-Ohm Lv1
+  maxHP: 200
+  tier: 1
+  description: 
+  nutrientCost: 200
+  hydrationCost: 20
   HealVFXPrefab: {fileID: 0}
   PlaceSFX: {fileID: 8300000, guid: 024146ca7383e9c47adc408eb4778d12, type: 3}
   DestroySFX: {fileID: 8300000, guid: 0c13ba1bdc2a81749813e304d58e5cf5, type: 3}
-  nextLevelData: {fileID: 0}
-  upgradeCost: 150
-  icon: {fileID: 8141385818716634450, guid: cc55682bb38ed394888ee2cb5ee87ee5, type: 3}
+  nextLevelData: {fileID: 11400000, guid: 678e3530b50c92345aa401ba9f8f466c, type: 2}
+  upgradeCost: 400
+  icon: {fileID: 6196678965904796728, guid: cc55682bb38ed394888ee2cb5ee87ee5, type: 3}
   prefab: {fileID: 4611168650507600015, guid: ae53c4d789105f14a957fd44088e289e, type: 3}
-  damage: 20
+  damage: 10
   attackCooldown: 1
-  range: 5
+  range: 4
   attackType: 4
   targetFilter: 0
   useFourDirectionalFacing: 0
@@ -45,8 +45,8 @@ MonoBehaviour:
   burstCount: 3
   burstInterval: 0.1
   continuousBaseDamage: 10
-  continuousMaxDamage: 100
-  continuousRampTime: 1.5
+  continuousMaxDamage: 50
+  continuousRampTime: 2.5
   continuousTickRate: 0.7
   applyDOT: 0
   dotDamagePerTick: 5

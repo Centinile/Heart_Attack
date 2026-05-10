@@ -10,44 +10,44 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51ee95539e800654b9b75b07a2ff498b, type: 3}
-  m_Name: InfernoData_ lvl3
+  m_Name: Monolithlv3Data_
   m_EditorClassIdentifier: 
-  structureName: Inferno Tower
-  maxHP: 100
-  tier: 3
-  description: Structure Description
-  nutrientCost: 100
-  hydrationCost: 5
+  structureName: Anti-Body Tower Lv3
+  maxHP: 400
+  tier: 2
+  description: 
+  nutrientCost: 2200
+  hydrationCost: 70
   HealVFXPrefab: {fileID: 0}
   PlaceSFX: {fileID: 8300000, guid: 024146ca7383e9c47adc408eb4778d12, type: 3}
   DestroySFX: {fileID: 8300000, guid: 0c13ba1bdc2a81749813e304d58e5cf5, type: 3}
   nextLevelData: {fileID: 0}
-  upgradeCost: 150
-  icon: {fileID: -5546365585663817345, guid: cc55682bb38ed394888ee2cb5ee87ee5, type: 3}
-  prefab: {fileID: 4611168650507600015, guid: ae53c4d789105f14a957fd44088e289e, type: 3}
-  damage: 20
-  attackCooldown: 1
-  range: 5
-  attackType: 4
+  upgradeCost: 0
+  icon: {fileID: 3517987708361127489, guid: 58c0b87b945cbec4487e98c1b6b700b9, type: 3}
+  prefab: {fileID: 4611168650507600015, guid: a450f7ae8abd43a44aefa6be5bca5303, type: 3}
+  damage: 7
+  attackCooldown: 0.09
+  range: 16
+  attackType: 1
   targetFilter: 0
   useFourDirectionalFacing: 0
-  attackSound: {fileID: 8300000, guid: 420bb7f70df68714693e8d0d1bf47450, type: 3}
-  beamLoopSound: {fileID: 8300000, guid: 420bb7f70df68714693e8d0d1bf47450, type: 3}
+  attackSound: {fileID: 8300000, guid: 267715794113d6c4ea2157ceabbceb52, type: 3}
+  beamLoopSound: {fileID: 0}
   attackSoundVolume: 1
   beamLoopVolume: 0.8
-  projectileData: {fileID: 0}
-  projectileSpeed: 10
-  useLineRendererAttack: 1
+  projectileData: {fileID: 11400000, guid: 836956f7cbb6c3d4a9b5ba506621e194, type: 2}
+  projectileSpeed: 60
+  useLineRendererAttack: 0
   flickerBeamPrefab: {fileID: 0}
   maxTargets: 2
   splashRadius: 2
   useBurst: 0
   burstCount: 3
   burstInterval: 0.1
-  continuousBaseDamage: 10
-  continuousMaxDamage: 150
-  continuousRampTime: 1.5
-  continuousTickRate: 0.7
+  continuousBaseDamage: 5
+  continuousMaxDamage: 50
+  continuousRampTime: 4
+  continuousTickRate: 0.1
   applyDOT: 0
   dotDamagePerTick: 5
   dotTickInterval: 0.5

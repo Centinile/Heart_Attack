@@ -20,7 +20,7 @@ public class ProjectileVisual : MonoBehaviour
         if (moveDir == Vector3.zero) return;
         if (spriteRenderer == null) return;
 
-        float angle = Mathf.Atan2(moveDir.y, moveDir.x) * Mathf.Rad2Deg - 90f;
+        float angle = Mathf.Atan2(moveDir.y, moveDir.x) * Mathf.Rad2Deg - 0f;
         spriteRenderer.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
 }

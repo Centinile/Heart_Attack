@@ -195,10 +195,15 @@ public class GameManager : MonoBehaviour
     // ── Victory / Game Over ────────────────────────────────────────────
 
     /// <summary>Called by WaveManager after each wave to check win condition.</summary>
+    private bool _victoryTriggered = false;
     public void CheckVictory(int wavesCleared)
     {
+        if (_victoryTriggered) return;
         if (WavesToWin > 0 && wavesCleared >= WavesToWin)
+        {
+            _victoryTriggered = true;
             WinGame();
+        }
     }
 
     public void WinGame()
@@ -234,7 +239,7 @@ public class GameManager : MonoBehaviour
         if (currentState == GameState.Paused) return;
         ChangeState(GameState.Paused);
         Time.timeScale = 0f;
-        pauseScreen.SetActive(true);
+        if (pauseScreen != null) pauseScreen.SetActive(true);
     }
 
     public void ResumeGame()
@@ -242,7 +247,7 @@ public class GameManager : MonoBehaviour
         if (currentState != GameState.Paused) return;
         ChangeState(previousState);
         Time.timeScale = 1f;
-        pauseScreen.SetActive(false);
+        if (pauseScreen != null) pauseScreen.SetActive(false);
     }
 
     public void CheckForPauseAndResume()
@@ -299,6 +304,27 @@ public class GameManager : MonoBehaviour
         if (victoryScreen  != null) victoryScreen.SetActive(false);
         if (GameOverScreen != null) GameOverScreen.SetActive(false);
         if (waveClearPanel != null) waveClearPanel.SetActive(false);
+    }
+
+    public void ContinueAfterVictory()
+    {
+        if (currentState != GameState.Victory) return;
+
+        if (victoryScreen != null) victoryScreen.SetActive(false);
+        if (uiScreen != null) uiScreen.SetActive(true);
+
+        Time.timeScale = 1f;
+        ChangeState(GameState.RestingPhase);
+
+        // _victoryTriggered stays true — WinGame will never fire again this session
+
+        WaveManager waveManager = FindFirstObjectByType<WaveManager>();
+        if (waveManager != null)
+        {
+            if (waveManager.startWaveButton != null)
+                waveManager.startWaveButton.interactable = true;
+            waveManager.freeplayMode = true;
+        }
     }
 
     // ── Resources ──────────────────────────────────────────────────────

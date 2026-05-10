@@ -25,8 +25,6 @@ public class KeybindManager : MonoBehaviour
     private TowerSelectionUI _towerSelectionUI;
     private BuildingSelector _buildingSelector;
     private int _currentTabIndex = 0;
-    private bool _isPaused = false;
-
     private static readonly KeyCode[] NumberKeys =
     {
         KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3,
@@ -121,16 +119,16 @@ public class KeybindManager : MonoBehaviour
     private void HandlePause()
     {
         if (!Input.GetKeyDown(KeyCode.Escape)) return;
-        _isPaused = !_isPaused;
-        if (pausePanel != null) pausePanel.SetActive(_isPaused);
-        Time.timeScale = _isPaused ? 0f : 1f;
+
+        if (GameManager.Instance.currentState == GameManager.GameState.Paused)
+            GameManager.Instance.ResumeGame();
+        else
+            GameManager.Instance.PauseGame();
     }
 
     public void Resume()
     {
-        _isPaused = false;
-        if (pausePanel != null) pausePanel.SetActive(false);
-        Time.timeScale = 1f;
+        GameManager.Instance.ResumeGame();
     }
 
     public void QuitToMenu()

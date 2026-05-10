@@ -12,23 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51ee95539e800654b9b75b07a2ff498b, type: 3}
   m_Name: TeslaLv2Data_
   m_EditorClassIdentifier: 
-  structureName: Tesla
-  maxHP: 100
-  tier: 2
-  description: Multi-Targeting Tower
-  nutrientCost: 150
+  structureName: Palpitator Lv2
+  maxHP: 150
+  tier: 1
+  description: 
+  nutrientCost: 300
   hydrationCost: 10
   HealVFXPrefab: {fileID: 0}
   PlaceSFX: {fileID: 8300000, guid: 024146ca7383e9c47adc408eb4778d12, type: 3}
   DestroySFX: {fileID: 8300000, guid: 0c13ba1bdc2a81749813e304d58e5cf5, type: 3}
   nextLevelData: {fileID: 11400000, guid: 6a27fc439241fb84988cc3477471a197, type: 2}
-  upgradeCost: 150
+  upgradeCost: 400
   icon: {fileID: 4230166539057105616, guid: 29527c488b1f3f34b97951d1b6f1558d, type: 3}
   prefab: {fileID: 4611168650507600015, guid: a18bdfb7588404a43ba22228ac9912fe, type: 3}
-  damage: 6
+  damage: 11
   attackCooldown: 0.5
-  range: 7
-  attackType: 1
+  range: 4
+  attackType: 0
   targetFilter: 0
   useFourDirectionalFacing: 0
   attackSound: {fileID: 8300000, guid: 42066375c82c64046a608ceed34748c9, type: 3}

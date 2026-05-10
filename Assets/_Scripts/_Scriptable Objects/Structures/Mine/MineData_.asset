@@ -12,20 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 051adea317e7fb445943ca37c4b8b90e, type: 3}
   m_Name: MineData_
   m_EditorClassIdentifier: 
-  structureName: Mine
+  structureName: Nutrient Mine
   maxHP: 100
   tier: 1
-  description: Structure Description
+  description: 
   nutrientCost: 50
   hydrationCost: 5
   HealVFXPrefab: {fileID: 0}
   PlaceSFX: {fileID: 8300000, guid: 024146ca7383e9c47adc408eb4778d12, type: 3}
   DestroySFX: {fileID: 8300000, guid: 0c13ba1bdc2a81749813e304d58e5cf5, type: 3}
   nextLevelData: {fileID: 0}
-  upgradeCost: 150
+  upgradeCost: 0
   icon: {fileID: -8206198869673284931, guid: 8c297e5df3806b9409fa59988f1ae485, type: 3}
   prefab: {fileID: 4611168650507600015, guid: 7cae0236dc9126a4cb14c5e895a975b5, type: 3}
   type: 0
-  nutrientsPerWave: 100
+  nutrientsPerWave: 50
   hydrationCapacityBoost: 10
   collectEffect: {fileID: 0}

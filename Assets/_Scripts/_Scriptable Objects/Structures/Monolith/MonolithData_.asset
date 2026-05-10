@@ -12,31 +12,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51ee95539e800654b9b75b07a2ff498b, type: 3}
   m_Name: MonolithData_
   m_EditorClassIdentifier: 
-  structureName: Monolith
-  maxHP: 100
-  tier: 1
-  description: Structure Description
-  nutrientCost: 300
-  hydrationCost: 5
+  structureName: Anti-Body Tower Lv1
+  maxHP: 300
+  tier: 2
+  description: 
+  nutrientCost: 600
+  hydrationCost: 50
   HealVFXPrefab: {fileID: 0}
   PlaceSFX: {fileID: 8300000, guid: 024146ca7383e9c47adc408eb4778d12, type: 3}
   DestroySFX: {fileID: 8300000, guid: 0c13ba1bdc2a81749813e304d58e5cf5, type: 3}
-  nextLevelData: {fileID: 11400000, guid: f7f8256593ede6e4b8ca026818d35dba, type: 2}
+  nextLevelData: {fileID: 11400000, guid: b9d8a292dd22f0540802b9e1ee080057, type: 2}
   upgradeCost: 500
   icon: {fileID: 3517987708361127489, guid: 58c0b87b945cbec4487e98c1b6b700b9, type: 3}
   prefab: {fileID: 4611168650507600015, guid: 61f593d9ad790664098a835dc983740c, type: 3}
   damage: 3
-  attackCooldown: 0.5
-  range: 8
+  attackCooldown: 0.2
+  range: 10
   attackType: 0
   targetFilter: 0
   useFourDirectionalFacing: 0
-  attackSound: {fileID: 8300000, guid: 2df288cb1aa18c7499a28c9ac5e1fb26, type: 3}
+  attackSound: {fileID: 8300000, guid: 267715794113d6c4ea2157ceabbceb52, type: 3}
   beamLoopSound: {fileID: 0}
   attackSoundVolume: 1
   beamLoopVolume: 0.8
   projectileData: {fileID: 11400000, guid: 836956f7cbb6c3d4a9b5ba506621e194, type: 2}
-  projectileSpeed: 10
+  projectileSpeed: 50
   useLineRendererAttack: 0
   flickerBeamPrefab: {fileID: 0}
   maxTargets: 3

@@ -1873,8 +1873,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab5ddb2b0fb03d649bf8f4c367050a99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loadingSceneName: LoadingScreen
-  targetSceneName: Level1
+  mainMenuSceneName: Main Menu
+  fadeDuration: 0.4
+  fadeOverlay: {fileID: 0}
 --- !u!1 &409016606
 GameObject:
   m_ObjectHideFlags: 0
@@ -4373,14 +4374,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 383865605}
         m_TargetAssemblyTypeName: SceneController, Assembly-CSharp
-        m_MethodName: LoadTargetScene
-        m_Mode: 1
+        m_MethodName: SceneChange
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Level1
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1045538126

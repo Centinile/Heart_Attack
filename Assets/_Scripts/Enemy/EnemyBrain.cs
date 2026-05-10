@@ -181,18 +181,18 @@ public class EnemyBrain : MonoBehaviour, IEnemy
 
     private void HandleCombatState()
     {
-        // Wall blocking path takes combat priority
         bool wallBlocking = motor.IsPathBlocked
-                         && motor.BlockedBy != null
-                         && motor.BlockedBy.IsAlive;
+                        && motor.BlockedBy != null
+                        && motor.BlockedBy.IsAlive;
 
-        GameObject activeTarget = wallBlocking
+        // Ranged enemies always attack their actual target, not the wall —
+        // they shoot over walls rather than breaking them
+        GameObject activeTarget = (!data.IsRanged && wallBlocking)
             ? motor.BlockedBy.gameObject
             : targetBuilding.gameObject;
 
         if (activeTarget == null) return;
 
-        // Use ClosestPoint for accurate distance on large colliders
         Collider2D col = activeTarget.GetComponent<Collider2D>();
         float dist = col != null
             ? Vector3.Distance(transform.position, col.ClosestPoint(transform.position))
@@ -206,10 +206,14 @@ public class EnemyBrain : MonoBehaviour, IEnemy
         else
         {
             motor.Resume();
-            // Only drive movement here if not already managed by UpdatePath
             if (!motor.IsPathBlocked)
                 motor.MoveToward(targetBuilding.transform.position);
         }
+
+        Vector2 vel = motor.Agent.velocity;
+        enemyAnimations?.PlayAnimation(vel);
+        if (vel != Vector2.zero)
+            enemyAnimations?.RotateToPointer(vel);
     }
 
     private void PerformAttack(GameObject target)
@@ -218,17 +222,51 @@ public class EnemyBrain : MonoBehaviour, IEnemy
 
         enemyAnimations?.PlayAttackAnimation();
 
-        if (target.TryGetComponent<Building>(out Building b))
+        if (data.IsRanged && data.ProjectileData != null)
         {
-            float dmg = scaledDamage > 0 ? scaledDamage : data.AttackDamage;
-            b.TakeDamage(dmg);
-            data.TriggerAttackAbilities(this, b);
+            FireProjectile(target);
+        }
+        else
+        {
+            if (target.TryGetComponent<Building>(out Building b))
+            {
+                float dmg = scaledDamage > 0 ? scaledDamage : data.AttackDamage;
+                b.TakeDamage(dmg);
+                data.TriggerAttackAbilities(this, b);
 
-            if (!b.IsAlive)
-                DetermineTarget();
+                if (!b.IsAlive)
+                    DetermineTarget();
+            }
         }
 
         attackTimer = data.AttackCooldown;
+    }
+
+    private void FireProjectile(GameObject target)
+    {
+        if (data.ProjectileData.Prefab == null) return;
+
+        GameObject projObj = Instantiate(
+            data.ProjectileData.Prefab,
+            transform.position,
+            Quaternion.identity);
+
+        if (projObj.TryGetComponent(out Projectile proj))
+        {
+            float dmg = scaledDamage > 0 ? scaledDamage : data.AttackDamage;
+
+            // Check for first attack multiplier ability
+            foreach (var a in instantiatedAbilities)
+            {
+                if (a is FirstAttackMultiplierAbility firstHit)
+                {
+                    dmg *= firstHit.GetAndConsumeMultiplier();
+                    break;
+                }
+            }
+
+            proj.InitializeFromEnemy(target.transform, dmg);
+        }
     }
 
     // --- Stats & Lifecycle ---

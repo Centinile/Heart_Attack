@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 2523947682524650795}
   - component: {fileID: 6400134272375442884}
   m_Layer: 3
-  m_Name: BuilderHut
+  m_Name: PlateletHutlv3
   m_TagString: Defense
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -235,7 +235,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 8048772291348302879, guid: d76d5b1f75b3d43408383660584911bf, type: 3}
+  m_Sprite: {fileID: 3553609290742520674, guid: d76d5b1f75b3d43408383660584911bf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

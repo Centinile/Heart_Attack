@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bcb84a3137e84345b91444a5301ca2f, type: 3}
   m_Name: WallData_
   m_EditorClassIdentifier: 
-  structureName: Wall
+  structureName: Bone Wall
   maxHP: 200
   tier: 1
-  description: Structure Description
-  nutrientCost: 20
+  description: 
+  nutrientCost: 50
   hydrationCost: 0
   HealVFXPrefab: {fileID: 0}
   PlaceSFX: {fileID: 8300000, guid: 024146ca7383e9c47adc408eb4778d12, type: 3}

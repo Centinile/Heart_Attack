@@ -10,22 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51ee95539e800654b9b75b07a2ff498b, type: 3}
-  m_Name: BuilderHutData_lvl3
+  m_Name: PlateletHutData_Lv3
   m_EditorClassIdentifier: 
-  structureName: Builder Hut
-  maxHP: 100
-  tier: 3
-  description: Structure Description
-  nutrientCost: 50
-  hydrationCost: 5
+  structureName: Platelet Hut Lv 3
+  maxHP: 200
+  tier: 2
+  description: 
+  nutrientCost: 750
+  hydrationCost: 40
   HealVFXPrefab: {fileID: 0}
   PlaceSFX: {fileID: 8300000, guid: 024146ca7383e9c47adc408eb4778d12, type: 3}
   DestroySFX: {fileID: 8300000, guid: 0c13ba1bdc2a81749813e304d58e5cf5, type: 3}
   nextLevelData: {fileID: 0}
-  upgradeCost: 150
+  upgradeCost: 0
   icon: {fileID: 3553609290742520674, guid: d76d5b1f75b3d43408383660584911bf, type: 3}
-  prefab: {fileID: 4611168650507600015, guid: 8e3095beea78c4248b78dc9c5f39a890, type: 3}
-  damage: 20
+  prefab: {fileID: 4611168650507600015, guid: 51717227d32d52d4b96d4ef6c7fcd7e8, type: 3}
+  damage: 25
   attackCooldown: 2
   range: 7
   attackType: 5

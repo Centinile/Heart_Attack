@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -7169618700048717458}
   - component: {fileID: 4998913561541659758}
   - component: {fileID: 2333257933596486116}
+  - component: {fileID: -4344865230591705471}
   m_Layer: 6
   m_Name: Pekka
   m_TagString: Enemy
@@ -196,7 +197,7 @@ NavMeshAgent:
   m_Height: 0.8
   m_BaseOffset: 0.4
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 0
 --- !u!114 &2333257933596486116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,3 +214,15 @@ MonoBehaviour:
   enemyAnimations: {fileID: 6797045837789945845}
   healthBar: {fileID: 4042287836452294586}
   currentHP: 0
+--- !u!114 &-4344865230591705471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6344384041587836070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36bca2ba6f971ce40b5fcc80015939f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
