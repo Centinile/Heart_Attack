@@ -26,6 +26,12 @@ public class MainMenuManager : MonoBehaviour
     private CanvasGroup _levelSelectGroup;
     private Coroutine _panelCoroutine;
 
+    [Header("Credits Panel")]
+    [SerializeField] private GameObject creditsPanel;
+    [SerializeField] private float creditsFadeDuration = 0.25f;
+    private CanvasGroup _creditsGroup;
+    private Coroutine _creditsPanelCoroutine;
+
     [Header("Achievements Panel")]
     [SerializeField] private GameObject achievementsPanel;
     [SerializeField] private float achievementsFadeDuration = 0.25f;
@@ -72,6 +78,19 @@ public class MainMenuManager : MonoBehaviour
             _levelSelectGroup.interactable   = false;
             _levelSelectGroup.blocksRaycasts = false;
             levelSelectPanel.SetActive(false);
+        }
+
+        // ── Credits Panel setup ────────────────────────────────────────
+        if (creditsPanel != null)
+        {
+            _creditsGroup = creditsPanel.GetComponent<CanvasGroup>();
+            if (_creditsGroup == null)
+                _creditsGroup = creditsPanel.AddComponent<CanvasGroup>();
+
+            _creditsGroup.alpha          = 0f;
+            _creditsGroup.interactable   = false;
+            _creditsGroup.blocksRaycasts = false;
+            creditsPanel.SetActive(false);
         }
     }
 
@@ -125,6 +144,20 @@ public class MainMenuManager : MonoBehaviour
     public void CloseLevelSelectPanel()
     {
         SetPanelVisible(false, () => levelSelectPanel.SetActive(false));
+    }
+
+    /// <summary>Called by the Credits button.</summary>
+    public void OpenCreditsPanel()
+    {
+        if (creditsPanel == null) return;
+        creditsPanel.SetActive(true);
+        SetCreditsPanelVisible(true);
+    }
+
+    /// <summary>Called by the X / close button inside the Credits Panel.</summary>
+    public void CloseCreditsPanel()
+    {
+        SetCreditsPanelVisible(false, () => creditsPanel.SetActive(false));
     }
 
     /// <summary>Called by the Play / Start button to load the game scene.</summary>
@@ -346,6 +379,32 @@ public class MainMenuManager : MonoBehaviour
         }
 
         _levelSelectGroup.alpha = targetAlpha;
+        onComplete?.Invoke();
+    }
+
+    private void SetCreditsPanelVisible(bool visible, System.Action onComplete = null)
+    {
+        if (_creditsPanelCoroutine != null) StopCoroutine(_creditsPanelCoroutine);
+        float target = visible ? 1f : 0f;
+        _creditsPanelCoroutine = StartCoroutine(FadeCreditsPanel(target, onComplete));
+
+        _creditsGroup.interactable   = visible;
+        _creditsGroup.blocksRaycasts = visible;
+    }
+
+    private IEnumerator FadeCreditsPanel(float targetAlpha, System.Action onComplete = null)
+    {
+        float startAlpha = _creditsGroup.alpha;
+        float elapsed = 0f;
+
+        while (elapsed < creditsFadeDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            _creditsGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsed / creditsFadeDuration);
+            yield return null;
+        }
+
+        _creditsGroup.alpha = targetAlpha;
         onComplete?.Invoke();
     }
 
