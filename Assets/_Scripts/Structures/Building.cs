@@ -61,6 +61,9 @@ public class Building : MonoBehaviour
 
     private Outline outline;
     protected StructureAnimations structureAnimations;
+
+    public static System.Action OnBuildingPlaced;
+    public static System.Action OnHeartSold;
     
 
     protected virtual void Awake()
@@ -187,6 +190,8 @@ public class Building : MonoBehaviour
         {
             tutorialTrigger.PlaceTower();
         }
+
+        OnBuildingPlaced?.Invoke();
     }
 
     protected void TryActivate()
@@ -292,6 +297,9 @@ public class Building : MonoBehaviour
 
     public virtual void Sell()
     {
+        if (StructureType == StructureType.Heart)
+            OnHeartSold?.Invoke();
+            
         GameManager.Instance.AddNutrients(Data.NutrientCost * 0.5f);
         OnDestroyed();
     }

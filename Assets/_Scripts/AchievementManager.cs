@@ -2,27 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class AchievementManager : MonoBehaviour
 {
     public static AchievementManager Instance;
     public static System.Action<AchievementDefinition> OnAchievementUnlocked;
+    private int _buildingsPlacedThisRun = 0;
 
     // Definitions — editable in inspector
     [Header("Achievement Definitions")]
     [SerializeField] private List<AchievementDefinition> achievements = new List<AchievementDefinition>
     {
-        new AchievementDefinition { ID = AchievementID.CompleteTutorial,       Name = "First Steps",          Description = "Complete the tutorial.",                                  Classification = AchievementClassification.Bronze },
-        new AchievementDefinition { ID = AchievementID.WinEasy,                Name = "Steady Pulse",         Description = "Complete a game on Easy difficulty.",                    Classification = AchievementClassification.Bronze },
-        new AchievementDefinition { ID = AchievementID.WinMedium,              Name = "Irregular Rhythm",     Description = "Complete a game on Medium difficulty.",                  Classification = AchievementClassification.Silver },
-        new AchievementDefinition { ID = AchievementID.WinHard,                Name = "Flatline Survivor",    Description = "Complete a game on Hard difficulty.",                    Classification = AchievementClassification.Gold },
-        new AchievementDefinition { ID = AchievementID.WinWithArrhythmia,      Name = "Arrhythmia",           Description = "Win a game with Random Waves active.",                   Classification = AchievementClassification.Silver },
-        new AchievementDefinition { ID = AchievementID.WinWithAtherosclerosis, Name = "Atherosclerosis",      Description = "Win a game with Stat Ramping active.",                   Classification = AchievementClassification.Silver },
+        new AchievementDefinition { ID = AchievementID.CompleteTutorial,       Name = "First Steps",          Description = "Complete the tutorial.",                                Classification = AchievementClassification.Bronze },
+        new AchievementDefinition { ID = AchievementID.WinEasy,                Name = "Steady Pulse",         Description = "Complete a game on Easy difficulty.",                   Classification = AchievementClassification.Bronze },
+        new AchievementDefinition { ID = AchievementID.WinMedium,              Name = "Irregular Rhythm",     Description = "Complete a game on Medium difficulty.",                 Classification = AchievementClassification.Silver },
+        new AchievementDefinition { ID = AchievementID.WinHard,                Name = "Flatline Survivor",    Description = "Complete a game on Hard difficulty.",                   Classification = AchievementClassification.Gold },
+        new AchievementDefinition { ID = AchievementID.WinWithArrhythmia,      Name = "Arrhythmia",           Description = "Win a game with Random Waves active.",                  Classification = AchievementClassification.Silver },
+        new AchievementDefinition { ID = AchievementID.WinWithAtherosclerosis, Name = "Atherosclerosis",      Description = "Win a game with Stat Ramping active.",                  Classification = AchievementClassification.Silver },
         new AchievementDefinition { ID = AchievementID.WinWithCardiomyopathy,  Name = "Cardiomyopathy",       Description = "Win a game with No Breaks active.",                     Classification = AchievementClassification.Silver },
-        new AchievementDefinition { ID = AchievementID.WinWithLungFailure,     Name = "Lung Failure",         Description = "Win a game with Fog of War active.",                     Classification = AchievementClassification.Silver },
+        new AchievementDefinition { ID = AchievementID.WinWithLungFailure,     Name = "Lung Failure",         Description = "Win a game with Fog of War active.",                    Classification = AchievementClassification.Silver },
         new AchievementDefinition { ID = AchievementID.WinWithGERD,            Name = "GERD",                 Description = "Win a game with Acid Rain active.",                     Classification = AchievementClassification.Silver },
         new AchievementDefinition { ID = AchievementID.ReachWave80Freeplay,    Name = "Into the Abyss",       Description = "Reach wave 80 in Freeplay mode.",                       Classification = AchievementClassification.Gold },
         new AchievementDefinition { ID = AchievementID.WinAllModifiersHard,    Name = "Total Organ Failure",  Description = "Win on Hard with all modifiers active.",                Classification = AchievementClassification.Gold },
+        new AchievementDefinition { ID = AchievementID.SoldHeart,              Name = "Heartless",            Description = "Sell the Heart building.",                              Classification = AchievementClassification.Bronze },
+        new AchievementDefinition { ID = AchievementID.Placed100Buildings,     Name = "Base Planner",         Description = "Place 100 buildings in a single run.",                  Classification = AchievementClassification.Silver },
     };
 
     private void Awake()
@@ -39,6 +43,11 @@ public class AchievementManager : MonoBehaviour
         }
     }
 
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        _buildingsPlacedThisRun = 0; // Reset per run
+    }
+
     private void OnEnable()
     {
         GameManager.OnVictory  += OnVictory;
@@ -49,6 +58,18 @@ public class AchievementManager : MonoBehaviour
     {
         GameManager.OnVictory  -= OnVictory;
         WaveManager.OnWaveCleared -= OnWaveCleared;
+    }
+
+    private void OnBuildingPlaced()
+    {
+        _buildingsPlacedThisRun++;
+        if (_buildingsPlacedThisRun >= 100)
+            Unlock(AchievementID.Placed100Buildings);
+    }
+
+    private void OnHeartSold()
+    {
+        Unlock(AchievementID.SoldHeart);
     }
 
     // ── Public unlock entry point ──────────────────────────────────────
@@ -138,7 +159,9 @@ public enum AchievementID
     WinWithLungFailure,
     WinWithGERD,
     ReachWave80Freeplay,
-    WinAllModifiersHard
+    WinAllModifiersHard,
+    SoldHeart,          
+    Placed100Buildings,
 }
 
 public enum AchievementClassification
