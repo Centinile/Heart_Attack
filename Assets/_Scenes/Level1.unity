@@ -32053,7 +32053,7 @@ MonoBehaviour:
   enableScaling: 1
   scalingPerWave: 0.02
   spawnBounds: {fileID: 1709989434}
-  freeplayMode: 0
+  freeplayMode: 1
   availableGroups:
   - {fileID: 11400000, guid: 1fdfae811fa585244b9446503ede3a97, type: 2}
   - {fileID: 11400000, guid: 529f4648813277f46bf7e366ac174ca5, type: 2}

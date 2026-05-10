@@ -17,7 +17,7 @@ MonoBehaviour:
     count: 10
   - prefab: {fileID: 6344384041587836070, guid: 8a6c650e7d98aea4595327c95710d18e, type: 3}
     count: 5
-  weightCost: 20
+  weightCost: 5
   NutrientReward: 100
   selectionWeight: 10
   raidName: 
