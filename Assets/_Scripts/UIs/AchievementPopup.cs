@@ -30,17 +30,6 @@ public class AchievementPopup : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-
         _panelRect = popupPanel.GetComponent<RectTransform>();
         _visiblePosition = _panelRect.anchoredPosition;
         popupPanel.SetActive(false);

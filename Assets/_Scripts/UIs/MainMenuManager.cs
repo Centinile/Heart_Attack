@@ -196,6 +196,15 @@ public class MainMenuManager : MonoBehaviour
 
             GameObject row = Instantiate(achievementRowPrefab, achievementsContent);
 
+            // Row background image (BG) - used to enforce full opacity when unlocked.
+            Image backgroundImage = FindChildComponentByNames<Image>(row.transform,
+                "BG", "Background", "BACKGROUND");
+            if (backgroundImage == null && row.transform.childCount >= 1)
+            {
+                Transform bgChild = row.transform.GetChild(0);
+                backgroundImage = bgChild.GetComponent<Image>() ?? bgChild.GetComponentInChildren<Image>(true);
+            }
+
             // Prefer named children so prefab child ordering doesn't matter
             Image trophyImage = FindChildComponentByNames<Image>(row.transform,
                 "TROPHY IMAGE", "Trophy Image", "Trophy", "TrophyIcon", "Trophy Icon");
@@ -240,6 +249,14 @@ public class MainMenuManager : MonoBehaviour
                 descriptionText.text = definition.Description;
             if (statusText != null)
                 statusText.text = unlocked ? "Unlocked" : "Locked";
+
+            if (backgroundImage != null && unlocked)
+            {
+                // Unity inspector's 255 alpha equivalent in code.
+                Color32 c = backgroundImage.color;
+                c.a = 255;
+                backgroundImage.color = c;
+            }
 
             if (trophyImage != null)
             {
