@@ -853,6 +853,7 @@ Transform:
   - {fileID: 1244167641}
   - {fileID: 127880290}
   - {fileID: 59544266}
+  - {fileID: 1437822765}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &127880289
@@ -45464,6 +45465,61 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1355118812}
   m_CullTransparentMesh: 1
+--- !u!1 &1437822764
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1437822765}
+  - component: {fileID: 1437822766}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1437822765
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1437822764}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 116316396}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1437822766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1437822764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8cfa1da52aba74ab72b54ae91d71a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainMenuMusic: {fileID: 8300000, guid: c08f1ecf8e896e048854bfba17c8aa18, type: 3}
+  level1Tracks:
+  - {fileID: 8300000, guid: 8f8e081c50e9f8743a54791287314bb6, type: 3}
+  - {fileID: 8300000, guid: dd555290952f89247ab425fa982b664b, type: 3}
+  - {fileID: 8300000, guid: 2df288cb1aa18c7499a28c9ac5e1fb26, type: 3}
+  tutorialMusic: {fileID: 8300000, guid: 2df288cb1aa18c7499a28c9ac5e1fb26, type: 3}
+  volume: 1
+  fadeDuration: 1
+  mainMenuSceneName: Main Menu
+  level1SceneName: Level1
+  tutorialSceneName: TutorialScene
 --- !u!1 &1439165355
 GameObject:
   m_ObjectHideFlags: 0
