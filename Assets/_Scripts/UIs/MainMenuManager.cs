@@ -26,6 +26,12 @@ public class MainMenuManager : MonoBehaviour
     private CanvasGroup _levelSelectGroup;
     private Coroutine _panelCoroutine;
 
+    [Header("Credits Panel")]
+    [SerializeField] private GameObject creditsPanel;
+    [SerializeField] private float creditsFadeDuration = 0.25f;
+    private CanvasGroup _creditsGroup;
+    private Coroutine _creditsPanelCoroutine;
+
     [Header("Achievements Panel")]
     [SerializeField] private GameObject achievementsPanel;
     [SerializeField] private float achievementsFadeDuration = 0.25f;
@@ -72,6 +78,19 @@ public class MainMenuManager : MonoBehaviour
             _levelSelectGroup.interactable   = false;
             _levelSelectGroup.blocksRaycasts = false;
             levelSelectPanel.SetActive(false);
+        }
+
+        // ── Credits Panel setup ────────────────────────────────────────
+        if (creditsPanel != null)
+        {
+            _creditsGroup = creditsPanel.GetComponent<CanvasGroup>();
+            if (_creditsGroup == null)
+                _creditsGroup = creditsPanel.AddComponent<CanvasGroup>();
+
+            _creditsGroup.alpha          = 0f;
+            _creditsGroup.interactable   = false;
+            _creditsGroup.blocksRaycasts = false;
+            creditsPanel.SetActive(false);
         }
     }
 
@@ -125,6 +144,20 @@ public class MainMenuManager : MonoBehaviour
     public void CloseLevelSelectPanel()
     {
         SetPanelVisible(false, () => levelSelectPanel.SetActive(false));
+    }
+
+    /// <summary>Called by the Credits button.</summary>
+    public void OpenCreditsPanel()
+    {
+        if (creditsPanel == null) return;
+        creditsPanel.SetActive(true);
+        SetCreditsPanelVisible(true);
+    }
+
+    /// <summary>Called by the X / close button inside the Credits Panel.</summary>
+    public void CloseCreditsPanel()
+    {
+        SetCreditsPanelVisible(false, () => creditsPanel.SetActive(false));
     }
 
     /// <summary>Called by the Play / Start button to load the game scene.</summary>
@@ -196,6 +229,15 @@ public class MainMenuManager : MonoBehaviour
 
             GameObject row = Instantiate(achievementRowPrefab, achievementsContent);
 
+            // Row background image (BG) - used to enforce full opacity when unlocked.
+            Image backgroundImage = FindChildComponentByNames<Image>(row.transform,
+                "BG", "Background", "BACKGROUND");
+            if (backgroundImage == null && row.transform.childCount >= 1)
+            {
+                Transform bgChild = row.transform.GetChild(0);
+                backgroundImage = bgChild.GetComponent<Image>() ?? bgChild.GetComponentInChildren<Image>(true);
+            }
+
             // Prefer named children so prefab child ordering doesn't matter
             Image trophyImage = FindChildComponentByNames<Image>(row.transform,
                 "TROPHY IMAGE", "Trophy Image", "Trophy", "TrophyIcon", "Trophy Icon");
@@ -240,6 +282,14 @@ public class MainMenuManager : MonoBehaviour
                 descriptionText.text = definition.Description;
             if (statusText != null)
                 statusText.text = unlocked ? "Unlocked" : "Locked";
+
+            if (backgroundImage != null && unlocked)
+            {
+                // Unity inspector's 255 alpha equivalent in code.
+                Color32 c = backgroundImage.color;
+                c.a = 255;
+                backgroundImage.color = c;
+            }
 
             if (trophyImage != null)
             {
@@ -329,6 +379,32 @@ public class MainMenuManager : MonoBehaviour
         }
 
         _levelSelectGroup.alpha = targetAlpha;
+        onComplete?.Invoke();
+    }
+
+    private void SetCreditsPanelVisible(bool visible, System.Action onComplete = null)
+    {
+        if (_creditsPanelCoroutine != null) StopCoroutine(_creditsPanelCoroutine);
+        float target = visible ? 1f : 0f;
+        _creditsPanelCoroutine = StartCoroutine(FadeCreditsPanel(target, onComplete));
+
+        _creditsGroup.interactable   = visible;
+        _creditsGroup.blocksRaycasts = visible;
+    }
+
+    private IEnumerator FadeCreditsPanel(float targetAlpha, System.Action onComplete = null)
+    {
+        float startAlpha = _creditsGroup.alpha;
+        float elapsed = 0f;
+
+        while (elapsed < creditsFadeDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            _creditsGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsed / creditsFadeDuration);
+            yield return null;
+        }
+
+        _creditsGroup.alpha = targetAlpha;
         onComplete?.Invoke();
     }
 

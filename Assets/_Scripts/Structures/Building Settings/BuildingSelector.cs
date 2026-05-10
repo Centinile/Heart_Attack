@@ -204,19 +204,20 @@ public class BuildingSelector : MonoBehaviour
 
     private void ShowDefenseStats(BuildingData d)
     {
-        ShowRow(structureNameLabel, structureNameValue, "Structure",      d.StructureName);
-        ShowRow(maxHPLabel,         maxHPValue,         "Max HP",         d.MaxHP.ToString());
+        ShowRow(structureNameLabel, structureNameValue, "Structure:",      d.StructureName);
+        ShowRow(maxHPLabel,         maxHPValue,         "Max HP:",         d.MaxHP.ToString());
         if (d is DefenseData dd)
-            ShowRow(damageLabel, damageValue, "Damage", dd.damage.ToString());
-        ShowRow(nutrientCostLabel,  nutrientCostValue,  "Nutrient Cost",  d.NutrientCost.ToString());
-        ShowRow(hydrationCostLabel, hydrationCostValue, "Hydration Cost", d.HydrationCost.ToString());
-        ShowRow(upgradeCostLabel,   upgradeCostValue,   "Upgrade Cost",   d.UpgradeCost.ToString());
+            ShowRow(damageLabel, damageValue, "Damage:", dd.damage.ToString());
+        ShowRow(nutrientCostLabel,  nutrientCostValue,  "Nutrient Cost:",  d.NutrientCost.ToString());
+        ShowRow(hydrationCostLabel, hydrationCostValue, "Hydration Cost:", d.HydrationCost.ToString());
+        ShowRow(upgradeCostLabel,   upgradeCostValue,   "Upgrade Cost:",   d.UpgradeCost.ToString());
     }
 
     private void ShowHeartStats(BuildingData d)
     {
-        ShowRow(maxHPLabel,       maxHPValue,       "Max HP",       d.MaxHP.ToString());
-        ShowRow(upgradeCostLabel, upgradeCostValue, "Upgrade Cost", d.UpgradeCost.ToString());
+        ShowRow(structureNameLabel, structureNameValue, "Structure:",      d.StructureName);
+        ShowRow(maxHPLabel,       maxHPValue,       "Max HP:",       d.MaxHP.ToString());
+        ShowRow(upgradeCostLabel, upgradeCostValue, "Upgrade Cost:", d.UpgradeCost.ToString());
     }
 
     private void ShowResourceStats(BuildingData d)
@@ -224,11 +225,11 @@ public class BuildingSelector : MonoBehaviour
         if (!(d is ResourceData rd)) return;
 
         // Name — shown for all resource types
-        ShowRow(structureNameLabel, structureNameValue, "Structure", d.StructureName);
-        ShowRow(maxHPLabel,         maxHPValue,         "Max HP",   d.MaxHP.ToString());
-        ShowRow(nutrientCostLabel,  nutrientCostValue,  "Nutrient Cost",  d.NutrientCost.ToString());
-        ShowRow(hydrationCostLabel, hydrationCostValue, "Hydration Cost", d.HydrationCost.ToString());
-        ShowRow(upgradeCostLabel,   upgradeCostValue,   "Upgrade Cost",   d.UpgradeCost.ToString());
+        ShowRow(structureNameLabel, structureNameValue, "Structure:", d.StructureName);
+        ShowRow(maxHPLabel,         maxHPValue,         "Max HP:",   d.MaxHP.ToString());
+        ShowRow(nutrientCostLabel,  nutrientCostValue,  "Nutrient Cost:",  d.NutrientCost.ToString());
+        ShowRow(hydrationCostLabel, hydrationCostValue, "Hydration Cost:", d.HydrationCost.ToString());
+        ShowRow(upgradeCostLabel,   upgradeCostValue,   "Upgrade Cost:",   d.UpgradeCost.ToString());
 
         // Only show the relevant production stat based on resource type
         if (rd.type == ResourceType.Nutrients)
@@ -247,11 +248,11 @@ public class BuildingSelector : MonoBehaviour
     {
         if (!(d is ResearchData rd)) return;
 
-        ShowRow(structureNameLabel, structureNameValue, "Structure",     d.StructureName);
-        ShowRow(maxHPLabel,         maxHPValue,         "Max HP",        d.MaxHP.ToString());
-        ShowRow(nutrientCostLabel,  nutrientCostValue,  "Nutrient Cost", d.NutrientCost.ToString());
-        ShowRow(hydrationCostLabel, hydrationCostValue, "Hydration Cost",d.HydrationCost.ToString());
-        ShowRow(upgradeCostLabel,   upgradeCostValue,   "Upgrade Cost",  d.UpgradeCost.ToString());
+        ShowRow(structureNameLabel, structureNameValue, "Structure:",     d.StructureName);
+        ShowRow(maxHPLabel,         maxHPValue,         "Max HP:",        d.MaxHP.ToString());
+        ShowRow(nutrientCostLabel,  nutrientCostValue,  "Nutrient Cost:", d.NutrientCost.ToString());
+        ShowRow(hydrationCostLabel, hydrationCostValue, "Hydration Cost:",d.HydrationCost.ToString());
+        ShowRow(upgradeCostLabel,   upgradeCostValue,   "Upgrade Cost:",  d.UpgradeCost.ToString());
 
         // Show which tier this lab unlocks
         BuildingTier unlockedTier = rd.GetUnlockedTier();
@@ -262,10 +263,10 @@ public class BuildingSelector : MonoBehaviour
 
     private void ShowWallStats(BuildingData d)
     {
-        ShowRow(structureNameLabel, structureNameValue, "Structure",     d.StructureName);
-        ShowRow(maxHPLabel,        maxHPValue,        "Max HP",        d.MaxHP.ToString());
-        ShowRow(nutrientCostLabel, nutrientCostValue, "Nutrient Cost", d.NutrientCost.ToString());
-        ShowRow(upgradeCostLabel,  upgradeCostValue,  "Upgrade Cost",  d.UpgradeCost.ToString());
+        ShowRow(structureNameLabel, structureNameValue, "Structure:",     d.StructureName);
+        ShowRow(maxHPLabel,        maxHPValue,        "Max HP:",        d.MaxHP.ToString());
+        ShowRow(nutrientCostLabel, nutrientCostValue, "Nutrient Cost:", d.NutrientCost.ToString());
+        ShowRow(upgradeCostLabel,  upgradeCostValue,  "Upgrade Cost:",  d.UpgradeCost.ToString());
     }
 
     // ── Row utilities ──────────────────────────────────────────────────

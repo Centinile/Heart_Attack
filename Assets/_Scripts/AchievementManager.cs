@@ -31,10 +31,16 @@ public class AchievementManager : MonoBehaviour
 
     private void Awake()
     {
+        // Only the Main Menu manager should persist
+        // Level1 manager is non-persistent and gets fresh instances
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            // Check if we're in Main Menu scene
+            if (SceneManager.GetActiveScene().name == "MainMenu")
+            {
+                DontDestroyOnLoad(gameObject);
+            }
         }
         else
         {
