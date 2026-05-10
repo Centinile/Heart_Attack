@@ -24019,7 +24019,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -24050,7 +24050,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: -10.224734, w: 0}
+  m_margin: {x: 0, y: 0, z: -0.044239998, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -24100,7 +24100,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &159835047
 RectTransform:
   m_ObjectHideFlags: 0
@@ -33088,8 +33088,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -158.4, y: 4.0063}
-  m_SizeDelta: {x: 58.4546, y: 127.3562}
+  m_AnchoredPosition: {x: -153.7, y: 0.00001049}
+  m_SizeDelta: {x: 48, y: 48}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &505738664
 MonoBehaviour:
@@ -33111,7 +33111,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 2367290999609236866, guid: 744562d750ed75e48b44dc113bcf57b7, type: 3}
+  m_Sprite: {fileID: -8411816328702029873, guid: de9d9124d48817b499f4ad80298b2000, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -72167,6 +72167,7 @@ MonoBehaviour:
   popupPanel: {fileID: 159835046}
   achievementNameText: {fileID: 402278991}
   achievementDescriptionText: {fileID: 137174539}
+  trophyImage: {fileID: 505738664}
   displayDuration: 3
   slideDuration: 0.4
   slideCurve:
@@ -72210,62 +72211,62 @@ MonoBehaviour:
     Name: First Steps
     Description: Complete the tutorial.
     Classification: 0
-    TrophySprite: {fileID: 0}
+    TrophySprite: {fileID: 5072265826684818060, guid: de9d9124d48817b499f4ad80298b2000, type: 3}
   - ID: 1
     Name: Steady Pulse
     Description: Complete a game on Easy difficulty.
     Classification: 0
-    TrophySprite: {fileID: 0}
+    TrophySprite: {fileID: 5072265826684818060, guid: de9d9124d48817b499f4ad80298b2000, type: 3}
   - ID: 2
     Name: Irregular Rhythm
     Description: Complete a game on Medium difficulty.
     Classification: 1
-    TrophySprite: {fileID: 0}
+    TrophySprite: {fileID: 3040414296611471646, guid: de9d9124d48817b499f4ad80298b2000, type: 3}
   - ID: 3
     Name: Flatline Survivor
     Description: Complete a game on Hard difficulty.
     Classification: 2
-    TrophySprite: {fileID: 0}
+    TrophySprite: {fileID: -8411816328702029873, guid: de9d9124d48817b499f4ad80298b2000, type: 3}
   - ID: 4
     Name: Arrhythmia
     Description: Win a game with Random Waves active.
     Classification: 1
-    TrophySprite: {fileID: 0}
+    TrophySprite: {fileID: 3040414296611471646, guid: de9d9124d48817b499f4ad80298b2000, type: 3}
   - ID: 5
     Name: Atherosclerosis
     Description: Win a game with Stat Ramping active.
     Classification: 1
-    TrophySprite: {fileID: 0}
+    TrophySprite: {fileID: 3040414296611471646, guid: de9d9124d48817b499f4ad80298b2000, type: 3}
   - ID: 6
     Name: Cardiomyopathy
     Description: Win a game with No Breaks active.
     Classification: 1
-    TrophySprite: {fileID: 0}
+    TrophySprite: {fileID: 3040414296611471646, guid: de9d9124d48817b499f4ad80298b2000, type: 3}
   - ID: 7
     Name: Lung Failure
     Description: Win a game with Fog of War active.
     Classification: 1
-    TrophySprite: {fileID: 0}
+    TrophySprite: {fileID: 3040414296611471646, guid: de9d9124d48817b499f4ad80298b2000, type: 3}
   - ID: 8
     Name: GERD
     Description: Win a game with Acid Rain active.
     Classification: 1
-    TrophySprite: {fileID: 0}
+    TrophySprite: {fileID: 3040414296611471646, guid: de9d9124d48817b499f4ad80298b2000, type: 3}
   - ID: 9
     Name: Into the Abyss
     Description: Reach wave 80 in Freeplay mode.
     Classification: 2
-    TrophySprite: {fileID: 0}
+    TrophySprite: {fileID: -8411816328702029873, guid: de9d9124d48817b499f4ad80298b2000, type: 3}
   - ID: 10
     Name: Total Organ Failure
     Description: Win on Hard with all modifiers active.
     Classification: 2
-    TrophySprite: {fileID: 0}
+    TrophySprite: {fileID: -8411816328702029873, guid: de9d9124d48817b499f4ad80298b2000, type: 3}
   - ID: 11
     Name: Heartless
     Description: ???
     Classification: 0
-    TrophySprite: {fileID: -5181718117150156639, guid: 46e58fcb1d8a95e4b9e43bd620b5818e, type: 3}
+    TrophySprite: {fileID: 5072265826684818060, guid: de9d9124d48817b499f4ad80298b2000, type: 3}
 --- !u!1 &1101983622
 GameObject:
   m_ObjectHideFlags: 0
@@ -75935,8 +75936,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.582, y: 0.36900002}
   m_AnchorMax: {x: 0.8794541, y: 0.6307112}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: -0.00000047683716}
+  m_AnchoredPosition: {x: -0.000041962, y: 0}
+  m_SizeDelta: {x: -0.0000076294, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1629677950
 CanvasRenderer:
@@ -76000,7 +76001,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -76031,7 +76032,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: -7.8468895, w: 0}
+  m_margin: {x: 0, y: 0, z: -0.0077819815, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

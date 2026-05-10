@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class AchievementPopup : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class AchievementPopup : MonoBehaviour
     [SerializeField] private GameObject popupPanel;
     [SerializeField] private TMP_Text achievementNameText;
     [SerializeField] private TMP_Text achievementDescriptionText;
+    [SerializeField] private Image trophyImage;
 
     [Header("Timing")]
     [SerializeField] private float displayDuration = 3f;
@@ -71,6 +73,8 @@ public class AchievementPopup : MonoBehaviour
 
             achievementNameText.text        = def.Name;
             achievementDescriptionText.text = def.Description;
+            if (trophyImage != null)
+                trophyImage.sprite = def.TrophySprite;
 
             yield return StartCoroutine(SlideTo(_hiddenPosition, _visiblePosition)); // slide in
             yield return new WaitForSecondsRealtime(displayDuration);
