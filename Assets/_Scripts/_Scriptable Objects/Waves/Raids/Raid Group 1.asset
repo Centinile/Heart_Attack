@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Raid Group 1
   m_EditorClassIdentifier: 
   spawnEntries:
-  - prefab: {fileID: 6344384041587836070, guid: 2c5759beee75cae4788596fa0f8c26b6, type: 3}
-    count: 15
+  - prefab: {fileID: 6344384041587836070, guid: 226de1eed3fe2374aa58fcaa630be58e, type: 3}
+    count: 10
   - prefab: {fileID: 6344384041587836070, guid: 8a6c650e7d98aea4595327c95710d18e, type: 3}
-    count: 7
-  weightCost: 3
-  NutrientReward: 0
+    count: 5
+  weightCost: 20
+  NutrientReward: 100
   selectionWeight: 10
   raidName: 

@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnEntries:
   - prefab: {fileID: 6344384041587836070, guid: 7f98ca1ef66481b438f87c0b56a887b7, type: 3}
-    count: 8
-  weightCost: 20
-  NutrientReward: 0
+    count: 15
+  - prefab: {fileID: 6344384041587836070, guid: 2c5759beee75cae4788596fa0f8c26b6, type: 3}
+    count: 5
+  weightCost: 30
+  NutrientReward: 200
   selectionWeight: 10
   raidName: 
