@@ -27,35 +27,51 @@ public class Jukebox : MonoBehaviour
 
     void Awake()
     {
-        // Optional singleton, but no persistence
+        // Persistent singleton - only one Jukebox across all scenes
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
+            
+            if (audioSource == null)
+            {
+                audioSource = GetComponent<AudioSource>();
+                if (audioSource == null)
+                {
+                    Debug.LogError("Jukebox: No AudioSource found! Please add one to the GameObject.");
+                }
+            }
+            
+            // Listen for scene changes
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
-            Destroy(gameObject);  // Destroy duplicates in the same scene
-        }
-
-        if (audioSource == null)
-        {
-            audioSource = GetComponent<AudioSource>();
-            if (audioSource == null)
-            {
-                Debug.LogError("Jukebox: No AudioSource found! Please add one to the GameObject.");
-            }
+            Destroy(gameObject);  // Destroy duplicates
         }
     }
 
     void Start()
     {
-        string sceneName = SceneManager.GetActiveScene().name.ToLower();
+        // Play music for the initial scene
+        SwitchMusicForScene(SceneManager.GetActiveScene().name);
+    }
 
-        if (sceneName == "main menu")
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Switch music when scene changes
+        SwitchMusicForScene(scene.name);
+    }
+
+    private void SwitchMusicForScene(string sceneName)
+    {
+        string lowerSceneName = sceneName.ToLower();
+
+        if (lowerSceneName == "main menu")
         {
             PlayMusicFromList(mainMenuMusic);
         }
-        else if (sceneName == "level1" || sceneName == "tutorialscene")
+        else if (lowerSceneName == "level1" || lowerSceneName == "tutorialscene")
         {
             PlayMusicFromList(gameMusic);
         }
@@ -63,6 +79,11 @@ public class Jukebox : MonoBehaviour
         {
             Debug.LogWarning("Jukebox: Unknown scene type for '" + sceneName + "'. No music played.");
         }
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     void Update()
@@ -145,7 +166,8 @@ public class Jukebox : MonoBehaviour
         float startVolume = audioSource.volume;
         for (float t = 0; t < fadeDuration; t += Time.deltaTime)
         {
-            audioSource.volume = Mathf.Lerp(startVolume, 0f, t / fadeDuration);
+            if (audioSource.isPlaying)
+                audioSource.volume = Mathf.Lerp(startVolume, 0f, t / fadeDuration);
             yield return null;
         }
 
