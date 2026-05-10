@@ -10,16 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ccd076b4981b11c4c9381feaaae25d5f, type: 3}
-  m_Name: Raid Group 9
+  m_Name: Raid Group 19
   m_EditorClassIdentifier: 
   spawnEntries:
-  - prefab: {fileID: 6344384041587836070, guid: 2c5759beee75cae4788596fa0f8c26b6, type: 3}
-    count: 43
-  - prefab: {fileID: 6344384041587836070, guid: 6566b014f46abea4aa0a897846eba3b9, type: 3}
-    count: 5
   - prefab: {fileID: 6344384041587836070, guid: eab9c27668c130d4b92fbd002a019d72, type: 3}
     count: 3
-  weightCost: 8
+  weightCost: 2
   NutrientReward: 100
   selectionWeight: 5
   raidName: 

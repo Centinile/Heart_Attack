@@ -32065,6 +32065,17 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0596dd469e4e40a4fbe7a8dd2a0a0e88, type: 2}
   - {fileID: 11400000, guid: 37ab29a416216bc46ae92ea8fa4f00fb, type: 2}
   - {fileID: 11400000, guid: 251c62315d1f3e942bde257c2955543e, type: 2}
+  - {fileID: 11400000, guid: f3c891a7736bb364dbac3c49f4237aee, type: 2}
+  - {fileID: 11400000, guid: 11b0e92065cab9044a81793d3b0147e0, type: 2}
+  - {fileID: 11400000, guid: 3a642a03a7d74b5489341718a290384b, type: 2}
+  - {fileID: 11400000, guid: 37e5cdb174ee4f84ea47b8ccf216f3c1, type: 2}
+  - {fileID: 11400000, guid: 17370c8e33dd8ca4f81be2a77c6f9524, type: 2}
+  - {fileID: 11400000, guid: e37dea95e6a9f774ea30993334281ad4, type: 2}
+  - {fileID: 11400000, guid: 9ee73d39b50f80947b23688f88e0841d, type: 2}
+  - {fileID: 11400000, guid: b888687347659b2459711a803576febd, type: 2}
+  - {fileID: 11400000, guid: dbcb958a28983d749aca3b35cff30689, type: 2}
+  - {fileID: 11400000, guid: 8b5d35730a2809f4eae3bf87a7a05aa5, type: 2}
+  - {fileID: 11400000, guid: 3b5b430b71bfeb045b1c51da7baa4ed2, type: 2}
   baseFreeplayWeight: 5
   weightIncreasePerWave: 1
 --- !u!1 &350128785

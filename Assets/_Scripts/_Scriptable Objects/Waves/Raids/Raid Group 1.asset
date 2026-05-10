@@ -19,5 +19,5 @@ MonoBehaviour:
     count: 5
   weightCost: 5
   NutrientReward: 100
-  selectionWeight: 10
+  selectionWeight: 5
   raidName: 
