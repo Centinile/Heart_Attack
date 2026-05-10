@@ -62,7 +62,6 @@ public class AchievementManager : MonoBehaviour
         GameManager.OnVictory  -= OnVictory;
         WaveManager.OnWaveCleared -= OnWaveCleared;
         Building.OnBuildingPlaced -= OnBuildingPlaced;
-        Building.OnHeartSold      -= OnHeartSold;
     }
 
     private void OnBuildingPlaced()

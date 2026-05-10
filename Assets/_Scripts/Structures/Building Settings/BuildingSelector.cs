@@ -306,7 +306,7 @@ public class BuildingSelector : MonoBehaviour
             }
             else
             {
-                repairCostDisplay.text = $"Repair Cost: {SelectedBuilding.RepairCost}";
+                repairCostDisplay.text = $"{SelectedBuilding.RepairCost}";
                 repairCostDisplay.gameObject.SetActive(true);
             }
         }
@@ -329,7 +329,7 @@ public class BuildingSelector : MonoBehaviour
         }
         else
         {
-            upgradeCostValue.text = $"Upgrade Cost: {SelectedBuilding.Data.UpgradeCost}";
+            upgradeCostValue.text = $"{SelectedBuilding.Data.UpgradeCost}";
             upgradeCostValue.gameObject.SetActive(true);
         }
     }
