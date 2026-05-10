@@ -61,13 +61,21 @@ public class AchievementManager : MonoBehaviour
     {
         GameManager.OnVictory  -= OnVictory;
         WaveManager.OnWaveCleared -= OnWaveCleared;
+        Building.OnBuildingPlaced -= OnBuildingPlaced;
+        Building.OnHeartSold      -= OnHeartSold;
     }
 
     private void OnBuildingPlaced()
     {
+        if (IsUnlocked(AchievementID.Placed100Buildings)) return;
+
         _buildingsPlacedThisRun++;
+
         if (_buildingsPlacedThisRun >= 100)
+        {
+            Debug.Log("[Achievement] Triggering Placed100Buildings unlock");
             Unlock(AchievementID.Placed100Buildings);
+        }
     }
 
     private void OnHeartSold()

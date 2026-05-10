@@ -17,7 +17,8 @@ MonoBehaviour:
   triggerOnSpawn: 1
   triggerOnAttack: 0
   triggerOnDeath: 0
+  preventDeath: 0
   isPassive: 0
   usableWhileStunned: 1
-  speedMultiplier: 5
+  speedMultiplier: 3
   boostDuration: 2.5

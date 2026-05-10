@@ -26,6 +26,6 @@ MonoBehaviour:
   icon: {fileID: 5827085863969058485, guid: 6682f6cd86b0d8f4a8fe945c05d75d1e, type: 3}
   prefab: {fileID: 4611168650507600015, guid: 20727da3cbb6d6646b9147b0c833547d, type: 3}
   type: 1
-  nutrientsPerWave: 60
+  nutrientsPerWave: 0
   hydrationCapacityBoost: 10
   collectEffect: {fileID: 0}

@@ -42,7 +42,7 @@ public class Wall : Building
 
     protected override void OnDestroyed()
     {
-        Debug.Log("Wall breached!");
+        //Debug.Log("Wall breached!");
         base.OnDestroyed(); 
     }
 }

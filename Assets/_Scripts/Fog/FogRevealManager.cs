@@ -31,7 +31,7 @@ public class FogRevealManager : MonoBehaviour
     public void Register(FogRevealer revealer)
     {
         _buildingCount++;
-        Debug.Log($"[Fog] Registered. Building count: {_buildingCount}");
+        //Debug.Log($"[Fog] Registered. Building count: {_buildingCount}");
         PushToVFX();
     }
 

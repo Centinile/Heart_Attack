@@ -25,3 +25,4 @@ MonoBehaviour:
   abilities:
   - {fileID: 11400000, guid: 0f942f017c905464f887f8fa72f80aa8, type: 2}
   enemyIcon: {fileID: 0}
+  deathEffectPrefab: {fileID: 4907615197041015014, guid: 451cf76232ff57d4495510223b5ca6d6, type: 3}

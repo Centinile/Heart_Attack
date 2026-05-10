@@ -26,3 +26,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d7e25f1984e04ee4a8e6db2f339d7b4f, type: 2}
   - {fileID: 11400000, guid: 56f506ad178d7874c80e6093f8757c7b, type: 2}
   enemyIcon: {fileID: 0}
+  deathEffectPrefab: {fileID: 5883322726929490019, guid: 92d19f9b39c587746812361d3eaef9ca, type: 3}

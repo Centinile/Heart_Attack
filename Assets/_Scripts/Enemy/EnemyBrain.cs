@@ -286,6 +286,10 @@ public class EnemyBrain : MonoBehaviour, IEnemy
 
         if (!deathPrevented)
         {
+            // Spawn death effect at enemy position before destroying
+            if (data.DeathEffectPrefab != null)
+                Instantiate(data.DeathEffectPrefab, transform.position, Quaternion.identity);
+
             healthBar?.ReturnBar();
             StopAllCoroutines();
             foreach (var a in instantiatedAbilities) if (a != null) Destroy(a);

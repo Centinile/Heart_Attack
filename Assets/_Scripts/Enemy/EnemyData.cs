@@ -57,6 +57,10 @@ public class EnemyData : ScriptableObject
     [Header("Visual")]
     [Tooltip("Optional: Sprite or model preview for this enemy type.")]
     [SerializeField] private Sprite enemyIcon;
+
+    [Header("Death Effect")]
+    [SerializeField] private GameObject deathEffectPrefab;
+    public GameObject DeathEffectPrefab => deathEffectPrefab;
     
     // Public accessors
     public float MaxHP => maxHP;

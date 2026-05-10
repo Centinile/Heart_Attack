@@ -16,6 +16,7 @@ public class AchievementPopup : MonoBehaviour
     [SerializeField] private float displayDuration = 3f;
     [SerializeField] private float slideDuration = 0.4f;
     [SerializeField] private AnimationCurve slideCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+    public float TotalDisplayTime => slideDuration * 2f + displayDuration;
 
     private RectTransform _panelRect;
     private Vector2 _visiblePosition;

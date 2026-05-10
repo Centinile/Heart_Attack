@@ -219,14 +219,11 @@ public class TutorialManager : MonoBehaviour
         _tutorialDone = true;
 
         if (tutorialCanvas != null) tutorialCanvas.SetActive(false);
-
-        // Show done button as a manual escape hatch
         if (doneButton != null) doneButton.gameObject.SetActive(true);
 
         if (AchievementManager.Instance != null)
             AchievementManager.Instance.Unlock(AchievementID.CompleteTutorial);
 
-        // Auto-redirect after 3 seconds regardless of button press
         StartCoroutine(ForcedRedirectTimer());
     }
 
@@ -234,7 +231,14 @@ public class TutorialManager : MonoBehaviour
 
     private IEnumerator ForcedRedirectTimer()
     {
-        yield return new WaitForSecondsRealtime(3f);
+        // Wait for popup to finish showing before leaving the scene
+        // AchievementPopup.displayDuration + slideDuration * 2 + small buffer
+        float popupWait = 0f;
+        if (AchievementPopup.Instance != null)
+            popupWait = AchievementPopup.Instance.TotalDisplayTime + 0.5f;
+
+        float waitTime = Mathf.Max(3f, popupWait);
+        yield return new WaitForSecondsRealtime(waitTime);
         FinishTutorial();
     }
 

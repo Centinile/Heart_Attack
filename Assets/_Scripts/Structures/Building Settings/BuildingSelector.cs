@@ -13,9 +13,6 @@ public class BuildingSelector : MonoBehaviour
 
     [Header("Repair UI")]
     [SerializeField] private GameObject repairButton;
-    [SerializeField] private TMP_Text repairCostText;
-    [SerializeField] private TMP_Text repairCostDisplay;
-[SerializeField] private TMP_Text upgradeCostDisplay;
 
     [Header("Stats Display")]
     [SerializeField] private GameObject statsPanel;
@@ -44,6 +41,10 @@ public class BuildingSelector : MonoBehaviour
 
     [SerializeField] private TMP_Text hydrationCapacityBoostLabel;
     [SerializeField] private TMP_Text hydrationCapacityBoostValue;
+
+    [SerializeField] private TMP_Text repairCostText;
+    [SerializeField] private TMP_Text repairCostDisplay;
+
 
     [SerializeField] private TMP_Text descriptionValue;
 
@@ -195,6 +196,7 @@ public class BuildingSelector : MonoBehaviour
             case StructureType.Heart:    ShowHeartStats(data);    break;
             case StructureType.Resource: ShowResourceStats(data); break;
             case StructureType.Wall:     ShowWallStats(data);     break;
+            case StructureType.Research: ShowResearchStats(data); break;
         }
 
         statsPanel.SetActive(true);
@@ -221,21 +223,46 @@ public class BuildingSelector : MonoBehaviour
     {
         if (!(d is ResourceData rd)) return;
 
-        ShowRow(maxHPLabel,                  maxHPValue,                  "Max HP",                  d.MaxHP.ToString());
-        ShowRow(nutrientsPerWaveLabel,       nutrientsPerWaveValue,       "Nutrients/Wave",           rd.nutrientsPerWave.ToString());
-        ShowRow(hydrationCapacityBoostLabel, hydrationCapacityBoostValue, "Hydration Capacity Boost", rd.hydrationCapacityBoost.ToString());
+        // Name — shown for all resource types
+        ShowRow(structureNameLabel, structureNameValue, "Structure", d.StructureName);
+        ShowRow(maxHPLabel,         maxHPValue,         "Max HP",   d.MaxHP.ToString());
+        ShowRow(nutrientCostLabel,  nutrientCostValue,  "Nutrient Cost",  d.NutrientCost.ToString());
+        ShowRow(hydrationCostLabel, hydrationCostValue, "Hydration Cost", d.HydrationCost.ToString());
+        ShowRow(upgradeCostLabel,   upgradeCostValue,   "Upgrade Cost",   d.UpgradeCost.ToString());
 
-        if (d.StructureName == "Mine")
+        // Only show the relevant production stat based on resource type
+        if (rd.type == ResourceType.Nutrients)
         {
-            ShowRow(nutrientCostLabel,  nutrientCostValue,  "Nutrient Cost",  d.NutrientCost.ToString());
-            ShowRow(hydrationCostLabel, hydrationCostValue, "Hydration Cost", d.HydrationCost.ToString());
+            ShowRow(nutrientsPerWaveLabel, nutrientsPerWaveValue,
+                "Nutrients/Wave", rd.nutrientsPerWave.ToString());
         }
+        else if (rd.type == ResourceType.Hydration)
+        {
+            ShowRow(hydrationCapacityBoostLabel, hydrationCapacityBoostValue,
+                "Hydration Boost", rd.hydrationCapacityBoost.ToString());
+        }
+    }
 
-        ShowRow(upgradeCostLabel, upgradeCostValue, "Upgrade Cost", d.UpgradeCost.ToString());
+    private void ShowResearchStats(BuildingData d)
+    {
+        if (!(d is ResearchData rd)) return;
+
+        ShowRow(structureNameLabel, structureNameValue, "Structure",     d.StructureName);
+        ShowRow(maxHPLabel,         maxHPValue,         "Max HP",        d.MaxHP.ToString());
+        ShowRow(nutrientCostLabel,  nutrientCostValue,  "Nutrient Cost", d.NutrientCost.ToString());
+        ShowRow(hydrationCostLabel, hydrationCostValue, "Hydration Cost",d.HydrationCost.ToString());
+        ShowRow(upgradeCostLabel,   upgradeCostValue,   "Upgrade Cost",  d.UpgradeCost.ToString());
+
+        // Show which tier this lab unlocks
+        BuildingTier unlockedTier = rd.GetUnlockedTier();
+        if (unlockedTier != BuildingTier.Tier1)
+            ShowRow(nutrientsPerWaveLabel, nutrientsPerWaveValue,
+                "Unlocks Tier", unlockedTier.ToString());
     }
 
     private void ShowWallStats(BuildingData d)
     {
+        ShowRow(structureNameLabel, structureNameValue, "Structure",     d.StructureName);
         ShowRow(maxHPLabel,        maxHPValue,        "Max HP",        d.MaxHP.ToString());
         ShowRow(nutrientCostLabel, nutrientCostValue, "Nutrient Cost", d.NutrientCost.ToString());
         ShowRow(upgradeCostLabel,  upgradeCostValue,  "Upgrade Cost",  d.UpgradeCost.ToString());
@@ -264,7 +291,7 @@ public class BuildingSelector : MonoBehaviour
         repairButton.SetActive(canRepair);
 
         if (canRepair && repairCostText != null)
-            repairCostText.text = $"Repair ({SelectedBuilding.RepairCost} Nutrients)";
+            repairCostText.text = $"Repair ({SelectedBuilding.RepairCost})";
 
         if (repairCostDisplay != null)
         {
@@ -279,7 +306,7 @@ public class BuildingSelector : MonoBehaviour
             }
             else
             {
-                repairCostDisplay.text = $"Repair Cost: {SelectedBuilding.RepairCost} Nutrients";
+                repairCostDisplay.text = $"Repair Cost: {SelectedBuilding.RepairCost}";
                 repairCostDisplay.gameObject.SetActive(true);
             }
         }
@@ -287,23 +314,23 @@ public class BuildingSelector : MonoBehaviour
 
     private void RefreshUpgradeUI()
     {
-        if (upgradeCostDisplay == null) return;
+        if (upgradeCostValue == null) return;
 
         if (SelectedBuilding == null)
         {
-            upgradeCostDisplay.gameObject.SetActive(false);
+            upgradeCostValue.gameObject.SetActive(false);
             return;
         }
 
         if (SelectedBuilding.Data.NextLevelData == null)
         {
-            upgradeCostDisplay.text = "Max Level";
-            upgradeCostDisplay.gameObject.SetActive(true);
+            upgradeCostValue.text = "Max Level";
+            upgradeCostValue.gameObject.SetActive(true);
         }
         else
         {
-            upgradeCostDisplay.text = $"Upgrade Cost: {SelectedBuilding.Data.UpgradeCost} Nutrients";
-            upgradeCostDisplay.gameObject.SetActive(true);
+            upgradeCostValue.text = $"Upgrade Cost: {SelectedBuilding.Data.UpgradeCost}";
+            upgradeCostValue.gameObject.SetActive(true);
         }
     }
 

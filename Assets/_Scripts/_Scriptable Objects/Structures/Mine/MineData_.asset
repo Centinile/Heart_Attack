@@ -27,5 +27,5 @@ MonoBehaviour:
   prefab: {fileID: 4611168650507600015, guid: 7cae0236dc9126a4cb14c5e895a975b5, type: 3}
   type: 0
   nutrientsPerWave: 50
-  hydrationCapacityBoost: 10
+  hydrationCapacityBoost: 0
   collectEffect: {fileID: 0}

@@ -21,5 +21,5 @@ MonoBehaviour:
   isPassive: 0
   usableWhileStunned: 1
   enemyPrefab: {fileID: 6344384041587836070, guid: 2c5759beee75cae4788596fa0f8c26b6, type: 3}
-  spawnCount: 2
+  spawnCount: 4
   spawnRadius: 0.5
