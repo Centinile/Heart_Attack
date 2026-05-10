@@ -448,7 +448,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Protect The Heart at all Costs!
+  m_text: Use WASD or Hold Right click to move the Camera!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ee02a3cd1e55f3846928e0e0a4404f10, type: 2}
   m_sharedMaterial: {fileID: 7372366581737908625, guid: ee02a3cd1e55f3846928e0e0a4404f10, type: 2}
