@@ -23,7 +23,7 @@ MonoBehaviour:
   DestroySFX: {fileID: 8300000, guid: 0c13ba1bdc2a81749813e304d58e5cf5, type: 3}
   nextLevelData: {fileID: 0}
   upgradeCost: 150
-  icon: {fileID: 8048772291348302879, guid: d76d5b1f75b3d43408383660584911bf, type: 3}
+  icon: {fileID: -6324880435504713953, guid: 93e14082c06212749a62d7afea060725, type: 3}
   prefab: {fileID: 4611168650507600015, guid: 3deca77649692f54594f0479495bd77c, type: 3}
   unlocksTier2: 1
   unlocksTier3: 0

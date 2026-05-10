@@ -131,10 +131,10 @@ TextureImporter:
       name: Nutrient Mine_0
       rect:
         serializedVersion: 2
-        x: 24
-        y: 319
-        width: 222
-        height: 192
+        x: 0
+        y: 320
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -153,10 +153,10 @@ TextureImporter:
       name: Nutrient Mine_1
       rect:
         serializedVersion: 2
-        x: 344
-        y: 319
-        width: 222
-        height: 192
+        x: 320
+        y: 320
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -175,10 +175,10 @@ TextureImporter:
       name: Nutrient Mine_2
       rect:
         serializedVersion: 2
-        x: 664
-        y: 319
-        width: 222
-        height: 192
+        x: 640
+        y: 320
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -197,10 +197,10 @@ TextureImporter:
       name: Nutrient Mine_3
       rect:
         serializedVersion: 2
-        x: 24
+        x: 0
         y: 0
-        width: 222
-        height: 191
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -219,10 +219,10 @@ TextureImporter:
       name: Nutrient Mine_4
       rect:
         serializedVersion: 2
-        x: 344
+        x: 320
         y: 0
-        width: 222
-        height: 191
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -241,10 +241,10 @@ TextureImporter:
       name: Nutrient Mine_5
       rect:
         serializedVersion: 2
-        x: 664
+        x: 640
         y: 0
-        width: 222
-        height: 191
+        width: 320
+        height: 320
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -263,7 +263,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 9dd3e0df2cafbb54e84575682bced1bc
     internalID: 0
     vertices: []
     indices: 
@@ -271,7 +271,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":320.0,"y":320.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       Nutrient Mine_0: 6858282056258333515
       Nutrient Mine_1: 7886930609774451164

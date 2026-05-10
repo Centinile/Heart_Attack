@@ -60,7 +60,7 @@ public class WaveManager : MonoBehaviour
         else
         {
             // Resting phase — show upcoming wave
-            waveText.text = $"Next: Wave {displayWave}";
+            waveText.text = $"Wave {displayWave}";
         }
     }
 

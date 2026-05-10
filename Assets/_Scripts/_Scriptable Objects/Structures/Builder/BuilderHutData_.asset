@@ -21,7 +21,7 @@ MonoBehaviour:
   HealVFXPrefab: {fileID: 0}
   PlaceSFX: {fileID: 8300000, guid: 024146ca7383e9c47adc408eb4778d12, type: 3}
   DestroySFX: {fileID: 8300000, guid: 0c13ba1bdc2a81749813e304d58e5cf5, type: 3}
-  nextLevelData: {fileID: 0}
+  nextLevelData: {fileID: 11400000, guid: ad7c29a231ba9cd4ea5fb0e60fb50292, type: 2}
   upgradeCost: 150
   icon: {fileID: 8048772291348302879, guid: d76d5b1f75b3d43408383660584911bf, type: 3}
   prefab: {fileID: 4611168650507600015, guid: 8e3095beea78c4248b78dc9c5f39a890, type: 3}

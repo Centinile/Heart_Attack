@@ -22,7 +22,7 @@ MonoBehaviour:
   PlaceSFX: {fileID: 8300000, guid: 024146ca7383e9c47adc408eb4778d12, type: 3}
   DestroySFX: {fileID: 8300000, guid: 0c13ba1bdc2a81749813e304d58e5cf5, type: 3}
   nextLevelData: {fileID: 0}
-  upgradeCost: 150
+  upgradeCost: 0
   icon: {fileID: 1206767222682907769, guid: ec145644ce7d3a64c882e7b42d375dbf, type: 3}
   prefab: {fileID: 4611168650507600015, guid: 30474534713806b44b7f4900164ec842, type: 3}
   prioritizedByEnemies: 0
