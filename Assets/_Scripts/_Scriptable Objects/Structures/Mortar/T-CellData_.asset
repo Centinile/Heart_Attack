@@ -48,9 +48,9 @@ MonoBehaviour:
   continuousMaxDamage: 50
   continuousRampTime: 4
   continuousTickRate: 0.1
-  applyDOT: 1
+  applyDOT: 0
   dotDamagePerTick: 5
   dotTickInterval: 0.5
   dotDuration: 4
   dotRadius: 0.31
-  dotZonePrefab: {fileID: 3598478439607017487, guid: 02195da1e35762c459580cfe5e785594, type: 3}
+  dotZonePrefab: {fileID: 0}
