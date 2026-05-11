@@ -381,7 +381,7 @@ MonoBehaviour:
   popupPanel: {fileID: 461311035}
   achievementNameText: {fileID: 199915512}
   achievementDescriptionText: {fileID: 637147944}
-  trophyImage: {fileID: 0}
+  trophyImage: {fileID: 657865494}
   displayDuration: 3
   slideDuration: 0.4
   slideCurve:
