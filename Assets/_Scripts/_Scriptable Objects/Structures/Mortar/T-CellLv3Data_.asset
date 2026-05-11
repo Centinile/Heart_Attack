@@ -35,7 +35,7 @@ MonoBehaviour:
   beamLoopSound: {fileID: 0}
   attackSoundVolume: 1
   beamLoopVolume: 0.8
-  projectileData: {fileID: 11400000, guid: e6b8978179209e546b8c0a2faec8405c, type: 2}
+  projectileData: {fileID: 11400000, guid: af4ffdd1087a40747a50e1475237f05a, type: 2}
   projectileSpeed: 10
   useLineRendererAttack: 0
   flickerBeamPrefab: {fileID: 0}

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7297932f0ad0a040a95ae2de5e552d6, type: 3}
-  m_Name: Bomb
+  m_Name: Bomb_DOt
   m_EditorClassIdentifier: 
   prefab: {fileID: 1045415496188527212, guid: b15b02c310972ae42bc71391dfbd2ef4, type: 3}
   sprite: {fileID: -2613247888821195678, guid: 80ca41141f39f66459e1119bdfdb9296, type: 3}
@@ -96,7 +96,7 @@ MonoBehaviour:
   trailEffect: {fileID: 0}
   impactSound: {fileID: 8300000, guid: f31b46d95570338428784cab169f1ec0, type: 3}
   impactSoundVolume: 1
-  applyDOT: 0
+  applyDOT: 1
   dotDamagePerTick: 5
   dotTickInterval: 0.5
   dotDuration: 3
