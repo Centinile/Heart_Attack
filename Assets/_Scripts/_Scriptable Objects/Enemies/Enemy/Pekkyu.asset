@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Pekkyu
   m_EditorClassIdentifier: 
   maxHP: 150
-  attackDamage: 15
+  attackDamage: 30
   attackRadius: 0.9
   moveSpeed: 2
   isRanged: 0
@@ -22,6 +22,7 @@ MonoBehaviour:
   targetingPriority: 2
   detectionRadius: 5
   stoppingDistance: 0.2
-  abilities: []
+  abilities:
+  - {fileID: 11400000, guid: c5cdf4bb5997b4a418e3c933edb6f576, type: 2}
   enemyIcon: {fileID: 0}
   deathEffectPrefab: {fileID: 4907615197041015014, guid: 451cf76232ff57d4495510223b5ca6d6, type: 3}
