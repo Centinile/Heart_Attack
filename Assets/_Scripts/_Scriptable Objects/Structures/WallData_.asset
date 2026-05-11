@@ -16,7 +16,7 @@ MonoBehaviour:
   maxHP: 200
   tier: 1
   description: 
-  nutrientCost: 50
+  nutrientCost: 20
   hydrationCost: 0
   HealVFXPrefab: {fileID: 0}
   PlaceSFX: {fileID: 8300000, guid: 024146ca7383e9c47adc408eb4778d12, type: 3}
