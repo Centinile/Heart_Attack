@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnEntries:
   - prefab: {fileID: 6344384041587836070, guid: 6566b014f46abea4aa0a897846eba3b9, type: 3}
-    count: 5
+    count: 6
   - prefab: {fileID: 6344384041587836070, guid: 8a6c650e7d98aea4595327c95710d18e, type: 3}
-    count: 21
+    count: 18
   WaveWeight: 5
   NutrientReward: 140

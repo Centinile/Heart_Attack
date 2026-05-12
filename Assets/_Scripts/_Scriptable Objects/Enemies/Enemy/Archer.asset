@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHP: 10
   attackDamage: 4
-  attackRadius: 2.8
+  attackRadius: 2
   moveSpeed: 1.6
   isRanged: 1
   projectileData: {fileID: 11400000, guid: d500cbf7a8a33a04e920b02edf4c609b, type: 2}

@@ -15,7 +15,7 @@ MonoBehaviour:
   structureName: H20 Pump
   maxHP: 100
   tier: 1
-  description: 
+  description: Increase Hydration by 10
   nutrientCost: 200
   hydrationCost: 0
   HealVFXPrefab: {fileID: 0}

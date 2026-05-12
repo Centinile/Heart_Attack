@@ -14,17 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnEntries:
   - prefab: {fileID: 6344384041587836070, guid: 6566b014f46abea4aa0a897846eba3b9, type: 3}
-    count: 30
-  - prefab: {fileID: 6344384041587836070, guid: 2c5759beee75cae4788596fa0f8c26b6, type: 3}
     count: 50
+  - prefab: {fileID: 6344384041587836070, guid: 2c5759beee75cae4788596fa0f8c26b6, type: 3}
+    count: 80
   - prefab: {fileID: 6344384041587836070, guid: 16456ee394639cd4488cf9e8a4904cb6, type: 3}
-    count: 8
-  - prefab: {fileID: 6344384041587836070, guid: 15988e63095ea344d92ccd764de51605, type: 3}
-    count: 35
+    count: 10
+  - prefab: {fileID: 6344384041587836070, guid: eab9c27668c130d4b92fbd002a019d72, type: 3}
+    count: 20
   - prefab: {fileID: 6344384041587836070, guid: 7f98ca1ef66481b438f87c0b56a887b7, type: 3}
     count: 20
   - prefab: {fileID: 6344384041587836070, guid: 8a6c650e7d98aea4595327c95710d18e, type: 3}
-    count: 40
+    count: 60
   - prefab: {fileID: 6344384041587836070, guid: 1355e66e6e89d944aa32be1356532c4b, type: 3}
     count: 30
   - prefab: {fileID: 6344384041587836070, guid: 226de1eed3fe2374aa58fcaa630be58e, type: 3}

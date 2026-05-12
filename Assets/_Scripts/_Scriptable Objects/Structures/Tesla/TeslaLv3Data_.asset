@@ -15,7 +15,7 @@ MonoBehaviour:
   structureName: Palpitator Lv3
   maxHP: 150
   tier: 1
-  description: 
+  description: Basic Shooting
   nutrientCost: 700
   hydrationCost: 30
   HealVFXPrefab: {fileID: 0}

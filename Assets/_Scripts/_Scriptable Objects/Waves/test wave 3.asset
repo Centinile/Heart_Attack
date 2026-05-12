@@ -16,8 +16,6 @@ MonoBehaviour:
   - prefab: {fileID: 6344384041587836070, guid: 2c5759beee75cae4788596fa0f8c26b6, type: 3}
     count: 16
   - prefab: {fileID: 6344384041587836070, guid: 8a6c650e7d98aea4595327c95710d18e, type: 3}
-    count: 18
-  - prefab: {fileID: 6344384041587836070, guid: 8a6c650e7d98aea4595327c95710d18e, type: 3}
-    count: 5
+    count: 4
   WaveWeight: 5
   NutrientReward: 120

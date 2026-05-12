@@ -305,7 +305,7 @@ MonoBehaviour:
     Name: First Steps
     Description: Complete the tutorial.
     Classification: 0
-    TrophySprite: {fileID: 0}
+    TrophySprite: {fileID: 5072265826684818060, guid: de9d9124d48817b499f4ad80298b2000, type: 3}
   - ID: 1
     Name: Steady Pulse
     Description: Complete a game on Easy difficulty.
@@ -825,6 +825,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 116316396}
+  - component: {fileID: 116316397}
   m_Layer: 0
   m_Name: GameMaster
   m_TagString: Untagged
@@ -857,6 +858,28 @@ Transform:
   - {fileID: 59544266}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &116316397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 116316395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91bb472624e1e0446a82b96a470579b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tabs:
+  - tabName: 
+    tabToggle: {fileID: 1234924712}
+    towerSlots: []
+  - tabName: 
+    tabToggle: {fileID: 146567269}
+    towerSlots: []
+  pausePanel: {fileID: 0}
+  sceneController: {fileID: 0}
+  mainMenuSceneName: MainMenu
 --- !u!1 &127880289
 GameObject:
   m_ObjectHideFlags: 0

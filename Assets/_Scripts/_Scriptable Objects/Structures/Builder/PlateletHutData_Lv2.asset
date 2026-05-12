@@ -15,7 +15,7 @@ MonoBehaviour:
   structureName: Platelet Hut Lv 2
   maxHP: 100
   tier: 1
-  description: 
+  description: Repairs other Buildings
   nutrientCost: 450
   hydrationCost: 15
   HealVFXPrefab: {fileID: 0}

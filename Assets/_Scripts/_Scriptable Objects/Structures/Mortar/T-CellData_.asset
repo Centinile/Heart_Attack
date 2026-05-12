@@ -15,7 +15,7 @@ MonoBehaviour:
   structureName: T-Cell Launcher Lv1
   maxHP: 200
   tier: 1
-  description: 
+  description: Long Ranged AoE
   nutrientCost: 200
   hydrationCost: 20
   HealVFXPrefab: {fileID: 0}
@@ -40,7 +40,7 @@ MonoBehaviour:
   useLineRendererAttack: 0
   flickerBeamPrefab: {fileID: 0}
   maxTargets: 1
-  splashRadius: 5
+  splashRadius: 3
   useBurst: 0
   burstCount: 1
   burstInterval: 0.1

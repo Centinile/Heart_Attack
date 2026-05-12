@@ -82,12 +82,18 @@ public class EnemyBrain : MonoBehaviour, IEnemy
 
     // --- Targeting ---
 
+    private Building lockedWallTarget = null;
     private void CheckDetectionRange()
     {
         if (data.TargetingPriority == TargetPriority.None) return;
 
         // Already on a preferred target — don't switch
         if (targetBuilding != null && IsPreferredTarget(targetBuilding)) return;
+
+            // Don't switch away from a locked wall
+        if (data.TargetingPriority == TargetPriority.WallOnly
+            && lockedWallTarget != null
+            && lockedWallTarget.IsAlive) return;
 
         Building inRange = FindPreferredTargetInRange();
         if (inRange != null && inRange != targetBuilding)
@@ -116,6 +122,15 @@ public class EnemyBrain : MonoBehaviour, IEnemy
 
     private void DetermineTarget()
     {
+        // If we have a locked wall that's still alive, stay on it
+        if (data.TargetingPriority == TargetPriority.WallOnly
+            && lockedWallTarget != null
+            && lockedWallTarget.IsAlive)
+        {
+            targetBuilding = lockedWallTarget;
+            return;
+        }
+
         Building[] allBuildings = FindObjectsOfType<Building>();
         if (allBuildings.Length == 0) return;
 
@@ -235,7 +250,13 @@ public class EnemyBrain : MonoBehaviour, IEnemy
                 data.TriggerAttackAbilities(this, b);
 
                 if (!b.IsAlive)
+                {
+                    // Clear wall lock when it dies so we pick a new one
+                    if (data.TargetingPriority == TargetPriority.WallOnly)
+                        lockedWallTarget = null;
+
                     DetermineTarget();
+                }
             }
         }
 

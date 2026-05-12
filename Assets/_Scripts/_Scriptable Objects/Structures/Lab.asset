@@ -15,7 +15,7 @@ MonoBehaviour:
   structureName: Immunity Lab
   maxHP: 150
   tier: 1
-  description: 
+  description: Unlocks some Upgrades
   nutrientCost: 1000
   hydrationCost: 90
   HealVFXPrefab: {fileID: 0}

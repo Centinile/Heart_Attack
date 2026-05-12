@@ -15,7 +15,7 @@ MonoBehaviour:
   structureName: Platelet Hut Lv 1
   maxHP: 50
   tier: 1
-  description: 
+  description: Repairs other Buildings
   nutrientCost: 175
   hydrationCost: 15
   HealVFXPrefab: {fileID: 0}
@@ -25,7 +25,7 @@ MonoBehaviour:
   upgradeCost: 200
   icon: {fileID: 8048772291348302879, guid: d76d5b1f75b3d43408383660584911bf, type: 3}
   prefab: {fileID: 4611168650507600015, guid: 8e3095beea78c4248b78dc9c5f39a890, type: 3}
-  damage: 5
+  damage: 10
   attackCooldown: 3
   range: 7
   attackType: 5

@@ -15,7 +15,7 @@ MonoBehaviour:
   structureName: Bone Wall
   maxHP: 200
   tier: 1
-  description: 
+  description: Blocks and Reroutes enemy path
   nutrientCost: 20
   hydrationCost: 0
   HealVFXPrefab: {fileID: 0}

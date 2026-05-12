@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnEntries:
   - prefab: {fileID: 6344384041587836070, guid: 1355e66e6e89d944aa32be1356532c4b, type: 3}
-    count: 10
+    count: 5
   weightCost: 3
   NutrientReward: 100
   selectionWeight: 5

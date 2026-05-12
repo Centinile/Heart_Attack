@@ -41,6 +41,10 @@ public class WaveManager : MonoBehaviour
         autoStartNextWave = GameManager.Instance.enableNoBreaks;
         enableScaling     = GameManager.Instance.enableStatRamping;
 
+        // If freeplay is on from the start (random waves setting),
+        // use a lower base weight so early waves aren't overwhelming
+        baseFreeplayWeight = freeplayMode ? 1 : 10;
+
         UpdateWaveText();
     }
 

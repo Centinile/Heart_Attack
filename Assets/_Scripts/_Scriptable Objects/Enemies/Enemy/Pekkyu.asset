@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 283b3799aa6c3234ba9b2c130d13851c, type: 3}
   m_Name: Pekkyu
   m_EditorClassIdentifier: 
-  maxHP: 150
+  maxHP: 300
   attackDamage: 30
-  attackRadius: 0.9
+  attackRadius: 0.8
   moveSpeed: 2
   isRanged: 0
   projectileData: {fileID: 0}

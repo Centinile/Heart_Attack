@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 283b3799aa6c3234ba9b2c130d13851c, type: 3}
   m_Name: Golem
   m_EditorClassIdentifier: 
-  maxHP: 300
+  maxHP: 500
   attackDamage: 25
   attackRadius: 0.9
   moveSpeed: 0.8

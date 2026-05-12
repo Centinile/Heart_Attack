@@ -15,7 +15,7 @@ MonoBehaviour:
   structureName: Anti-Body Tower Lv3
   maxHP: 400
   tier: 2
-  description: 
+  description: Rapid Fire Attacks
   nutrientCost: 2200
   hydrationCost: 70
   HealVFXPrefab: {fileID: 0}
@@ -25,7 +25,7 @@ MonoBehaviour:
   upgradeCost: 0
   icon: {fileID: 3517987708361127489, guid: 58c0b87b945cbec4487e98c1b6b700b9, type: 3}
   prefab: {fileID: 4611168650507600015, guid: a450f7ae8abd43a44aefa6be5bca5303, type: 3}
-  damage: 7
+  damage: 5
   attackCooldown: 0.09
   range: 16
   attackType: 1

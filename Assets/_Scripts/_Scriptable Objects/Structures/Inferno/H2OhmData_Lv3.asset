@@ -15,7 +15,7 @@ MonoBehaviour:
   structureName: H2-Ohm Lv3
   maxHP: 300
   tier: 2
-  description: 
+  description: High Scaling Damage
   nutrientCost: 1100
   hydrationCost: 60
   HealVFXPrefab: {fileID: 0}

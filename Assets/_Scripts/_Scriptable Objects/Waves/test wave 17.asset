@@ -16,9 +16,9 @@ MonoBehaviour:
   - prefab: {fileID: 6344384041587836070, guid: 2c5759beee75cae4788596fa0f8c26b6, type: 3}
     count: 66
   - prefab: {fileID: 6344384041587836070, guid: 8a6c650e7d98aea4595327c95710d18e, type: 3}
-    count: 48
+    count: 30
   - prefab: {fileID: 6344384041587836070, guid: 226de1eed3fe2374aa58fcaa630be58e, type: 3}
-    count: 36
+    count: 50
   - prefab: {fileID: 6344384041587836070, guid: 6566b014f46abea4aa0a897846eba3b9, type: 3}
     count: 6
   WaveWeight: 5

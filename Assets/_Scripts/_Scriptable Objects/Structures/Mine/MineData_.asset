@@ -15,7 +15,7 @@ MonoBehaviour:
   structureName: Nutrient Mine
   maxHP: 100
   tier: 1
-  description: 
+  description: Gives 100 nutrients per wave
   nutrientCost: 50
   hydrationCost: 5
   HealVFXPrefab: {fileID: 0}
